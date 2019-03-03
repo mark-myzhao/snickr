@@ -1,8 +1,10 @@
-function hello (ctx) {
-  let user = ctx.request.query.user;
-  ctx.ok({ user });
+const { getAllUsers } = require('../models/user')
+
+async function getAllUsersInfo (ctx) {
+  let result = await getAllUsers()
+  ctx.ok({ users: result })
 }
 
 module.exports = {
-  hello
+  getAllUsersInfo
 }

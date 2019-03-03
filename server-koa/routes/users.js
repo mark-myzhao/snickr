@@ -1,7 +1,7 @@
 const Router = require('koa-router')
 const router = new Router()
-const Ctrl = require('../controllers/users')
+const User = require('../controllers/users')
 
-router.get('/', Ctrl.hello)
+router.get('/all', User.getAllUsersInfo)
 
 module.exports = router.routes()
