@@ -10,6 +10,10 @@ require('dotenv').config()
 const app = new Koa()
 const router = new Router()
 
+// self defined middle-wares
+const db = require('./db.js')
+app.context.db = db
+
 app.use(Helmet())
 
 if (process.env.NODE_ENV === 'development') {

@@ -21,3 +21,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# tex
+*.aux
+*.fdb_latexmk
+*.synctex.gz
+*.fls
+/_minted-main
