@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{insert} \PYG{k}{into} \PYG{k}{User}
+    \PYG{n}{value} \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}newuser@gmail.com\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}newuser\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}nu\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s1}{\PYGZsq{}12345678\PYGZsq{}}\PYG{p}{);}
+\end{Verbatim}

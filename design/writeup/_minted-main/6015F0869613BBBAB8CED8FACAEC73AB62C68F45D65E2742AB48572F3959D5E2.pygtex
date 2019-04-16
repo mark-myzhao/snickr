@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{select} \PYG{n}{uemail}\PYG{p}{,} \PYG{n}{wid}
+    \PYG{k}{from} \PYG{n}{Workspace} \PYG{k}{natural} \PYG{k}{join} \PYG{n}{wMember}
+    \PYG{k}{where} \PYG{n}{wmtype} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}admin\PYGZsq{}}
+    \PYG{k}{group} \PYG{k}{by} \PYG{n}{uemail}\PYG{p}{,} \PYG{n}{wid}\PYG{p}{;}
+\end{Verbatim}

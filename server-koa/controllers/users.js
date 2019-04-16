@@ -1,10 +1,10 @@
-const { getAllUsers } = require('../models/user')
+const UserModel = require('../models/user')
 
-async function getAllUsersInfo (ctx) {
-  let result = await getAllUsers()
+async function getAllUsers (ctx) {
+  let result = await UserModel.getAllUsers()
   ctx.ok({ users: result })
 }
 
 module.exports = {
-  getAllUsersInfo
+  getAllUsers
 }

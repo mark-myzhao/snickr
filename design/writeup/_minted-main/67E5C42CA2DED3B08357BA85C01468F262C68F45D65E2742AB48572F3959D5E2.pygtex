@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{select} \PYG{n}{mcontent}
+    \PYG{k}{from} \PYG{n}{Message} \PYG{k}{natural} \PYG{k}{join} \PYG{n}{cMember} \PYG{k}{natural} \PYG{k}{join} \PYG{n}{wMember}
+    \PYG{k}{where} \PYG{n}{uemail} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}xz8888@nyu.edu\PYGZsq{}} \PYG{k}{and} \PYG{n}{mcontent} \PYG{k}{like} \PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}perpendicular\PYGZpc{}\PYGZsq{}}\PYG{p}{;}
+\end{Verbatim}

@@ -1,0 +1,75 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{create} \PYG{k}{table} \PYG{k}{User} \PYG{p}{(}
+    \PYG{n}{uemail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null} \PYG{k}{primary} \PYG{k}{key}\PYG{p}{,}
+    \PYG{n}{uname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{nickname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{password} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{null}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{Workspace} \PYG{p}{(}
+    \PYG{n}{wid} \PYG{n+nb}{int} \PYG{n}{auto\PYGZus{}increment} \PYG{k}{primary} \PYG{k}{key}\PYG{p}{,}
+    \PYG{n}{wname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{wdesc} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{)} \PYG{k}{null}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{Channel} \PYG{p}{(}
+    \PYG{n}{wid} \PYG{n+nb}{int} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{cname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{ctype} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{ctime} \PYG{n}{datetime} \PYG{k}{null}\PYG{p}{,}
+    \PYG{k}{primary} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{)} \PYG{k}{references} \PYG{n}{Workspace} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{)}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{Message} \PYG{p}{(}
+    \PYG{n}{wid} \PYG{n+nb}{int} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{cname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{uemail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{mtime} \PYG{n}{datetime} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{mcontent} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{300}\PYG{p}{)} \PYG{k}{null}\PYG{p}{,}
+    \PYG{k}{primary} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{,} \PYG{n}{uemail}\PYG{p}{,} \PYG{n}{mtime}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{)} \PYG{k}{references} \PYG{n}{Channel} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{)}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{cInvitation} \PYG{p}{(}
+	\PYG{n}{semail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+	\PYG{n}{remail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+	\PYG{n}{wid} \PYG{n+nb}{int} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+	\PYG{n}{cname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+	\PYG{n}{citime} \PYG{n}{datetime} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+	\PYG{k}{primary} \PYG{k}{key} \PYG{p}{(}\PYG{n}{semail}\PYG{p}{,} \PYG{n}{remail}\PYG{p}{,} \PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{,} \PYG{n}{citime}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{semail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{remail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{)} \PYG{k}{references} \PYG{n}{Channel} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{)}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{cMember} \PYG{p}{(}
+    \PYG{n}{uemail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{wid} \PYG{n+nb}{int} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{cname} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{k}{primary} \PYG{k}{key} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{,} \PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{)} \PYG{k}{references} \PYG{n}{Channel} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{)}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{wInvitation} \PYG{p}{(}
+    \PYG{n}{semail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{remail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{wid} \PYG{n+nb}{int} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{witime} \PYG{n}{datetime} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{k}{primary} \PYG{k}{key} \PYG{p}{(}\PYG{n}{semail}\PYG{p}{,} \PYG{n}{remail}\PYG{p}{,} \PYG{n}{wid}\PYG{p}{,} \PYG{n}{witime}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{semail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{remail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{)} \PYG{k}{references} \PYG{n}{Workspace} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{)}
+\PYG{p}{);}
+
+\PYG{k}{create} \PYG{k}{table} \PYG{n}{wMember} \PYG{p}{(}
+    \PYG{n}{uemail} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{wid} \PYG{n+nb}{int} \PYG{k}{not} \PYG{k}{null}\PYG{p}{,}
+    \PYG{n}{wmtype} \PYG{n+nb}{varchar}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)} \PYG{k}{null}\PYG{p}{,}
+    \PYG{k}{primary} \PYG{k}{key} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{,} \PYG{n}{wid}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{)} \PYG{k}{references} \PYG{k}{User} \PYG{p}{(}\PYG{n}{uemail}\PYG{p}{),}
+    \PYG{k}{foreign} \PYG{k}{key} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{)} \PYG{k}{references} \PYG{n}{Workspace} \PYG{p}{(}\PYG{n}{wid}\PYG{p}{)}
+\PYG{p}{);}
+\end{Verbatim}

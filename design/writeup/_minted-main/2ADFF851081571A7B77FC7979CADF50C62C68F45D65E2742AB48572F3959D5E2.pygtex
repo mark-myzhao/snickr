@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{select} \PYG{n}{mcontent}
+    \PYG{k}{from} \PYG{n}{Channel} \PYG{k}{natural} \PYG{k}{join} \PYG{n}{Message}
+    \PYG{k}{where} \PYG{n}{cname} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}channel1\PYGZsq{}}
+    \PYG{k}{order} \PYG{k}{by} \PYG{n}{mtime}\PYG{p}{;}
+\end{Verbatim}

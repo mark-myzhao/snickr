@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{k}{select} \PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{,} \PYG{k}{count}\PYG{p}{(}\PYG{n}{remail}\PYG{p}{)} \PYG{k}{as} \PYG{n}{allnotin}
+\PYG{k}{from} \PYG{n}{cInvitation} \PYG{k}{natural} \PYG{k}{join} \PYG{n}{Channel}
+\PYG{k}{where} \PYG{n}{timestampdiff}\PYG{p}{(}\PYG{k}{Day}\PYG{p}{,} \PYG{p}{(}\PYG{n}{date\PYGZus{}format}\PYG{p}{(}\PYG{n}{ctime}\PYG{p}{,}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZpc{}m\PYGZpc{}d\PYGZsq{}}\PYG{p}{)),}\PYG{n}{date\PYGZus{}format}\PYG{p}{(}\PYG{n}{now}\PYG{p}{(),}\PYG{l+s+s1}{\PYGZsq{}\PYGZpc{}Y\PYGZpc{}m\PYGZpc{}d\PYGZsq{}}\PYG{p}{))} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{5} \PYG{k}{and} \PYG{n}{wid} \PYG{o}{=} \PYG{l+m+mi}{3}
+  \PYG{k}{and} \PYG{n}{Channel}\PYG{p}{.}\PYG{n}{ctype} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}public\PYGZsq{}}
+      \PYG{k}{and} \PYG{n}{remail} \PYG{k}{not} \PYG{k}{in} \PYG{p}{(}
+        \PYG{k}{select} \PYG{n}{uemail}
+        \PYG{k}{from} \PYG{n}{cMember}
+        \PYG{k}{where} \PYG{n}{wid} \PYG{o}{=} \PYG{l+m+mi}{3} \PYG{k}{and} \PYG{n}{cInvitation}\PYG{p}{.}\PYG{n}{cname} \PYG{o}{=} \PYG{n}{cMember}\PYG{p}{.}\PYG{n}{cname}
+    \PYG{p}{)}
+\PYG{k}{group} \PYG{k}{by} \PYG{n}{wid}\PYG{p}{,} \PYG{n}{cname}\PYG{p}{;}
+\end{Verbatim}

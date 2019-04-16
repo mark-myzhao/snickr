@@ -1,0 +1,37 @@
+\ProvidesPackage{mytex}
+
+% Page template
+\usepackage[top=1 in,bottom=1in, left=1 in, right=1 in]{geometry}
+
+% Basic Packages
+\usepackage{import}
+\usepackage{enumerate}
+
+% Mathematics Equations
+\usepackage{amsmath,amsfonts,graphicx}
+\usepackage{amssymb}
+
+% Color
+\usepackage{color,xcolor}
+
+% Code Blocks
+\usepackage{minted}
+\setminted[sql]{
+    breaklines=true,
+    linenos=true
+}
+
+% Title page
+\newcommand{\HRule}[1]{\rule{\linewidth}{#1}}
+\makeatletter
+\def\printtitle{
+    {\centering \@title\par}}
+\makeatother
+
+\makeatletter
+\def\printauthor{
+    {\centering \large \@author}}
+\makeatother
+
+% cancel the indentation of paragraphs
+\setlength\parindent{0pt}
