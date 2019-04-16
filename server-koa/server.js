@@ -1,10 +1,12 @@
 const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
 const Router = require('koa-router')
 const Logger = require('koa-logger')
 const Cors = require('@koa/cors')
-const BodyParser = require('koa-bodyparser')
 const Helmet = require('koa-helmet')
 const respond = require('koa-respond')
+const session = require('koa-session')
+const passport = require('koa-passport')
 require('dotenv').config()
 
 const app = new Koa()
@@ -14,6 +16,11 @@ const router = new Router()
 const db = require('./db.js')
 app.context.db = db
 
+// sessions
+app.keys = ['super-secret-key']
+app.use(session(app))
+
+// default safe settings
 app.use(Helmet())
 
 if (process.env.NODE_ENV === 'development') {
@@ -21,15 +28,12 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(Cors())
-app.use(BodyParser({
-  enableTypes: ['json'],
-  jsonLimit: '5mb',
-  strict: true,
-  onerror: function (err, ctx) {
-    console.log(err)
-    ctx.throw('body parse error', 422)
-  }
-}))
+app.use(bodyParser())
+
+// authentication
+require('./auth')
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(respond())
 
