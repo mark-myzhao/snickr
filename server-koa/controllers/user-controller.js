@@ -6,5 +6,8 @@ module.exports = {
     ctx.ok({
       users: result
     })
+  },
+  getAUser: async (ctx, next) => {
+    // let
   }
 }
