@@ -37,6 +37,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.7.1",
     "supertest": "^4.0.2",
+    "supertest-session": "^4.0.0",
     "webpack": "^4.30.0"
   },
   "repository": {
