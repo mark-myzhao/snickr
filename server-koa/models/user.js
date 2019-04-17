@@ -1,15 +1,64 @@
-module.exports = {
-  getUsers: async (db, uemail = undefined) => {
-    try {
-      let data = null
-      if (!uemail) {
-        data = await db.query(` SELECT uemail, uname, nickname FROM User`)
-      } else {
-        data = await db.query(` SELECT uemail, uname, nickname FROM User WHERE uemail=? `, uemail)
-      }
-      return data
-    } catch (error) {
-      console.log(error)
+const db = require('../db.js')
+
+let get = async (uemail = undefined) => {
+  try {
+    let data = null
+    if (!uemail) {
+      data = await db.query(` SELECT uemail, uname, nickname FROM User`)
+    } else {
+      data = await db.query(` SELECT uemail, uname, nickname FROM User WHERE uemail=? `, uemail)
     }
+    return data
+  } catch (error) {
+    throw error
   }
+}
+
+let add = async (uemail, uname, nickname, password) => {
+  try {
+    if (uemail && uname && nickname && password) {
+      await db.query(` INSERT INTO User (uemail, uname, nickname, password) VALUES (?, ?, ?, ?) `, [uemail, uname, nickname, password])
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+let update = async (uemail, uname, nickname, password) => {
+  try {
+    let statement = null
+    let feed = []
+    if (!uemail) return false
+    let values = { uname, nickname, password }
+    for (let k in values) {
+      if (values[k]) {
+        statement = statement ? statement + `, ${k} = ?` : `SET ${k} = ?`
+        feed.push(values[k])
+      }
+    }
+    feed.push(uemail)
+    let { affectedRows } = await db.query(` UPDATE User ${statement} WHERE uemail = ? `, feed)
+    return affectedRows > 0
+  } catch (error) {
+    throw error
+  }
+}
+
+let remove = async (uemail) => {
+  try {
+    let { affectedRows } = await db.query(` DELETE FROM User WHERE uemail = ? `, [uemail])
+    return affectedRows > 0
+  } catch (error) {
+    throw error
+  }
+}
+
+module.exports = {
+  get,
+  add,
+  update,
+  remove
 }
