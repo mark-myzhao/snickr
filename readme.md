@@ -1,4 +1,6 @@
-# CS 6083 Project
+# CS 6083 Project: Snickr
+
+[![Build Status](https://travis-ci.com/alex-myzhao/snickr.svg?branch=master)](https://travis-ci.com/alex-myzhao/snickr)
 
 ## Backend Design - MVC
 - `package.json` defines your project from nodes perspective, change project details and dependencies here.
@@ -23,4 +25,4 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 - [Node.js in 2018: Full stack tutorial](https://medium.com/jtribe/node-js-in-2018-full-stack-tutorial-with-koa-react-redux-sagas-and-mongodb-14a7efaee4d4)
 - [How To Use MySQL And Async/Await With Your Koa Node.js Application](https://blog.innermonkdesign.com/how-to-use-mysql-and-asyncawait-with-your-koa-node-js-application/)
 - [MySQL Cheet Sheet](https://devhints.io/mysql)
-- [ER_NOT_SUPPORTED_AUTH_MODE]https://stackoverflow.com/questions/44946270/er-not-supported-auth-mode-mysql-server
+- [Solution for ER_NOT_SUPPORTED_AUTH_MODE](https://stackoverflow.com/questions/44946270/er-not-supported-auth-mode-mysql-server)
