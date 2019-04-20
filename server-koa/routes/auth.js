@@ -2,6 +2,8 @@ const Router = require('koa-router')
 const router = new Router()
 const passport = require('koa-passport')
 
+const Util = require('../util')
+
 router.post('/logout', async (ctx) => {
   if (ctx.isAuthenticated()) {
     ctx.logout()
@@ -11,17 +13,15 @@ router.post('/logout', async (ctx) => {
   }
 })
 
-router.post('/test', async (ctx, next) => {
-  if (ctx.isAuthenticated()) {
+router.get('/me', Util.authWarpper(
+  async (ctx, next) => {
+    let { user } = ctx.session.passport
     ctx.ok({
-      res: 'result'
-    })
-  } else {
-    ctx.ok({
-      res: 'need login'
+      success: true,
+      user
     })
   }
-})
+))
 
 router.post('/login', async (ctx) => {
   if (!ctx.isAuthenticated()) {
@@ -31,7 +31,10 @@ router.post('/login', async (ctx) => {
       } else if (user === false) {
         ctx.unauthorized({ success: false })
       } else {
-        ctx.body = { success: true }
+        ctx.body = {
+          success: true,
+          session: ctx.session
+        }
         return ctx.login(user)
       }
     })(ctx)
