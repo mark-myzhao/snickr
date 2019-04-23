@@ -23,7 +23,11 @@ if (process.env.NODE_ENV === 'development') {
   app.use(Logger())
 }
 
-app.use(Cors())
+// allow client to reach
+app.use(Cors({
+  origin: process.env.CLIENT_ADDRESS,
+  credentials: true
+}))
 app.use(bodyParser())
 
 // authentication

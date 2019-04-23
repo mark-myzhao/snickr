@@ -1,16 +1,20 @@
-import React, { Component } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import withStyles from '@material-ui/core/styles/withStyles';
+import React, { Component } from 'react'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import withStyles from '@material-ui/core/styles/withStyles'
+import { withRouter } from 'react-router-dom'
+
+import Store from '../store'
+import axios from 'axios'
 
 const styles = theme => ({
   main: {
@@ -52,20 +56,27 @@ class SignIn extends Component {
     remember: true
   }
 
+  componentDidMount () {
+    // check if the user has already signed in
+  }
+
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleSubmit = e => {
+  handleSubmit = async (e) => {
     e.preventDefault()
-    console.log({
-      uemail: this.state.uemail,
-      password: this.state.password,
-      remember: this.state.remember
-    })
-    // localStorage.setItem('uemail', this.state.uemail)
-    // localStorage.getItem('uemail', this.state.uemail)
-    // localStorage.removeItem('uemail')
+    try {
+      let res = await axios.post('/auth/token', {
+        uemail: this.state.uemail,
+        password: this.state.password
+      })
+      console.log(res.data.token)
+      // Store.setToken(res.data.token)
+      // this.props.history.push('/')
+    } catch (err) {
+      console.error('login failed')
+    }
   }
 
   render() {
@@ -140,4 +151,4 @@ class SignIn extends Component {
   }
 }
 
-export default withStyles(styles)(SignIn);
+export default withRouter(withStyles(styles)(SignIn))
