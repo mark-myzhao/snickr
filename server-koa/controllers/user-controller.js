@@ -1,19 +1,15 @@
 const UserModel = require('../models/user')
-const Util = require('../util')
+const { withAuth } = require('../util')
+const ERRMSG = require('../util/errmsg')
 
-const ERRMSG = {
-  'notFound': 'User Not Found',
-  'badRequest': 'Invalid Request'
-}
-
-let getAllUsers = Util.authWarpper(
+let getAllUsers = withAuth(
   async (ctx, next) => {
     try {
       let result = await UserModel.get()
       if (result.length > 0) {
         ctx.ok({ users: result })
       } else {
-        ctx.notFound({ error: ERRMSG['notFound'] })
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -21,7 +17,7 @@ let getAllUsers = Util.authWarpper(
   }
 )
 
-let getUser = Util.authWarpper(
+let getUser = withAuth(
   async (ctx, next) => {
     try {
       const uemail = ctx.params.uemail
@@ -29,7 +25,7 @@ let getUser = Util.authWarpper(
       if (result.length > 0) {
         ctx.ok({ users: result })
       } else {
-        ctx.notFound({ error: ERRMSG['notFound'] })
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -37,7 +33,7 @@ let getUser = Util.authWarpper(
   }
 )
 
-let addUser = Util.authWarpper(
+let addUser = withAuth(
   async (ctx, next) => {
     try {
       const { uemail, username, nickname, password } = ctx.request.body
@@ -45,7 +41,7 @@ let addUser = Util.authWarpper(
       if (result) {
         ctx.created({ success: true, added: uemail })
       } else {
-        ctx.badRequest({ error: ERRMSG['badRequest'] })
+        ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
     } catch (error) {
       ctx.badRequest({ error })
@@ -53,7 +49,7 @@ let addUser = Util.authWarpper(
   }
 )
 
-let updateUser = Util.authWarpper(
+let updateUser = withAuth(
   async (ctx, next) => {
     try {
       const uemail = ctx.params.uemail
@@ -62,7 +58,7 @@ let updateUser = Util.authWarpper(
       if (result) {
         ctx.ok({ success: true, updated: uemail })
       } else {
-        ctx.notFound({ error: ERRMSG['notFound'] })
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
       ctx.badRequest({ error })
@@ -70,7 +66,7 @@ let updateUser = Util.authWarpper(
   }
 )
 
-let removeUser = Util.authWarpper(
+let removeUser = withAuth(
   async (ctx, next) => {
     try {
       const uemail = ctx.params.uemail
@@ -78,7 +74,7 @@ let removeUser = Util.authWarpper(
       if (result) {
         ctx.ok({ success: true, deleted: uemail })
       } else {
-        ctx.notFound({ error: ERRMSG['notFound'] })
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
       ctx.badRequest({ error })

@@ -12,10 +12,6 @@ require('dotenv').config()
 const app = new Koa()
 const router = new Router()
 
-// self defined middle-wares
-// const db = require('./db.js')
-// app.context.db = db
-
 // sessions
 // app.keys = ['super-secret-key']
 // app.use(session(app))

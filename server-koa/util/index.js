@@ -1,12 +1,24 @@
+const passport = require('koa-passport')
+const ERRMSG = require('./errmsg')
+
 module.exports = {
-  // a self-defined simple decorator
-  authWarpper: (func) => {
+  withAuth: (func) => {
     return async (ctx, next) => {
-      if (ctx.isAuthenticated()) {
-        await func(ctx, next)
-      } else {
-        ctx.unauthorized({ success: false, info: 'need login first' })
-      }
+      return passport.authenticate('bearer', async (error, user, info, status) => {
+        if (error) {
+          ctx.internalServerError({
+            success: false,
+            error
+          })
+        } else if (user === false) {
+          ctx.unauthorized({
+            success: false,
+            error: ERRMSG.unauthorized
+          })
+        } else {
+          await func(ctx, next)
+        }
+      })(ctx)
     }
   }
 }
