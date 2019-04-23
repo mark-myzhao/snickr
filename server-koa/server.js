@@ -5,7 +5,7 @@ const Logger = require('koa-logger')
 const Cors = require('@koa/cors')
 const Helmet = require('koa-helmet')
 const respond = require('koa-respond')
-const session = require('koa-session')
+// const session = require('koa-session')
 const passport = require('koa-passport')
 require('dotenv').config()
 
@@ -17,8 +17,8 @@ const router = new Router()
 // app.context.db = db
 
 // sessions
-app.keys = ['super-secret-key']
-app.use(session(app))
+// app.keys = ['super-secret-key']
+// app.use(session(app))
 
 // default safe settings
 app.use(Helmet())
@@ -33,7 +33,7 @@ app.use(bodyParser())
 // authentication
 require('./auth')
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 
 app.use(respond())
 

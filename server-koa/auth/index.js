@@ -1,19 +1,9 @@
 const passport = require('koa-passport')
-const db = require('./db')
+const db = require('../db')
 const LocalStrategy = require('passport-local').Strategy
-
-passport.serializeUser((user, done) => {
-  done(null, user.uemail)
-})
-
-passport.deserializeUser(async (uemail, done) => {
-  try {
-    const users = await db.query(` SELECT uemail, password FROM User WHERE uemail=? `, [uemail])
-    done(null, users[0])
-  } catch (err) {
-    done(err, null)
-  }
-})
+const BearerStrategy = require('passport-http-bearer').Strategy
+const jwt = require('jwt-simple')
+const SECRET = 'mysecret'
 
 passport.use(new LocalStrategy({
   usernameField: 'uemail',
@@ -25,12 +15,26 @@ passport.use(new LocalStrategy({
       done(null, false, { message: 'Email not exists.' })
     } else {
       if (password === users[0].password) {
-        return done(null, users[0])
+        return done(null, jwt.encode({ uemail: users[0].uemail }, SECRET))
       } else {
         return done(null, false, { message: 'Incorrect password.' })
       }
     }
   } catch (err) {
     done(err)
+  }
+}))
+
+passport.use(new BearerStrategy(async (token, done) => {
+  try {
+    const { uemail } = jwt.decode(token, SECRET)
+    const users = await db.query(` SELECT uemail, password FROM User WHERE uemail=? `, [uemail])
+    if (users.length === 0) {
+      done(null, false)
+    } else {
+      done(null, uemail)
+    }
+  } catch (error) {
+    done(null, false)
   }
 }))
