@@ -92,10 +92,10 @@ class Main extends Component {
         <Topbar />
         <div className={classes.root}>
           <Grid container justify="center">
-            <Grid spacing={24} alignItems="center" justify="left" container className={classes.grid}>
+            <Grid spacing={24} alignItems="center" justify="flex-start" container className={classes.grid}>
               {this.state.workspaces.map((value, index) => {
                 return (
-                  <WorkspaceItem value={value} index={index} />
+                  <WorkspaceItem key={value} value={value} index={index} />
                 )
               })}
             </Grid>

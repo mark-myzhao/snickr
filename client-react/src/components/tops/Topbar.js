@@ -13,24 +13,22 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import Button from '@material-ui/core/Button'
 import Menu from './Menu'
 
 import store from '../../store'
 import logo from '../../images/logo.svg'
-import { Button } from '@material-ui/core';
-
-// const logo = require('../images/logo.svg')
 
 const styles = theme => ({
   appBar: {
     position: 'relative',
-    boxShadow: 'none',
-    borderBottom: `1px solid ${theme.palette.grey['100']}`,
-    backgroundColor: 'white',
-
+    backgroundColor: 'white'
   },
   inline: {
     display: 'inline'
+  },
+  button: {
+    margin: theme.spacing.unit,
   },
   flex: {
     display: 'flex',
@@ -49,18 +47,18 @@ const styles = theme => ({
   },
   productLogo: {
     display: 'inline-block',
-    borderLeft: `1px solid ${theme.palette.grey['A100']}`,
-    marginLeft: 32,
-    paddingLeft: 24,
+    // borderLeft: `1px solid ${theme.palette.grey['A100']}`,
+    // marginRight: 32,
+    // paddingRight: 24,
     [theme.breakpoints.up('md')]: {
-      paddingTop: '1.5em'
+      paddingTop: 22
     }
   },
   tagline: {
     display: 'inline-block',
     marginLeft: 10,
     [theme.breakpoints.up('md')]: {
-      paddingTop: '0.8em'
+      paddingTop: 15
     }
   },
   iconContainer: {
@@ -79,8 +77,8 @@ const styles = theme => ({
     }
   },
   tabItem: {
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
     minWidth: 'auto'
   }
 })
@@ -115,84 +113,104 @@ class Topbar extends Component {
   }
 
   current = () => {
-    if(this.props.currentPath === '/home') {
-      return 0
+    const switcher = {
+      '/': 0,
+      '/profile': 1
     }
-    // if(this.props.currentPath === '/dashboard') {
-    //   return 1
-    // }
+    return switcher[this.props.location.pathname]
   }
 
   render() {
-
     const { classes } = this.props
 
     return (
-      <AppBar position="absolute" color="default" className={classes.appBar}>
+      <AppBar
+        position="static"
+        color="default"
+        className={classes.appBar}
+      >
         <Toolbar>
-            <Grid container spacing={24} alignItems="baseline">
-              <Grid item xs={12} className={classes.flex}>
-                  <div className={classes.inline}>
-                    <Typography variant="h6" color="inherit" noWrap>
-                      <Link to='/' className={classes.link}>
-                        <img width={20} src={logo} alt="" />
-                        <span className={classes.tagline}>Snickr</span>
-                      </Link>
-                    </Typography>
-                  </div>
-                  { !this.props.noTabs && (
-                    <React.Fragment>
-                      <div className={classes.productLogo}>
-                        <Typography>
-                          Hello, {this.userName()}
-                        </Typography>
-                      </div>
-                      <div className={classes.iconContainer}>
-                        <IconButton onClick={this.mobileMenuOpen} className={classes.iconButton} color="inherit" aria-label="Menu">
-                          <MenuIcon />
-                        </IconButton>
-                      </div>
-                      <div className={classes.tabContainer}>
-                        <SwipeableDrawer
-                          anchor="right"
-                          open={this.state.menuDrawer}
-                          onClose={this.mobileMenuClose}
-                          onOpen={this.mobileMenuOpen}
-                        >
-                          <AppBar title="Menu" />
-                          <List>
-                            {Menu.map((item, index) => (
-                              <ListItem
-                                key={item.label}
-                                component={Link}
-                                to={{pathname: item.pathname, search: this.props.location.search}}
-                                button
-                              >
-                                <ListItemText primary={item.label} />
-                              </ListItem>
-                            ))}
-                          </List>
-                        </SwipeableDrawer>
-                        <Tabs
-                          value={this.current() || this.state.value}
-                          indicatorColor="primary"
-                          textColor="primary"
-                          onChange={this.handleChange}
-                        >
+            <Grid
+              container
+              spacing={24}
+              alignItems="baseline"
+            >
+              <Grid
+                item xs={12}
+                className={classes.flex}
+              >
+                <div className={classes.inline}>
+                  <Typography
+                    variant="h6"
+                    color="inherit"
+                    noWrap
+                  >
+                    <Link to='/' className={classes.link}>
+                      <img width={20} src={logo} alt="logo" />
+                      <span className={classes.tagline}>Snickr</span>
+                    </Link>
+                  </Typography>
+                </div>
+                { !this.props.noTabs && (
+                  <React.Fragment>
+                    <div className={classes.iconContainer}>
+                      <IconButton
+                        onClick={this.mobileMenuOpen}
+                        color="inherit"
+                        aria-label="Menu"
+                        className={classes.iconButton}
+                      >
+                        <MenuIcon />
+                      </IconButton>
+                    </div>
+                    <div className={classes.tabContainer}>
+                      <SwipeableDrawer
+                        anchor="right"
+                        open={this.state.menuDrawer}
+                        onClose={this.mobileMenuClose}
+                        onOpen={this.mobileMenuOpen}
+                      >
+                        <List>
                           {Menu.map((item, index) => (
-                            <Tab
-                              key={index}
+                            <ListItem
+                              key={item.label}
                               component={Link}
                               to={{pathname: item.pathname, search: this.props.location.search}}
-                              classes={{root: classes.tabItem}}
-                              label={item.label}
-                            />
+                              button
+                            >
+                              <ListItemText primary={item.label} />
+                            </ListItem>
                           ))}
-                        </Tabs>
-                        {/* <div className={classes.grow} /> */}
-                      </div>
-                    </React.Fragment>
-                  )}
+                        </List>
+                      </SwipeableDrawer>
+                      <Tabs
+                        value={this.current() || this.state.value}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        onChange={this.handleChange}
+                      >
+                        {Menu.map((item, index) => (
+                          <Tab
+                            key={index}
+                            component={Link}
+                            to={{pathname: item.pathname, search: this.props.location.search}}
+                            label={item.label}
+                            classes={{root: classes.tabItem}}
+                          />
+                        ))}
+                      </Tabs>
+                    </div>
+                    <div className={classes.grow} />
+                    <div className={classes.productLogo}>
+                      <Typography>
+                        {this.userName()}
+                      </Typography>
+                    </div>
+                    <Button className={classes.button}>
+                      Logout
+                    </Button>
+                  </React.Fragment>
+                )}
               </Grid>
             </Grid>
         </Toolbar>

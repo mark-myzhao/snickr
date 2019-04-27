@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import 'typeface-roboto'
 import './App.css'
 import { blue, indigo } from '@material-ui/core/colors'
 import Routes from './routes'
@@ -16,8 +17,8 @@ const theme = createMuiTheme({
   },
   typography: {
     useNextVariants: true,
-    // Use the system font instead of the default Roboto font.
     fontFamily: [
+      'Roboto',
       '"Lato"',
       'sans-serif'
     ].join(',')
