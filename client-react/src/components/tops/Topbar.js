@@ -1,21 +1,25 @@
-import React,  { Component } from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { Link, withRouter } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import MenuIcon from '@material-ui/icons/Menu';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import Menu from './Menu';
+import React,  { Component } from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import { Link, withRouter } from 'react-router-dom'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Toolbar from '@material-ui/core/Toolbar'
+import AppBar from '@material-ui/core/AppBar'
+import Tabs from '@material-ui/core/Tabs'
+import Tab from '@material-ui/core/Tab'
+import MenuIcon from '@material-ui/icons/Menu'
+import IconButton from '@material-ui/core/IconButton'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import Menu from './Menu'
 
-const logo = require('../images/logo.svg');
+import store from '../../store'
+import logo from '../../images/logo.svg'
+import { Button } from '@material-ui/core';
+
+// const logo = require('../images/logo.svg')
 
 const styles = theme => ({
   appBar: {
@@ -35,6 +39,9 @@ const styles = theme => ({
       justifyContent: 'space-evenly',
       alignItems: 'center'
     }
+  },
+  grow: {
+    flexGrow: 1
   },
   link: {
     textDecoration: 'none',
@@ -83,22 +90,28 @@ class Topbar extends Component {
   state = {
     value: 0,
     menuDrawer: false
-  };
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
-  mobileMenuOpen = (event) => {
-    this.setState({ menuDrawer: true });
-  }
-
-  mobileMenuClose = (event) => {
-    this.setState({ menuDrawer: false });
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0)
+  }
+
+  handleChange = (event, value) => {
+    this.setState({ value })
+  }
+
+  mobileMenuOpen = (event) => {
+    this.setState({ menuDrawer: true })
+  }
+
+  mobileMenuClose = (event) => {
+    this.setState({ menuDrawer: false })
+  }
+
+  // computed attributes
+  userName = () => {
+    const name = store.getUser().nickname
+    return name ? name : 'Guest'
   }
 
   current = () => {
@@ -112,7 +125,7 @@ class Topbar extends Component {
 
   render() {
 
-    const { classes } = this.props;
+    const { classes } = this.props
 
     return (
       <AppBar position="absolute" color="default" className={classes.appBar}>
@@ -131,7 +144,7 @@ class Topbar extends Component {
                     <React.Fragment>
                       <div className={classes.productLogo}>
                         <Typography>
-                          A collaborative platform
+                          Hello, {this.userName()}
                         </Typography>
                       </div>
                       <div className={classes.iconContainer}>
@@ -140,11 +153,21 @@ class Topbar extends Component {
                         </IconButton>
                       </div>
                       <div className={classes.tabContainer}>
-                        <SwipeableDrawer anchor="right" open={this.state.menuDrawer} onClose={this.mobileMenuClose} onOpen={this.mobileMenuOpen}>
+                        <SwipeableDrawer
+                          anchor="right"
+                          open={this.state.menuDrawer}
+                          onClose={this.mobileMenuClose}
+                          onOpen={this.mobileMenuOpen}
+                        >
                           <AppBar title="Menu" />
                           <List>
                             {Menu.map((item, index) => (
-                              <ListItem component={Link} to={{pathname: item.pathname, search: this.props.location.search}} button key={item.label}>
+                              <ListItem
+                                key={item.label}
+                                component={Link}
+                                to={{pathname: item.pathname, search: this.props.location.search}}
+                                button
+                              >
                                 <ListItemText primary={item.label} />
                               </ListItem>
                             ))}
@@ -157,9 +180,16 @@ class Topbar extends Component {
                           onChange={this.handleChange}
                         >
                           {Menu.map((item, index) => (
-                            <Tab key={index} component={Link} to={{pathname: item.pathname, search: this.props.location.search}} classes={{root: classes.tabItem}} label={item.label} />
+                            <Tab
+                              key={index}
+                              component={Link}
+                              to={{pathname: item.pathname, search: this.props.location.search}}
+                              classes={{root: classes.tabItem}}
+                              label={item.label}
+                            />
                           ))}
                         </Tabs>
+                        {/* <div className={classes.grow} /> */}
                       </div>
                     </React.Fragment>
                   )}

@@ -11,6 +11,15 @@ const getToken = () => {
   return localStorage.getItem('token')
 }
 
+const clearToken = () => {
+  localStorage.removeItem('token')
+}
+
+const isLogin = () => {
+  const token = localStorage.getItem('token')
+  return token !== null && token !== undefined
+}
+
 const setUser = (user) => {
   localStorage.setItem('uemail', user.uemail)
   localStorage.setItem('uname', user.uname)
@@ -25,8 +34,10 @@ const getUser = () => {
   }
 }
 
-const clearToken = () => {
-  localStorage.removeItem('token')
+const clearUser = () => {
+  localStorage.removeItem('uemail')
+  localStorage.removeItem('uname')
+  localStorage.removeItem('nickname')
 }
 
 const clear = () => {
@@ -36,8 +47,10 @@ const clear = () => {
 export default {
   setToken,
   getToken,
+  clearToken,
+  isLogin,
   setUser,
   getUser,
-  clearToken,
+  clearUser,
   clear
 }

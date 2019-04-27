@@ -3,10 +3,10 @@ import { Route, HashRouter, Redirect, Switch } from 'react-router-dom'
 // import Dashboard from './components/Dashboard'
 // import Wizard from './components/Wizard'
 // import Cards from './components/Cards'
-import Main from './components/Main'
-import Signin from './components/Signin'
+import Main from './components/pages/Main'
+import Signin from './components/pages/Signin'
 // import Signup from './components/Signup'
-import ScrollToTop from './components/ScrollTop'
+import ScrollToTop from './components/tops/ScrollTop'
 
 const fakeAuth = {
   isAuthenticated: true

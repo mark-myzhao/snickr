@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import axios from 'axios'
+
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -13,8 +15,7 @@ import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { withRouter } from 'react-router-dom'
 
-import store from '../store'
-import axios from 'axios'
+import store from '../../store'
 
 const styles = theme => ({
   main: {
@@ -93,7 +94,7 @@ class SignIn extends Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Snickr
+            Snickr Login
           </Typography>
           <form
             className={classes.form}
