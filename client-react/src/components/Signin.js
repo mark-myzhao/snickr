@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { withRouter } from 'react-router-dom'
 
-import Store from '../store'
+import store from '../store'
 import axios from 'axios'
 
 const styles = theme => ({
@@ -71,10 +71,14 @@ class SignIn extends Component {
         uemail: this.state.uemail,
         password: this.state.password
       })
-      console.log(res.data.token)
-      // Store.setToken(res.data.token)
-      // this.props.history.push('/')
+      store.setToken(res.data.token)
+      res = await axios.get(`/users/${this.state.uemail}`, {
+        headers: {'Authorization': `bearer ${res.data.token}`}
+      })
+      store.setUser(res.data.users[0])
+      this.props.history.push('/')
     } catch (err) {
+      console.error(err)
       console.error('login failed')
     }
   }

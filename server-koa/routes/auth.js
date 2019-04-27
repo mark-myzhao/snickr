@@ -7,7 +7,10 @@ router.post('/token', (ctx) => {
     if (error) {
       ctx.internalServerError({ error })
     } else if (user === false) {
-      ctx.unauthorized({ success: false })
+      ctx.unauthorized({
+        success: false,
+        error: info.message
+      })
     } else {
       ctx.ok({
         token: user,

@@ -3,7 +3,7 @@ const ERRMSG = require('./errmsg')
 
 module.exports = {
   withAuth: (func) => {
-    return async (ctx, next) => {
+    return async (ctx) => {
       return passport.authenticate('bearer', async (error, user, info, status) => {
         if (error) {
           ctx.internalServerError({
@@ -16,7 +16,7 @@ module.exports = {
             error: ERRMSG.unauthorized
           })
         } else {
-          await func(ctx, next)
+          await func(ctx)
         }
       })(ctx)
     }

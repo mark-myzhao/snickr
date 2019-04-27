@@ -83,3 +83,5 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 - REST
     - [Learn REST: A RESTful Tutorial](https://www.restapitutorial.com)
     - [What is REST](https://restfulapi.net)
+- Authorization
+    - [Learn how to handle authentication with Node using Passport.js](https://medium.freecodecamp.org/learn-how-to-handle-authentication-with-node-using-passport-js-4a56ed18e81e)

@@ -28,7 +28,7 @@ passport.use(new LocalStrategy({
 passport.use(new BearerStrategy(async (token, done) => {
   try {
     const { uemail } = jwt.decode(token, SECRET)
-    const users = await db.query(` SELECT uemail, password FROM User WHERE uemail=? `, [uemail])
+    const users = await db.query(` SELECT uemail FROM User WHERE uemail=? `, [uemail])
     if (users.length === 0) {
       done(null, false)
     } else {

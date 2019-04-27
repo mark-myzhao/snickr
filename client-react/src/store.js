@@ -1,23 +1,43 @@
 // manage the localstorage used in the project
 // import axios from 'axios'
 
-const userKeys = ['uemail', 'uname', 'nickname']
+// const userKeys = ['uemail', 'uname', 'nickname']
+
+const setToken = (token) => {
+  localStorage.setItem('token', token)
+}
+
+const getToken = () => {
+  return localStorage.getItem('token')
+}
+
+const setUser = (user) => {
+  localStorage.setItem('uemail', user.uemail)
+  localStorage.setItem('uname', user.uname)
+  localStorage.setItem('nickname', user.nickname)
+}
+
+const getUser = () => {
+  return {
+    uemail: localStorage.getItem('uemail'),
+    uname: localStorage.getItem('uname'),
+    nickname: localStorage.getItem('nickname')
+  }
+}
+
+const clearToken = () => {
+  localStorage.removeItem('token')
+}
+
+const clear = () => {
+  localStorage.clear()
+}
 
 export default {
-  setUserInfo: (userInfo) => {
-    localStorage.setItem(userKeys[0], userInfo.uemail)
-    localStorage.setItem(userKeys[1], userInfo.uname)
-    localStorage.setItem(userKeys[2], userInfo.nickname)
-  },
-  clearUserInfo: () => {
-    for (let key of userKeys) {
-      localStorage.removeItem(key)
-    }
-  },
-  setToken: (token) => {
-    localStorage.setItem('token', token)
-  },
-  clearToken: () => {
-    localStorage.removeItem('token')
-  }
+  setToken,
+  getToken,
+  setUser,
+  getUser,
+  clearToken,
+  clear
 }
