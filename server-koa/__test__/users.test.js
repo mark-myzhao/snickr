@@ -78,7 +78,7 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
-  // get the particular users
+  //  get the particular users
   it('Should be able to find the added user GET /v1/users/newuser@nyu.edu', function (done) {
     request(server)
       .get('/v1/users/newuser@nyu.edu')
