@@ -49,4 +49,16 @@ ctx.ok({
 })
 ```
 
+##wInvitation
+```javascript
+// -> POST /v1/Channel/:wid
+{
+    'semail': 'send email',
+    'remail': 'recieve email',
+}
+// <- 201 CREATED
+ctx.created({
+    success: true
+})
+```
 
