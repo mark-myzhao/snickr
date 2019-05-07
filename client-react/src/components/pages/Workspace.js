@@ -17,9 +17,11 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import ChatIcon from '@material-ui/icons/Chat'
+import SettingsIcon from '@material-ui/icons/Settings'
 import Button from '@material-ui/core/Button'
+
 import MessageItem from '../items/MessageItem'
+import ChannelList from '../subcomponents/ChannelList'
 import store from '../../store'
 
 const drawerWidth = 240
@@ -102,9 +104,43 @@ const styles = theme => ({
 class Workspace extends React.Component {
   state = {
     open: true,
+    currentChannel: null,
+    channels: [
+      {
+        wid: 1,
+        cname: 'channel1',
+        ctype: 'public'
+      }, {
+        wid: 5,
+        cname: 'channel5',
+        ctype: 'private'
+      }, {
+        wid: 6,
+        cname: 'D channel',
+        ctype: 'direct'
+      }
+    ],
+    messages: [
+      {
+        uemail: 'mingyusysu@gmail.com',
+        uname: 'mingyu',
+        mtime: 'Fri Jan 18 2019 11:00:00 GMT-0500 (EST)',
+        mcontent: 'Haohao falls in love with Lee'
+      }
+    ]
   }
 
   // computed attributes
+  getChannels = (type) => {
+    return this.state.channels.filter(item => {
+      return item.ctype === type
+    })
+  }
+
+  getCurrentChannel = () => {
+    return this.state.currentChannel ? this.state.currentChannel.cname : ''
+  }
+
   userName = () => {
     const name = store.getUser().nickname
     return name ? name : 'Guest'
@@ -122,6 +158,12 @@ class Workspace extends React.Component {
 
   handleDrawerClose = () => {
     this.setState({ open: false })
+  }
+
+  handleDrawerClick = (item) => {
+    this.setState({
+      currentChannel: item
+    })
   }
 
   render() {
@@ -153,8 +195,14 @@ class Workspace extends React.Component {
               noWrap
               className={classes.title}
             >
-              {this.workspaceName()}
+              {`${this.workspaceName()}/${this.getCurrentChannel()}`}
             </Typography>
+            <IconButton
+              color="inherit"
+              aria-label="Settings"
+            >
+              <SettingsIcon />
+            </IconButton>
             <Button className={classes.button}>
               {this.userName()}
             </Button>
@@ -177,27 +225,43 @@ class Workspace extends React.Component {
           </div>
           <Divider />
           <List>
-            <div>
-              <ListItem button>
-                <ListItemIcon>
-                  <DashboardIcon />
-                </ListItemIcon>
-                <ListItemText primary="Dashboard" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <ChatIcon />
-                </ListItemIcon>
-                <ListItemText primary="Channel 1" />
-              </ListItem>
-            </div>
+            <ListItem button>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItem>
           </List>
+          <Divider />
+          <ChannelList
+            type="Public"
+            list={this.getChannels('public')}
+            handleClick={this.handleDrawerClick}
+          />
+          <Divider />
+          <ChannelList
+            type="Private"
+            list={this.getChannels('private')}
+            handleClick={this.handleDrawerClick}
+          />
+          <Divider />
+          <ChannelList
+            type="Direct"
+            list={this.getChannels('direct')}
+            handleClick={this.handleDrawerClick}
+          />
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
           <div >
-            <MessageItem />
-            <MessageItem />
+            {this.state.messages.map(item => {
+              return (
+                <MessageItem
+                  key={`${item.uemail}-${item.mtime}`}
+                  message={item}
+                />
+              )}
+            )}
           </div>
         </main>
       </div>

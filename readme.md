@@ -80,6 +80,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 - MySQL
     - [MySQL Cheet Sheet](https://devhints.io/mysql)
     - [Promise MySQL](https://www.npmjs.com/package/promise-mysql)
+    - [A Comprehensive Guide to Using MySQL ENUM](http://www.mysqltutorial.org/mysql-enum/)
 - REST
     - [Learn REST: A RESTful Tutorial](https://www.restapitutorial.com)
     - [What is REST](https://restfulapi.net)

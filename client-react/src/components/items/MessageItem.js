@@ -16,15 +16,15 @@ const styles = theme => ({
 
 class MessageItem extends React.Component {
   render() {
-    const { classes } = this.props
+    const { classes, message } = this.props
     return (
       <div>
         <Paper className={classes.root} elevation={1}>
           <Typography variant="h5" component="h3">
-            This is a sheet of paper.
+            {message.uname}
           </Typography>
           <Typography component="p">
-            Paper can be used to build surface or other elements for your application.
+            {message.mcontent}
           </Typography>
         </Paper>
       </div>
