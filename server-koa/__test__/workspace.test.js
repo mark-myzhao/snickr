@@ -1,6 +1,5 @@
 const request = require('supertest')
 const server = require('../index')
-const assert = require('assert')
 
 beforeAll(async () => {
   // do something before anything else runs
@@ -47,6 +46,52 @@ describe('should be able to get access with authenticating session', function ()
   it('Should get 404 for not exist user: getWithWorkspace', function (done) {
     request(server)
       .get('/v1/workspace/whodonotexist@qq.com')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(404)
+      .end(done)
+  })
+
+  // add a workspace
+  it('Should be able to add a workspace POST /v1/workspace', function (done) {
+    request(server)
+      .post('/v1/workspace')
+      .send({
+        wid: '12',
+        wname: 'new workspace',
+        wdesc: 'new desc',
+        uemail: 'hangbo@gmail.com'
+      })
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(201)
+      .end(done)
+  })
+
+  // update the name of this user
+  it('Should be able to update the workspace GET /v1/workspace/:wid', function (done) {
+    request(server)
+      .put('/v1/workspace/1')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .send({
+        wname: 'UpdatedWorkspaceName',
+        wdesc: 'UpdatedWorkspaceDescription'
+      })
+      .expect(200)
+      .end(done)
+  })
+
+  // delete the workspace
+  it('Should be able to remove the workspace GET /v1/workspace/:wid', function (done) {
+    request(server)
+      .delete('/v1/workspace/12')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(200)
+      .end(done)
+  })
+
+  // the workspace no longer exists, cannot delete again
+  it('Should not be able to remove the workspace again GET /v1/workspace/:wid', function (done) {
+    request(server)
+      .delete('/v1/workspace/12')
       .set('Authorization', `Bearer ${TEST_TOKEN}`)
       .expect(404)
       .end(done)

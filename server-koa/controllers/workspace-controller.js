@@ -21,6 +21,58 @@ let getWorkspace = withAuth(
   }
 )
 
+let addWorkspace = withAuth(
+  async (ctx, next) => {
+    try {
+      const { wid, wname, wdesc, uemail } = ctx.request.body
+      let result = await WorkspaceModel.addWithWorkspace(wid, wname, wdesc, uemail)
+      if (result) {
+        ctx.created({ success: true, added: wid })
+      } else {
+        ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
+      }
+    } catch (error) {
+      ctx.badRequest({ error })
+    }
+  }
+)
+
+let updateWorkspace = withAuth(
+  async (ctx, next) => {
+    try {
+      const wid = ctx.params.wid
+      const { wname, wdesc } = ctx.request.body
+      let result = await WorkspaceModel.updateWithWorkspace(wid, wname, wdesc)
+      if (result) {
+        ctx.ok({ success: true, updated: wid })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.badRequest({ error })
+    }
+  }
+)
+
+let removeWorkspace = withAuth(
+  async (ctx, next) => {
+    try {
+      const wid = ctx.params.wid
+      let result = await WorkspaceModel.removeWithWorkspace(wid)
+      if (result) {
+        ctx.ok({ success: true, deleted: wid })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.badRequest({ error })
+    }
+  }
+)
+
 module.exports = {
-  getWorkspace
+  getWorkspace,
+  addWorkspace,
+  updateWorkspace,
+  removeWorkspace
 }
