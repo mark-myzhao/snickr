@@ -22,6 +22,7 @@ import Button from '@material-ui/core/Button'
 
 import MessageItem from '../items/MessageItem'
 import ChannelList from '../subcomponents/ChannelList'
+import ChatBox from '../subcomponents/ChatBox'
 import store from '../../store'
 
 const drawerWidth = 240
@@ -87,10 +88,14 @@ const styles = theme => ({
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
-    flexGrow: 1,
+    position: 'relative',
     padding: theme.spacing.unit * 3,
     height: '100vh',
     overflow: 'auto',
+    flexGrow: 1,
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
   },
   h5: {
     marginBottom: theme.spacing.unit * 2,
@@ -98,6 +103,11 @@ const styles = theme => ({
   button: {
     color: '#FFFFFF',
     marginLeft: '5px'
+  },
+  messageContainer: {
+    position: 'relative',
+    overflow: 'auto',
+    flexGrow: 1
   }
 })
 
@@ -253,7 +263,7 @@ class Workspace extends React.Component {
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          <div >
+          <div className={classes.messageContainer}>
             {this.state.messages.map(item => {
               return (
                 <MessageItem
@@ -263,6 +273,7 @@ class Workspace extends React.Component {
               )}
             )}
           </div>
+          <ChatBox />
         </main>
       </div>
     )
