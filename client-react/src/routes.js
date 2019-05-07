@@ -4,6 +4,7 @@ import { Route, BrowserRouter, Redirect, Switch } from 'react-router-dom'
 // import Wizard from './components/Wizard'
 // import Cards from './components/Cards'
 import Main from './components/pages/Main'
+import Workspace from './components/pages/Workspace'
 import Signin from './components/pages/Signin'
 // import Signup from './components/Signup'
 import ScrollToTop from './components/commons/ScrollTop'
@@ -37,6 +38,7 @@ export default props => (
       <ScrollToTop>
         <Switch>
           <PrivateRoute exact path='/' component={ Main } />
+          <PrivateRoute exact path='/workspace/:wid' component={ Workspace } />
           <Route exact path='/signin' component={ Signin } />
           {/* <Route exact path='/dashboard' component={ Dashboard } />
           <PrivateRoute exact path='/signup' component={ Signup } />

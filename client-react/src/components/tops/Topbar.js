@@ -24,6 +24,10 @@ const styles = theme => ({
     position: 'relative',
     backgroundColor: 'white'
   },
+  logo: {
+    'vertical-align': 'text-top',
+    width: 35
+  },
   inline: {
     display: 'inline'
   },
@@ -56,7 +60,7 @@ const styles = theme => ({
   },
   tagline: {
     display: 'inline-block',
-    marginLeft: 10,
+    marginLeft: 5,
     [theme.breakpoints.up('md')]: {
       paddingTop: 15
     }
@@ -146,7 +150,11 @@ class Topbar extends Component {
                     noWrap
                   >
                     <Link to='/' className={classes.link}>
-                      <img width={20} src={logo} alt="logo" />
+                      <img
+                        className={classes.logo}
+                        src={logo}
+                        alt="logo"
+                      />
                       <span className={classes.tagline}>Snickr</span>
                     </Link>
                   </Typography>
@@ -201,11 +209,12 @@ class Topbar extends Component {
                       </Tabs>
                     </div>
                     <div className={classes.grow} />
-                    <div className={classes.productLogo}>
-                      <Typography>
-                        {this.userName()}
-                      </Typography>
-                    </div>
+                    <Button
+                      color="primary"
+                      className={classes.button}
+                    >
+                      {this.userName()}
+                    </Button>
                     <Button className={classes.button}>
                       Logout
                     </Button>
