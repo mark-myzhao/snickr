@@ -31,7 +31,7 @@ class ChatBox extends React.Component {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, handleDetailClick } = this.props
     return (
       <div className={classes.root}>
         <TextField
@@ -55,6 +55,7 @@ class ChatBox extends React.Component {
         <IconButton
           color="inherit"
           aria-label="Info"
+          onClick={handleDetailClick}
         >
           <InfoIcon />
         </IconButton>

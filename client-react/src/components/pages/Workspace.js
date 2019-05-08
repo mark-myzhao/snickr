@@ -13,6 +13,8 @@ import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
+import InboxIcon from '@material-ui/icons/Inbox'
+import DraftsIcon from '@material-ui/icons/Drafts'
 
 import MessageItem from '../items/MessageItem'
 import ChannelList from '../subcomponents/ChannelList'
@@ -53,30 +55,63 @@ const styles = theme => ({
       width: theme.spacing.unit * 9,
     },
   },
-  appBarSpacer: theme.mixins.toolbar,
   content: {
     position: 'relative',
-    padding: theme.spacing.unit * 3,
     height: '100vh',
     overflow: 'auto',
     flexGrow: 1,
     display: 'flex',
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: 'row',
+    paddingTop: theme.spacing.unit * 8,
   },
   h5: {
     marginBottom: theme.spacing.unit * 2,
   },
+  chatboxContainer: {
+    padding: theme.spacing.unit * 3,
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+  },
   messageContainer: {
     position: 'relative',
     overflow: 'auto',
+    flexDirection: 'column',
     flexGrow: 1
+  },
+  rightDrawerContainer: {
+    width: 300,
+    overflow: 'auto',
+    padding: theme.spacing.unit,
+    backgroundColor: theme.palette.background.paper,
+    borderLeftWidth: '1px',
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'rgba(0, 0, 0, 0.12)',
+    transitionProperty: 'width',
+    transitionDuration: '225ms',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
+    transitionDelay: '0ms',
+  },
+  rightDrawerContainerEmpty: {
+    width: 0,
+    overflow: 'auto',
+    backgroundColor: theme.palette.background.paper,
+    borderLeftWidth: '1px',
+    borderLeftStyle: 'solid',
+    borderLeftColor: 'rgba(0, 0, 0, 0.12)',
+    transitionProperty: 'width',
+    transitionDuration: '225ms',
+    transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
+    transitionDelay: '0ms',
   }
 })
 
 class Workspace extends React.Component {
   state = {
     open: true,
+    detailOpen: false,
     currentChannel: null,
     channels: [
       {
@@ -138,6 +173,13 @@ class Workspace extends React.Component {
     })
   }
 
+  handleDetailClick = () => {
+    const current = this.state.detailOpen
+    this.setState({
+      detailOpen: !current
+    })
+  }
+
   render() {
     const { classes } = this.props
     return (
@@ -192,18 +234,43 @@ class Workspace extends React.Component {
           />
         </Drawer>
         <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <div className={classes.messageContainer}>
-            {this.state.messages.map(item => {
-              return (
-                <MessageItem
-                  key={`${item.uemail}-${item.mtime}`}
-                  message={item}
-                />
+          <div className={classes.chatboxContainer}>
+            <div className={classes.messageContainer}>
+              {this.state.messages.map(item => {
+                return (
+                  <MessageItem
+                    key={`${item.uemail}-${item.mtime}`}
+                    message={item}
+                  />
+                )}
               )}
-            )}
+            </div>
+            <ChatBox
+              handleDetailClick={this.handleDetailClick}
+            />
           </div>
-          <ChatBox />
+          <div className={this.state.detailOpen ? classes.rightDrawerContainer : classes.rightDrawerContainerEmpty}>
+            <List component="nav">
+              <ListItem button>
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary="Inbox" />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <DraftsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Drafts" />
+              </ListItem>
+            </List>
+            <Divider />
+            <List component="nav">
+              <ListItem button>
+                <ListItemText primary="Trash" />
+              </ListItem>
+            </List>
+          </div>
         </main>
       </div>
     )
