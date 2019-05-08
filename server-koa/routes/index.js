@@ -6,4 +6,5 @@ module.exports = (router) => {
   router.use('/winvitation', require('./winvitations'))
   router.use('/channel', require('./channels'))
   router.use('/cinvitation', require('./cinvitations'))
+  router.use('/message', require('./messages'))
 }

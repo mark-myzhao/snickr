@@ -116,3 +116,20 @@ ctx.created({
 
 ```
 
+##Message
+```javascript
+// -> POST /v1/message/
+{
+    'wid': 1,
+    'cname': 'channel1',
+    'uemail' : '498973030@qq.com',
+    'mcontent' : 'hello Colleoni!'
+}
+// <- 201 CREATED
+ctx.created({
+    success: true
+})
+
+
+```
+
