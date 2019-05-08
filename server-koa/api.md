@@ -145,7 +145,7 @@ ctx.ok({
 // <- 200 ok 
 ctx.ok({
     success: true,
-    workspace: wid
+    workspace: {wid, wmtype}
 })
 
 // -> POST /v1/wmember
@@ -160,14 +160,14 @@ ctx.created({
 })
 
 
-// -> PUT /v1/wmember/:uemail  SET wid =1 for test
+// -> PUT /v1/wmember/:uemail  SET wid =2 for test
 {
     'wmtype': 'admin'
 }
 // <- 200 ok
 
 
-// -> DELETE /v1/wmember/:uemail  SET wid =1 for test
+// -> DELETE /v1/wmember/:uemail  SET wid =2 for test
 // <- 200 ok
 ctx.ok({
     success: true
@@ -190,7 +190,7 @@ ctx.ok({
     memberinfo: {uenamil, wid, cname}
 })
 
-// -> GET /v1/cmember/getchannel/:cname  get the member in the particular channel
+// -> GET /v1/cmember/getchannelmember/:cname  get the member in the particular channel   SET wid = 1 for test
 // <- 200 ok 
 ctx.ok({
     success: true,
@@ -198,4 +198,25 @@ ctx.ok({
 })
 
 
+// -> POST /v1/cmember
+{
+    'uemail': 'jiaqi@gmail.com',
+    'wid': 1,
+    'cname': 'channel2'
+}
+// <- 201 CREATED
+ctx.created({
+    success: true
+})
+
+
+// -> DELETE /v1/cmember/:uemail
+{
+    'cname': 'channel2',
+    'wid': 1,
+}
+// <- 200 ok
+ctx.ok({
+    success: true
+})
 ```
