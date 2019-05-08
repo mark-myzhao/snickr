@@ -22,7 +22,7 @@ create table Channel
     ctype varchar(50) null,
     ctime datetime null,
     primary key (wid, cname),
-    foreign key (wid) references Workspace (wid)
+    foreign key (wid) references Workspace (wid) on delete cascade
 );
 
 create table Message
@@ -33,8 +33,8 @@ create table Message
     mtime datetime not null,
     mcontent varchar(300) null,
     primary key (wid, cname, uemail, mtime),
-    foreign key (wid, cname) references Channel (wid, cname),
-    foreign key (uemail) references User (uemail)
+    foreign key (wid, cname) references Channel (wid, cname) on delete cascade,
+    foreign key (uemail) references User (uemail) on delete cascade
 );
 
 create table cInvitation
@@ -45,9 +45,9 @@ create table cInvitation
     cname varchar(50) not null,
     citime datetime not null,
     primary key (semail, remail, wid, cname, citime),
-    foreign key (semail) references User (uemail),
-    foreign key (remail) references User (uemail),
-    foreign key (wid, cname) references Channel (wid, cname)
+    foreign key (semail) references User (uemail) on delete cascade,
+    foreign key (remail) references User (uemail) on delete cascade,
+    foreign key (wid, cname) references Channel (wid, cname) on delete cascade
 );
 
 create table cMember
@@ -56,8 +56,8 @@ create table cMember
     wid int not null,
     cname varchar(50) not null,
     primary key (uemail, wid, cname),
-    foreign key (uemail) references User (uemail),
-    foreign key (wid, cname) references Channel (wid, cname)
+    foreign key (uemail) references User (uemail) on delete cascade,
+    foreign key (wid, cname) references Channel (wid, cname) on delete cascade
 );
 
 create table wInvitation
@@ -67,9 +67,9 @@ create table wInvitation
     wid int not null,
     witime datetime not null,
     primary key (semail, remail, wid, witime),
-    foreign key (semail) references User (uemail),
-    foreign key (remail) references User (uemail),
-    foreign key (wid) references Workspace (wid)
+    foreign key (semail) references User (uemail) on delete cascade,
+    foreign key (remail) references User (uemail) on delete cascade,
+    foreign key (wid) references Workspace (wid) on delete cascade
 );
 
 create table wMember
@@ -78,8 +78,8 @@ create table wMember
     wid int not null,
     wmtype varchar(50) null,
     primary key (uemail, wid),
-    foreign key (uemail) references User (uemail),
-    foreign key (wid) references Workspace (wid)
+    foreign key (uemail) references User (uemail) on delete cascade,
+    foreign key (wid) references Workspace (wid) on delete cascade
 );
 
 

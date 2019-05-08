@@ -51,49 +51,17 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
-  // add a workspace
-  it('Should be able to add a workspace POST /v1/workspace', function (done) {
+  // add a cinvitation
+  it('Should be able to add a cinvitation POST /v1/cinvitation/:cname', function (done) {
     request(server)
-      .post('/v1/workspace')
+      .post('/v1/cinvitation/channel1')
       .send({
-        wid: '12',
-        wname: 'new workspace',
-        wdesc: 'new desc',
-        uemail: 'hangbo@gmail.com'
+        semail: '498973030@qq.com',
+        remail: 'hangbo@gmail.com',
+        wid: 1
       })
       .set('Authorization', `Bearer ${TEST_TOKEN}`)
       .expect(201)
-      .end(done)
-  })
-
-  // update the name of this user
-  it('Should be able to update the workspace GET /v1/workspace/:wid', function (done) {
-    request(server)
-      .put('/v1/workspace/1')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
-      .send({
-        wname: 'UpdatedWorkspaceName',
-        wdesc: 'UpdatedWorkspaceDescription'
-      })
-      .expect(200)
-      .end(done)
-  })
-
-  // delete the workspace
-  it('Should be able to remove the workspace DELETE /v1/workspace/:wid', function (done) {
-    request(server)
-      .delete('/v1/workspace/12')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
-      .expect(200)
-      .end(done)
-  })
-
-  // the workspace no longer exists, cannot delete again
-  it('Should not be able to remove the workspace again GET /v1/workspace/:wid', function (done) {
-    request(server)
-      .delete('/v1/workspace/4')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
-      .expect(404)
       .end(done)
   })
 })

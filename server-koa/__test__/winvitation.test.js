@@ -51,49 +51,16 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
-  // add a workspace
-  it('Should be able to add a workspace POST /v1/workspace', function (done) {
+  // add a winvitation
+  it('Should be able to add a winvitation POST /v1/winvitation/:wid', function (done) {
     request(server)
-      .post('/v1/workspace')
+      .post('/v1/winvitation/2')
       .send({
-        wid: '12',
-        wname: 'new workspace',
-        wdesc: 'new desc',
-        uemail: 'hangbo@gmail.com'
+        semail: 'mingyusysu@gmail.com',
+        remail: 'xz8888@nyu.edu'
       })
       .set('Authorization', `Bearer ${TEST_TOKEN}`)
       .expect(201)
-      .end(done)
-  })
-
-  // update the name of this user
-  it('Should be able to update the workspace GET /v1/workspace/:wid', function (done) {
-    request(server)
-      .put('/v1/workspace/1')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
-      .send({
-        wname: 'UpdatedWorkspaceName',
-        wdesc: 'UpdatedWorkspaceDescription'
-      })
-      .expect(200)
-      .end(done)
-  })
-
-  // delete the workspace
-  it('Should be able to remove the workspace DELETE /v1/workspace/:wid', function (done) {
-    request(server)
-      .delete('/v1/workspace/12')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
-      .expect(200)
-      .end(done)
-  })
-
-  // the workspace no longer exists, cannot delete again
-  it('Should not be able to remove the workspace again GET /v1/workspace/:wid', function (done) {
-    request(server)
-      .delete('/v1/workspace/4')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
-      .expect(404)
       .end(done)
   })
 })

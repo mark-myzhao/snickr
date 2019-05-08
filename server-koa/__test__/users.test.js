@@ -27,7 +27,7 @@ describe('should be able to get access with authenticating session', function ()
   it('POST /v1/auth/token', function (done) {
     request(server)
       .post('/v1/auth/token')
-      .send({ uemail: '2333@gmail.com', password: '22334455' })
+      .send({ uemail: '2333@gmail.com', password: '12345678' })
       .expect(401)
       .end(done)
   })
@@ -36,7 +36,7 @@ describe('should be able to get access with authenticating session', function ()
   it('POST /v1/auth/token', function (done) {
     request(server)
       .post('/v1/auth/token')
-      .send({ uemail: 'mingyusysu@gmail.com', password: '22334455' })
+      .send({ uemail: 'mingyusysu@gmail.com', password: '12345678' })
       .expect(200)
       .end((err, res) => {
         if (err) return done(err)

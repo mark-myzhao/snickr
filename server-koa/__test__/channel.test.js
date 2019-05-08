@@ -51,47 +51,69 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
-  // add a workspace
-  it('Should be able to add a workspace POST /v1/workspace', function (done) {
+  // get all channel
+  it('Should be able to access now GET /v1/channel/:wid', function (done) {
     request(server)
-      .post('/v1/workspace')
+      .get('/v1/channel/1')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(200)
+      .end(done)
+  })
+
+  // get channels in wid which does not exist
+  it('Should get 404 for not exist user GET /v1/channel/donotexist', function (done) {
+    request(server)
+      .get('/v1/channel/12')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(404)
+      .end(done)
+  })
+
+  // add a channel
+  it('Should be able to add a channel POST /v1/channel/:wid', function (done) {
+    request(server)
+      .post('/v1/channel/1')
       .send({
-        wid: '12',
-        wname: 'new workspace',
-        wdesc: 'new desc',
-        uemail: 'hangbo@gmail.com'
+        cname: 'channel18',
+        ctype: 'public'
       })
       .set('Authorization', `Bearer ${TEST_TOKEN}`)
       .expect(201)
       .end(done)
   })
 
-  // update the name of this user
-  it('Should be able to update the workspace GET /v1/workspace/:wid', function (done) {
+  // add a channel which has already existed
+  it('Should be able to add a channel POST /v1/channel/:wid', function (done) {
     request(server)
-      .put('/v1/workspace/1')
-      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .post('/v1/channel/1')
       .send({
-        wname: 'UpdatedWorkspaceName',
-        wdesc: 'UpdatedWorkspaceDescription'
+        cname: 'channel18',
+        ctype: 'public'
       })
-      .expect(200)
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(400)
       .end(done)
   })
 
-  // delete the workspace
-  it('Should be able to remove the workspace DELETE /v1/workspace/:wid', function (done) {
+  // delete the channel
+  it('Should be able to remove the channel DELETE /v1/channel/:cname', function (done) {
     request(server)
-      .delete('/v1/workspace/12')
+      .delete('/v1/channel/channel18')
+      .send({
+        wid: 1
+      })
       .set('Authorization', `Bearer ${TEST_TOKEN}`)
       .expect(200)
       .end(done)
   })
 
-  // the workspace no longer exists, cannot delete again
-  it('Should not be able to remove the workspace again GET /v1/workspace/:wid', function (done) {
+  // the channel no longer exists, cannot delete again
+  it('Should not be able to remove the channel again DELETE /v1/channel/:cname', function (done) {
     request(server)
-      .delete('/v1/workspace/4')
+      .delete('/v1/channel/channel18')
+      .send({
+        wid: 1
+      })
       .set('Authorization', `Bearer ${TEST_TOKEN}`)
       .expect(404)
       .end(done)
