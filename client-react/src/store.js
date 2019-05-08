@@ -34,6 +34,10 @@ const getUser = () => {
   }
 }
 
+const getUserName = () => {
+  return getUser().nickname ? getUser().nickname : 'Guest'
+}
+
 const clearUser = () => {
   localStorage.removeItem('uemail')
   localStorage.removeItem('uname')
@@ -51,6 +55,7 @@ export default {
   isLogin,
   setUser,
   getUser,
+  getUserName,
   clearUser,
   clear
 }

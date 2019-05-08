@@ -3,9 +3,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { withRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
-// import InstructionDialog from './dialogs/InstructionDialog'
-// import SwipeDialog from './dialogs/SwipeDialog'
-import Topbar from '../tops/Topbar'
+import DIYTopBar from '../commons/DIYTopBar'
 import WorkspaceItem from '../items/WorkspaceItem'
 
 import store from '../../store'
@@ -14,13 +12,19 @@ import backgroundShape from '../../images/shape.svg'
 
 const styles = theme => ({
   root: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    overflow: 'auto',
     flexGrow: 1,
     backgroundColor: theme.palette.grey['100'],
-    overflow: 'hidden',
     background: `url(${backgroundShape}) no-repeat`,
     backgroundSize: 'cover',
     backgroundPosition: '0 400px',
-    paddingBottom: 500
+    padding: theme.spacing.unit * 3,
+    paddingTop: theme.spacing.unit * 6,
   },
   grid: {
     width: 1200,
@@ -28,50 +32,6 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       width: 'calc(100% - 20px)'
     }
-  },
-  rangeLabel: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    paddingTop: theme.spacing.unit * 2
-  },
-  topBar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 32
-  },
-  outlinedButtom: {
-    textTransform: 'uppercase',
-    margin: theme.spacing.unit
-  },
-  blockCenter: {
-    padding: theme.spacing.unit * 2,
-    textAlign: 'center'
-  },
-  block: {
-    padding: theme.spacing.unit * 2,
-  },
-  inlining: {
-    display: 'inline-block',
-    marginRight: 10
-  },
-  buttonBar: {
-    display: 'flex'
-  },
-  alignRight: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  noBorder: {
-    borderBottomStyle: 'hidden'
-  },
-  loadingState: {
-    opacity: 0.05
-  },
-  loadingMessage: {
-    position: 'absolute',
-    top: '40%',
-    left: '40%'
   }
 })
 
@@ -89,13 +49,29 @@ class Main extends Component {
     return (
       <React.Fragment>
         <CssBaseline />
-        <Topbar />
+        <DIYTopBar
+          open={false}
+          title={'Snickr'}
+        />
         <div className={classes.root}>
-          <Grid container justify="center">
-            <Grid spacing={24} alignItems="center" justify="flex-start" container className={classes.grid}>
+          <Grid
+            container
+            justify="center"
+          >
+            <Grid
+              className={classes.grid}
+              spacing={24}
+              alignItems="center"
+              justify="flex-start"
+              container
+            >
               {this.state.workspaces.map((value, index) => {
                 return (
-                  <WorkspaceItem key={value} value={value} index={index} />
+                  <WorkspaceItem
+                    key={value}
+                    value={value}
+                    index={index}
+                  />
                 )
               })}
             </Grid>

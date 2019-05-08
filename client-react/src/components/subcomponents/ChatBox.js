@@ -20,7 +20,7 @@ const styles = theme => ({
 
 class ChatBox extends React.Component {
   state = {
-    multiline: 'Controlled'
+    multiline: ''
   }
 
   handleChange = name => event => {
@@ -36,12 +36,13 @@ class ChatBox extends React.Component {
         <TextField
           className={classes.chatinput}
           id="outlined-multiline-flexible"
-          multiline
           rowsMax="4"
           value={this.state.multiline}
           onChange={this.handleChange('multiline')}
           margin="normal"
           variant="outlined"
+          placeholder="Message"
+          multiline
           fullWidth
         />
         <IconButton
