@@ -51,8 +51,8 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
-  // add a workspace
-  it('Should be able to add a workspace POST /v1/winvitation', function (done) {
+  // add a winvitation
+  it('Should be able to add a winvitation POST /v1/winvitation/:wid', function (done) {
     request(server)
       .post('/v1/winvitation/2')
       .send({

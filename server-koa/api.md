@@ -51,7 +51,7 @@ ctx.ok({
 
 ##wInvitation
 ```javascript
-// -> POST /v1/Channel/:wid
+// -> POST /v1/winvitation/:wid
 {
     'semail': 'send email',
     'remail': 'recieve email',
@@ -60,5 +60,43 @@ ctx.ok({
 ctx.created({
     success: true
 })
+```
+
+##Channel
+```javascript
+// -> GET /v1/channel/:wid
+// <- 200 ok
+ctx.ok({
+    success: true,
+    channel: [
+        {
+            'cname': 'channel1',
+            'ctype': 'public',
+            'ctime': 'Sat Dec 08 2018 10:00:00 GMT-0500'
+        }, {
+            'cname': 'channel5',
+            'ctype': 'privite',
+            'ctime': 'Mon Oct 01 2018 10:00:00 GMT-0400'
+        }
+    ]
+})
+
+
+// -> POST /v1/channel/:wid
+{
+    'cname': 'channel9',
+    'ctype': 'public'
+}
+// <- 201 CREATED
+ctx.created({
+    success: true
+})
+
+
+// -> DELETE /v1/channel/:cname
+{
+    'wid': 1
+}
+// <- 200 ok
 ```
 
