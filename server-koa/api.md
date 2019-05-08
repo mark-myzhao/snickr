@@ -129,7 +129,40 @@ ctx.created({
 ctx.created({
     success: true
 })
-
-
 ```
+##wMember  set wid = 1 in testcode
+```javascript
+//seek the member of this workspace
+// -> POST /v1/wmember/:uemail
+// <- 200 OK
+ctx.ok({
+    success: true,
+    member: uenamil
+})
 
+
+// -> POST /v1/wmember
+{
+    'uemail': 'sl9888@nyu.edu',
+    'wid': 1,
+    'wmtype': 'user'
+}
+// <- 201 CREATED
+ctx.created({
+    success: true
+})
+
+
+// -> PUT /v1/wmember/:uemail  SET wid =1 for test
+{
+    'wmtype': 'admin'
+}
+// <- 200 ok
+
+
+// -> DELETE /v1/wmember/:uemail  SET wid =1 for test
+// <- 200 ok
+ctx.ok({
+    success: true
+})
+```

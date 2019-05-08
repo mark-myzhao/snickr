@@ -7,4 +7,5 @@ module.exports = (router) => {
   router.use('/channel', require('./channels'))
   router.use('/cinvitation', require('./cinvitations'))
   router.use('/message', require('./messages'))
+  router.use('/wmember', require('./wmembers'))
 }
