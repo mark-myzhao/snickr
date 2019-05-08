@@ -100,3 +100,19 @@ ctx.created({
 // <- 200 ok
 ```
 
+##cInvitation
+```javascript
+// -> POST /v1/cinvitation/:cname
+{
+    'semail': 'send email',
+    'remail': 'recieve email',
+    'wid' : 1
+}
+// <- 201 CREATED
+ctx.created({
+    success: true
+})
+
+
+```
+
