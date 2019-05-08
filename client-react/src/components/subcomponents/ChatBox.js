@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
-import AddIcon from '@material-ui/icons/Add'
+import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn'
+import InfoIcon from '@material-ui/icons/Info'
 
 // import Typography from '@material-ui/core/Typography'
 
@@ -49,7 +50,13 @@ class ChatBox extends React.Component {
           color="inherit"
           aria-label="Add"
         >
-          <AddIcon />
+          <KeyboardReturnIcon />
+        </IconButton>
+        <IconButton
+          color="inherit"
+          aria-label="Info"
+        >
+          <InfoIcon />
         </IconButton>
       </div>
     )

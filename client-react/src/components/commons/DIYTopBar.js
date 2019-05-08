@@ -5,10 +5,14 @@ import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem'
 import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import SettingsIcon from '@material-ui/icons/Settings'
+
+import UserProfileDialog from '../subcomponents/UserProfileDialog'
 
 import store from '../../store'
 
@@ -52,7 +56,29 @@ const styles = theme => ({
 
 class DIYTopBar extends React.Component {
   state = {
-    open: true
+    userProfileAnchor: null,
+    dialogOpen: false,
+    dialogTitle: ''
+  }
+
+  handleUserProfileClick = event => {
+    this.setState({ userProfileAnchor: event.currentTarget })
+  }
+
+  handleUserProfileClose = () => {
+    this.setState({ userProfileAnchor: null })
+  }
+
+  handleDialogOpen = title => () => {
+    this.setState({
+      dialogOpen: true,
+      userProfileAnchor: null,
+      dialogTitle: title
+    })
+  }
+
+  handleDialogClose = () => {
+    this.setState({ dialogOpen: false })
   }
 
   render() {
@@ -90,13 +116,27 @@ class DIYTopBar extends React.Component {
           >
             <SettingsIcon />
           </IconButton>
-          <Button className={classes.button}>
+          <Button
+            className={classes.button}
+            onClick={this.handleUserProfileClick}
+          >
             {store.getUserName()}
           </Button>
-          <Button className={classes.button}>
-            Logout
-          </Button>
+          <Menu
+            anchorEl={this.state.userProfileAnchor}
+            open={Boolean(this.state.userProfileAnchor)}
+            onClose={this.handleUserProfileClose}
+          >
+            <MenuItem onClick={this.handleDialogOpen('User Profile')}>User Profile</MenuItem>
+            <MenuItem onClick={this.handleDialogOpen('Change Password')}>Change Password</MenuItem>
+            <MenuItem onClick={this.handleUserProfileClose}>Logout</MenuItem>
+          </Menu>
         </Toolbar>
+        <UserProfileDialog
+          title={this.state.dialogTitle}
+          open={this.state.dialogOpen}
+          handleClose={this.handleDialogClose}
+        />
       </AppBar>
     )
   }
