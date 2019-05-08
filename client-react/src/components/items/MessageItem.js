@@ -1,33 +1,75 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import Avatar from '@material-ui/core/Avatar'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
 const styles = theme => ({
   root: {
-    ...theme.mixins.gutters(),
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+    padding: theme.spacing.unit * 2,
     marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
   },
+  avatar: {
+
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginLeft: theme.spacing.unit,
+    wordBreak: 'break-word',
+  },
+  username: {
+    color: '#1d1c1d',
+    fontWeight: '900',
+    lineHeight: '1',
+  },
+  time: {
+    marginLeft: theme.spacing.unit,
+    lineHeight: '1',
+    color: '#616061',
+    fontSize: 12,
+  },
+  message: {
+    color: '#1d1c1d',
+    marginTop: theme.spacing.unit,
+    wordBreak: 'break-word',
+    lineHeight: '1.4',
+    'textAlign': 'left',
+  }
 })
 
 class MessageItem extends React.Component {
   render() {
     const { classes, message } = this.props
+    const mt = new Date(message.mtime)
+    let dd = String(mt.getDate()).padStart(2, '0')
+    let mm = String(mt.getMonth() + 1).padStart(2, '0')
+    let yyyy = mt.getFullYear()
+    let minute = String(mt.getMinutes()).padStart(2, '0')
+    let second = String(mt.getSeconds()).padStart(2, '0')
     return (
-      <div>
-        <Paper className={classes.root} elevation={1}>
-          <Typography variant="h5" component="h3">
-            {message.uname}
-          </Typography>
-          <Typography component="p">
+      <Paper className={classes.root} elevation={1}>
+        <Avatar className={classes.avatar}>
+          M
+        </Avatar>
+        <div className={classes.textContainer}>
+          <div>
+            <span className={classes.username}>{message.uname}</span>
+            <span className={classes.time}>{`${minute}:${second} ${mm}/${dd}/${yyyy}`}</span>
+          </div>
+          <Typography
+            className={classes.message}
+            variant="body1"
+          >
             {message.mcontent}
           </Typography>
-        </Paper>
-      </div>
+        </div>
+      </Paper>
     )
   }
 }

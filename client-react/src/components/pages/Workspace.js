@@ -4,11 +4,14 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import Avatar from '@material-ui/core/Avatar'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import ListSubheader from '@material-ui/core/ListSubheader'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -103,6 +106,9 @@ const styles = theme => ({
     transitionDuration: '225ms',
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
     transitionDelay: '0ms',
+  },
+  workspaceMember: {
+    flexGrow: 1
   }
 })
 
@@ -111,6 +117,7 @@ class Workspace extends React.Component {
     open: true,
     detailOpen: false,
     currentChannel: null,
+    isWorkspace: true,
     channels: [
       {
         wid: 1,
@@ -131,7 +138,7 @@ class Workspace extends React.Component {
         uemail: 'mingyusysu@gmail.com',
         uname: 'mingyu',
         mtime: 'Fri Jan 18 2019 11:00:00 GMT-0500 (EST)',
-        mcontent: 'Haohao falls in love with Lee'
+        mcontent: 'Haohao falls in love with Lee, Haohao falls in love with Lee, Haohao falls in love with Lee, Haohao falls in love with Lee, Haohao falls in love with Lee'
       }
     ]
   }
@@ -161,13 +168,17 @@ class Workspace extends React.Component {
     this.setState({ open: false })
   }
 
-  handleHomeClick = () => {
-    this.props.history.push('/')
+  handleWorkspaceClick = () => {
+    this.setState({
+      isWorkspace: true,
+      currentChannel: null
+    })
   }
 
   handleDrawerClick = (item) => {
     this.setState({
-      currentChannel: item
+      currentChannel: item,
+      isWorkspace: false
     })
   }
 
@@ -204,12 +215,13 @@ class Workspace extends React.Component {
           <List>
             <ListItem
               button
-              onClick={this.handleHomeClick}
+              selected={this.state.isWorkspace}
+              onClick={this.handleWorkspaceClick}
             >
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
-              <ListItemText primary="Home" />
+              <ListItemText primary="Workspace" />
             </ListItem>
           </List>
           <Divider />
@@ -234,27 +246,49 @@ class Workspace extends React.Component {
             handleClick={this.handleDrawerClick}
           />
         </Drawer>
-        <main className={classes.content}>
-          <div className={classes.chatAreaContainer}>
-            <div className={classes.messageItemContainer}>
-              {this.state.messages.map(item => {
-                return (
-                  <MessageItem
-                    key={`${item.uemail}-${item.mtime}`}
-                    message={item}
-                  />
+        {
+          !this.state.isWorkspace &&
+          <main className={classes.content}>
+            <div className={classes.chatAreaContainer}>
+              <div className={classes.messageItemContainer}>
+                {this.state.messages.map(item => {
+                  return (
+                    <MessageItem
+                      key={`${item.uemail}-${item.mtime}`}
+                      message={item}
+                    />
+                  )}
                 )}
-              )}
+              </div>
+              <ChatBox
+                handleDetailClick={this.handleDetailClick}
+              />
             </div>
-            <ChatBox
-              handleDetailClick={this.handleDetailClick}
+            <DetailDrawer
+              open={this.state.detailOpen}
+              currentChannel={this.getCurrentChannel()}
             />
-          </div>
-          <DetailDrawer
-            open={this.state.detailOpen}
-            currentChannel={this.getCurrentChannel()}
-          />
-        </main>
+          </main>
+        } {
+          this.state.isWorkspace &&
+          <main className={classes.content}>
+            <List className={classes.workspaceMember}>
+              <ListSubheader inset>
+                Workspace Mebers
+              </ListSubheader>
+              <ListItem
+                button
+              >
+                <ListItemAvatar>
+                  <Avatar>
+                    M
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="Mingyu" />
+              </ListItem>
+            </List>
+          </main>
+        }
       </div>
     )
   }

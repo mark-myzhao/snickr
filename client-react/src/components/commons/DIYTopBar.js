@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
+import { withRouter } from 'react-router-dom'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -12,6 +13,7 @@ import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import NotificationsIcon from '@material-ui/icons/Notifications'
+import HomeIcon from '@material-ui/icons/Home'
 
 import UserProfileDialog from '../subcomponents/UserProfileDialog'
 import NotificationDialog from '../subcomponents/NotificationDialog'
@@ -41,8 +43,7 @@ const styles = theme => ({
     marginLeft: '5px'
   },
   menuButton: {
-    marginLeft: 12,
-    marginRight: 36,
+    marginLeft: 8,
   },
   menuButtonHidden: {
     display: 'none',
@@ -78,6 +79,10 @@ class DIYTopBar extends React.Component {
         citime: '2018-12-24'
       }
     ]
+  }
+
+  handleHomeClick = () => {
+    this.props.history.push('/')
   }
 
   handleUserProfileClick = event => {
@@ -116,7 +121,10 @@ class DIYTopBar extends React.Component {
         color="primary"
         className={classNames(classes.appBar, open && classes.appBarShift)}
       >
-        <Toolbar disableGutters={!open} className={classes.toolbar}>
+        <Toolbar
+          disableGutters={!open}
+          className={classes.toolbar}
+        >
           {handleDrawerOpen && <IconButton
             className={classNames(
               classes.menuButton,
@@ -137,6 +145,13 @@ class DIYTopBar extends React.Component {
           >
             {title}
           </Typography>
+          <IconButton
+            color="inherit"
+            aria-label="Home"
+            onClick={this.handleHomeClick}
+          >
+            <HomeIcon />
+          </IconButton>
           <IconButton
             color="inherit"
             aria-label="Notifications"
@@ -186,4 +201,4 @@ DIYTopBar.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(DIYTopBar)
+export default withRouter(withStyles(styles)(DIYTopBar))
