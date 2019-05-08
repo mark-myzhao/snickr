@@ -133,11 +133,11 @@ ctx.created({
 ##wMember  set wid = 1 in testcode
 ```javascript
 //seek the member of this workspace
-// -> POST /v1/wmember/:uemail
+// -> GET /v1/wmember/:wid
 // <- 200 OK
 ctx.ok({
     success: true,
-    member: uenamil
+    member: {uemail, wmtype}
 })
 
 
@@ -172,4 +172,30 @@ ctx.created({
 ctx.ok({
     success: true
 })
+```
+
+##cMember
+```javascript
+// -> GET /v1/cmember/:uemail     get particular member in channel
+// <- 200 OK
+ctx.ok({
+    success: true,
+    memberinfo: {uenamil, wid, cname} 
+})
+
+// -> GET /v1/cmember   get all cmembers
+// <- 200 OK
+ctx.ok({
+    success: true,
+    memberinfo: {uenamil, wid, cname}
+})
+
+// -> GET /v1/cmember/getchannel/:cname  get the member in the particular channel
+// <- 200 ok 
+ctx.ok({
+    success: true,
+    member: uemail
+})
+
+
 ```

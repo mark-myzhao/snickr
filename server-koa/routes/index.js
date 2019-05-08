@@ -8,4 +8,5 @@ module.exports = (router) => {
   router.use('/cinvitation', require('./cinvitations'))
   router.use('/message', require('./messages'))
   router.use('/wmember', require('./wmembers'))
+  router.use('/cmember', require('./cmembers'))
 }

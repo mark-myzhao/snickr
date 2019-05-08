@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 const router = new Router()
-const wMemberController = require('../controllers/wMember-controller')
+const wMemberController = require('../controllers/wmember-controller')
 
 router.get('/:wid', wMemberController.findmember)
 router.get('/', wMemberController.findallmember)
