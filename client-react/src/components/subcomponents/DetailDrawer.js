@@ -77,7 +77,7 @@ class DetailDrawer extends React.Component {
       <React.Fragment>
         <div className={open ? classes.rightDrawerContainer : classes.rightDrawerContainerEmpty}>
           <List component="nav">
-            <ListItem button>
+            <ListItem>
               <ListItemText primary={`About #${currentChannel}`} />
             </ListItem>
           </List>

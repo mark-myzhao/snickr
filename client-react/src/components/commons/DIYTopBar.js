@@ -14,6 +14,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 
 import UserProfileDialog from '../subcomponents/UserProfileDialog'
+import NotificationDialog from '../subcomponents/NotificationDialog'
 
 import store from '../../store'
 
@@ -58,9 +59,25 @@ const styles = theme => ({
 class DIYTopBar extends React.Component {
   state = {
     userProfileAnchor: null,
-    dialogOpen: false,
-    dialogTitle: '',
-    notification: 10
+    userDialogOpen: false,
+    userDialogTitle: '',
+    notification: 10,
+    notificationDialogOpen: false,
+    cinvitation: [
+      {
+        semail: 'mingyusysu@gmail.com',
+        wid: '1',
+        cname: 'channel1',
+        citime: '2018-12-25'
+      }
+    ],
+    winvitation: [
+      {
+        semail: 'mingyusysu@gmail.com',
+        wid: '1',
+        citime: '2018-12-24'
+      }
+    ]
   }
 
   handleUserProfileClick = event => {
@@ -71,16 +88,24 @@ class DIYTopBar extends React.Component {
     this.setState({ userProfileAnchor: null })
   }
 
-  handleDialogOpen = title => () => {
+  handleUserDialogOpen = title => () => {
     this.setState({
-      dialogOpen: true,
+      userDialogOpen: true,
       userProfileAnchor: null,
-      dialogTitle: title
+      userDialogTitle: title
     })
   }
 
-  handleDialogClose = () => {
-    this.setState({ dialogOpen: false })
+  handleUserDialogClose = () => {
+    this.setState({ userDialogOpen: false })
+  }
+
+  handleNotificationDialogOpen = () => {
+    this.setState({ notificationDialogOpen: true })
+  }
+
+  handleNotificationDialogClose = () => {
+    this.setState({ notificationDialogOpen: false })
   }
 
   render() {
@@ -115,6 +140,7 @@ class DIYTopBar extends React.Component {
           <IconButton
             color="inherit"
             aria-label="Notifications"
+            onClick={this.handleNotificationDialogOpen}
           >
             <Badge
               color="error"
@@ -135,15 +161,21 @@ class DIYTopBar extends React.Component {
             open={Boolean(this.state.userProfileAnchor)}
             onClose={this.handleUserProfileClose}
           >
-            <MenuItem onClick={this.handleDialogOpen('User Profile')}>User Profile</MenuItem>
-            <MenuItem onClick={this.handleDialogOpen('Change Password')}>Change Password</MenuItem>
+            <MenuItem onClick={this.handleUserDialogOpen('User Profile')}>User Profile</MenuItem>
+            <MenuItem onClick={this.handleUserDialogOpen('Change Password')}>Change Password</MenuItem>
             <MenuItem onClick={this.handleUserProfileClose}>Logout</MenuItem>
           </Menu>
         </Toolbar>
         <UserProfileDialog
-          title={this.state.dialogTitle}
-          open={this.state.dialogOpen}
-          handleClose={this.handleDialogClose}
+          title={this.state.userDialogTitle}
+          open={this.state.userDialogOpen}
+          handleClose={this.handleUserDialogClose}
+        />
+        <NotificationDialog
+          open={this.state.notificationDialogOpen}
+          cinvitation={this.state.cinvitation}
+          winvitation ={this.state.winvitation}
+          handleClose={this.handleNotificationDialogClose}
         />
       </AppBar>
     )
