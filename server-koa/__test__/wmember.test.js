@@ -54,6 +54,24 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
+  // get all wid the member within
+  it('Should be able to access now GET /v1/wmember/getwid/:uemail', function (done) {
+    request(server)
+      .get('/v1/wmember/getwid/498973030@qq.com')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(200)
+      .end(done)
+  })
+
+  // cannot get wid of the member within because no such member
+  it('Should get 404 for not exist member GET /v1/wmember/getwid/:uemail', function (done) {
+    request(server)
+      .get('/v1/wmember/getwid/newuser@nyu.edu')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(404)
+      .end(done)
+  })
+
   // get a wmember who does not exist
   it('Should get 404 for not exist member GET /v1/member/donotexist', function (done) {
     request(server)

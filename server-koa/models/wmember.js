@@ -1,13 +1,22 @@
 const db = require('../db.js')
 
-let getmember = async (uemail = undefined) => {
+let getmember = async (wid = undefined) => {
   try {
     let data = null
-    if (uemail) {
-      data = await db.query('SELECT uemail, wmtype FROM wMember WHERE wid = 1 AND uemail = ?', uemail)
+    if (wid) {
+      data = await db.query('SELECT uemail, wmtype FROM wMember WHERE wid = ?', wid)
     } else {
-      data = await db.query('SELECT uemail, wmtype FROM wMember WHERE wid = 1')
+      data = await db.query('SELECT uemail, wmtype FROM wMember')
     }
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
+let getwid = async (uemail) => {
+  try {
+    let data = await db.query('SELECT wid, wmtype FROM wMember WHERE uemail = ?', uemail)
     return data
   } catch (error) {
     throw error
@@ -69,6 +78,7 @@ let remove = async (uemail) => {
 module.exports = {
   getmember,
   addNewmember,
+  getwid,
   update,
   remove
 }

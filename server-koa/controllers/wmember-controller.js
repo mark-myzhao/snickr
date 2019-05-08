@@ -39,6 +39,25 @@ let findallmember = withAuth(
   }
 )
 
+let getwidthememberin = withAuth(
+  async (ctx, next) => {
+    try {
+      const uemail = ctx.params.uemail
+      let result = await wMemberModel.getwid(uemail)
+      if (result.length > 0) {
+        ctx.ok({
+          success: true,
+          workspace: result
+        })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let addmember = withAuth(
   async (ctx, next) => {
     try {
@@ -91,6 +110,7 @@ let deletewmember = withAuth(
 module.exports = {
   findmember,
   findallmember,
+  getwidthememberin,
   addmember,
   updatetype,
   deletewmember

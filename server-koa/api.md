@@ -141,6 +141,13 @@ ctx.ok({
 })
 
 
+// -> GET /v1/wmember/getwid/:uemail
+// <- 200 ok 
+ctx.ok({
+    success: true,
+    workspace: wid
+})
+
 // -> POST /v1/wmember
 {
     'uemail': 'sl9888@nyu.edu',
