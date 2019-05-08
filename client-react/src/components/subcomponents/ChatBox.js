@@ -12,9 +12,11 @@ const styles = theme => ({
   root: {
     display: 'flex',
     position: 'relative',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   chatinput: {
+    marginTop: 0,
+    marginBottom: 0,
     marginRight: theme.spacing.unit
   }
 })

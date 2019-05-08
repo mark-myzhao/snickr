@@ -8,9 +8,10 @@ import Typography from '@material-ui/core/Typography'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem'
 import Button from '@material-ui/core/Button'
+import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
-import SettingsIcon from '@material-ui/icons/Settings'
+import NotificationsIcon from '@material-ui/icons/Notifications'
 
 import UserProfileDialog from '../subcomponents/UserProfileDialog'
 
@@ -58,7 +59,8 @@ class DIYTopBar extends React.Component {
   state = {
     userProfileAnchor: null,
     dialogOpen: false,
-    dialogTitle: ''
+    dialogTitle: '',
+    notification: 10
   }
 
   handleUserProfileClick = event => {
@@ -112,9 +114,15 @@ class DIYTopBar extends React.Component {
           </Typography>
           <IconButton
             color="inherit"
-            aria-label="Settings"
+            aria-label="Notifications"
           >
-            <SettingsIcon />
+            <Badge
+              color="error"
+              badgeContent={this.state.notification}
+              invisible={!this.state.notification}
+            >
+              <NotificationsIcon />
+            </Badge>
           </IconButton>
           <Button
             className={classes.button}

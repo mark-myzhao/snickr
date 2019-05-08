@@ -13,12 +13,11 @@ import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import InboxIcon from '@material-ui/icons/Inbox'
-import DraftsIcon from '@material-ui/icons/Drafts'
 
 import MessageItem from '../items/MessageItem'
 import ChannelList from '../subcomponents/ChannelList'
 import ChatBox from '../subcomponents/ChatBox'
+import DetailDrawer from '../subcomponents/DetailDrawer'
 import DIYTopBar from '../commons/DIYTopBar'
 
 
@@ -68,14 +67,14 @@ const styles = theme => ({
   h5: {
     marginBottom: theme.spacing.unit * 2,
   },
-  chatboxContainer: {
+  chatAreaContainer: {
     padding: theme.spacing.unit * 3,
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     flex: 1
   },
-  messageContainer: {
+  messageItemContainer: {
     position: 'relative',
     overflow: 'auto',
     flexDirection: 'column',
@@ -84,7 +83,6 @@ const styles = theme => ({
   rightDrawerContainer: {
     width: 300,
     overflow: 'auto',
-    padding: theme.spacing.unit,
     backgroundColor: theme.palette.background.paper,
     borderLeftWidth: '1px',
     borderLeftStyle: 'solid',
@@ -217,25 +215,28 @@ class Workspace extends React.Component {
           <Divider />
           <ChannelList
             type="Public"
+            currentChannel={this.getCurrentChannel()}
             list={this.getChannels('public')}
             handleClick={this.handleDrawerClick}
           />
           <Divider />
           <ChannelList
             type="Private"
+            currentChannel={this.getCurrentChannel()}
             list={this.getChannels('private')}
             handleClick={this.handleDrawerClick}
           />
           <Divider />
           <ChannelList
             type="Direct"
+            currentChannel={this.getCurrentChannel()}
             list={this.getChannels('direct')}
             handleClick={this.handleDrawerClick}
           />
         </Drawer>
         <main className={classes.content}>
-          <div className={classes.chatboxContainer}>
-            <div className={classes.messageContainer}>
+          <div className={classes.chatAreaContainer}>
+            <div className={classes.messageItemContainer}>
               {this.state.messages.map(item => {
                 return (
                   <MessageItem
@@ -249,28 +250,10 @@ class Workspace extends React.Component {
               handleDetailClick={this.handleDetailClick}
             />
           </div>
-          <div className={this.state.detailOpen ? classes.rightDrawerContainer : classes.rightDrawerContainerEmpty}>
-            <List component="nav">
-              <ListItem button>
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary="Inbox" />
-              </ListItem>
-              <ListItem button>
-                <ListItemIcon>
-                  <DraftsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Drafts" />
-              </ListItem>
-            </List>
-            <Divider />
-            <List component="nav">
-              <ListItem button>
-                <ListItemText primary="Trash" />
-              </ListItem>
-            </List>
-          </div>
+          <DetailDrawer
+            open={this.state.detailOpen}
+            currentChannel={this.getCurrentChannel()}
+          />
         </main>
       </div>
     )

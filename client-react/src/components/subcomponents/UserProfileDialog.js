@@ -1,16 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
+// import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-import store from '../../store'
+// import store from '../../store'
 
 
 const styles = theme => ({})
@@ -41,7 +40,7 @@ class UserProfileDialog extends React.Component {
   }
 
   render() {
-    const { classes, title, open, handleClose } = this.props
+    const { title, open, handleClose } = this.props
     return (
       <Dialog
         open={open}

@@ -20,6 +20,10 @@ class ChannelList extends React.Component {
     }
   }
 
+  isSelected = (item) => {
+    return item.cname === this.props.currentChannel
+  }
+
   render() {
     const { type, list, handleClick } = this.props
     return (
@@ -31,6 +35,7 @@ class ChannelList extends React.Component {
               <ListItem
                 button
                 key={`${item.wid}-${item.cname}`}
+                selected={this.isSelected(item)}
                 onClick={() => {handleClick(item)}}
               >
                 <ListItemIcon>
