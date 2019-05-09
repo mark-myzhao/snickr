@@ -16,7 +16,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AddIcon from '@material-ui/icons/Add'
 import AlternateEmailIcon from '@material-ui/icons/AlternateEmail'
 
-// import Typography from '@material-ui/core/Typography'
+import InvitationDialog from './InvitationDialog'
+
 
 const styles = theme => ({
   nested: {
@@ -59,6 +60,7 @@ const styles = theme => ({
 class DetailDrawer extends React.Component {
   state = {
     channelDetailOpen: false,
+    addMemberOpen: false,
     memberOpen: false
   }
 
@@ -70,15 +72,27 @@ class DetailDrawer extends React.Component {
     this.setState(state => ({ memberOpen: !state.memberOpen }));
   }
 
+  handleAddMemberOpen = () => {
+    this.setState({
+      addMemberOpen: true
+    })
+  }
+
+  handleAddMemberClose = () => {
+    this.setState({
+      addMemberOpen: false
+    })
+  }
+
   render() {
-    const { classes, open, currentChannel } = this.props
+    const { classes, open, currentChannel, currentWorkspace } = this.props
 
     return (
       <React.Fragment>
         <div className={open ? classes.rightDrawerContainer : classes.rightDrawerContainerEmpty}>
           <List component="nav">
             <ListItem>
-              <ListItemText primary={`About #${currentChannel}`} />
+              <ListItemText primary={`About #${currentChannel.cname}`} />
             </ListItem>
           </List>
           <Divider />
@@ -147,7 +161,11 @@ class DetailDrawer extends React.Component {
                     primary="Mingyu"
                   />
                 </ListItem>
-                <ListItem button className={classes.nested}>
+                <ListItem
+                  className={classes.nested}
+                  button
+                  onClick={this.handleAddMemberOpen}
+                >
                   <ListItemIcon className={classes.nestedIcon}>
                     <AddIcon />
                   </ListItemIcon>
@@ -160,6 +178,12 @@ class DetailDrawer extends React.Component {
               </List>
             </Collapse>
           </List>
+          <InvitationDialog
+            open={this.state.addMemberOpen}
+            currentWorkspace={currentWorkspace}
+            currentChannel={currentChannel}
+            handleClose={this.handleAddMemberClose}
+          />
         </div>
       </React.Fragment>
     )

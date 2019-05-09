@@ -72,6 +72,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 - JavaScript
     - [The Modern JavaScript Tutorial](https://javascript.info)
     - [MDN Java​Script](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+    - [Date and time](https://javascript.info/date)
 - Node.js
     - [Node.js in 2018: Full stack tutorial](https://medium.com/jtribe/node-js-in-2018-full-stack-tutorial-with-koa-react-redux-sagas-and-mongodb-14a7efaee4d4)
 - React.js

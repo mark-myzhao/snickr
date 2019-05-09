@@ -21,7 +21,8 @@ class ChannelList extends React.Component {
   }
 
   isSelected = (item) => {
-    return item.cname === this.props.currentChannel
+    const { currentChannel } = this.props
+    return currentChannel && (item.cname === currentChannel.cname)
   }
 
   render() {

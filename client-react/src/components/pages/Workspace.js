@@ -4,14 +4,11 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import Avatar from '@material-ui/core/Avatar'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import ListSubheader from '@material-ui/core/ListSubheader'
 import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
@@ -237,21 +234,21 @@ class Workspace extends React.Component {
           <Divider />
           <ChannelList
             type="Public"
-            currentChannel={this.getCurrentChannel()}
+            currentChannel={this.state.currentChannel}
             list={this.getChannels('public')}
             handleClick={this.handleDrawerClick}
           />
           <Divider />
           <ChannelList
             type="Private"
-            currentChannel={this.getCurrentChannel()}
+            currentChannel={this.state.currentChannel}
             list={this.getChannels('private')}
             handleClick={this.handleDrawerClick}
           />
           <Divider />
           <ChannelList
             type="Direct"
-            currentChannel={this.getCurrentChannel()}
+            currentChannel={this.state.currentChannel}
             list={this.getChannels('direct')}
             handleClick={this.handleDrawerClick}
           />
@@ -276,7 +273,8 @@ class Workspace extends React.Component {
             </div>
             <DetailDrawer
               open={this.state.detailOpen}
-              currentChannel={this.getCurrentChannel()}
+              currentWorkspace={this.state.currentWorkspace}
+              currentChannel={this.state.currentChannel}
             />
           </main>
         } {

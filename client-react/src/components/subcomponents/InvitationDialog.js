@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
-// import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import Slide from '@material-ui/core/Slide'
 
@@ -37,13 +38,28 @@ const styles = theme => ({
     fontSize: '34px',
     lineHeight: '41px',
     fontWeight: 700,
-    marginBottom: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 3,
   },
   closeButton: {
     position: 'absolute',
-    right: '1rem',
-    top: '1rem',
+    right: '4rem',
+    top: '3.5rem',
   },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.unit * 4,
+  },
+  inviteEmailInput: {
+    flexGrow: 1
+  },
+  button: {
+    marginLeft: theme.spacing.unit,
+  },
+  button2: {
+    marginLeft: theme.spacing.unit * -1,
+  }
 })
 
 function Transition(props) {
@@ -74,6 +90,7 @@ class InvitationDialog extends React.Component {
           <div className={classes.panelContainer}>
             <IconButton
               color="inherit"
+              fontSize="large"
               onClick={handleClose}
               aria-label="Close"
               className={classes.closeButton}
@@ -82,16 +99,41 @@ class InvitationDialog extends React.Component {
             </IconButton>
             <div className={classes.content}>
               <div className={classes.title}>
-                Add people to #{currentWorkspace.wname}{currentChannel ? `/${currentChannel.cname}` : ''}
+                Add people to #{currentChannel ? `${currentChannel.cname}` : `${currentWorkspace.wname}`}
               </div>
-              <TextField
-                className={classes.inviteEmail}
-                value={this.state.inviteEmail}
-                onChange={this.handleChange('inviteEmail')}
-                margin="normal"
-                variant="outlined"
-                placeholder="Message"
-              />
+              <div className={classes.inputContainer}>
+                <TextField
+                  className={classes.inviteEmailInput}
+                  value={this.state.inviteEmail}
+                  onChange={this.handleChange('inviteEmail')}
+                  margin="normal"
+                  variant="outlined"
+                  placeholder="User Email"
+                />
+                <Button
+                  className={classes.button}
+                  size="large"
+                  variant="contained"
+                >
+                  Add
+                </Button>
+              </div>
+              {
+                currentChannel &&
+                <React.Fragment>
+                  <Typography variant="body1">
+                    Need to add someone who’s not yet in this workspace?
+                  </Typography>
+                  <div>
+                    <Button
+                      className={classes.button2}
+                      color="primary"
+                    >
+                      Invite people to {currentWorkspace.wname}
+                    </Button>
+                  </div>
+                </React.Fragment>
+              }
             </div>
           </div>
         </Dialog>
