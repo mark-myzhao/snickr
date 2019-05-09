@@ -50,59 +50,57 @@ class UserProfileDialog extends React.Component {
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           {this.getDialogType() === 0 &&
-            <TextField
-              margin="dense"
-              id="uemail"
-              value={this.state.uemail}
-              label="Email Address"
-              type="email"
-              onChange={this.handleChange('uemail')}
-              fullWidth
-            />
-          }
-          {this.getDialogType() === 0 &&
-            <TextField
-              margin="dense"
-              id="uname"
-              value={this.state.uname}
-              label="Full Name"
-              type="text"
-              onChange={this.handleChange('uname')}
-              fullWidth
-            /
-          >}
-          {this.getDialogType() === 0 &&
-            <TextField
-              margin="dense"
-              id="nickname"
-              value={this.state.nickname}
-              label="Nick Name"
-              type="text"
-              onChange={this.handleChange('nickname')}
-              fullWidth
-            />
+            <React.Fragment>
+              <TextField
+                margin="dense"
+                id="uemail"
+                value={this.state.uemail}
+                label="Email Address"
+                type="email"
+                onChange={this.handleChange('uemail')}
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                id="uname"
+                value={this.state.uname}
+                label="Full Name"
+                type="text"
+                onChange={this.handleChange('uname')}
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                id="nickname"
+                value={this.state.nickname}
+                label="Nick Name"
+                type="text"
+                onChange={this.handleChange('nickname')}
+                fullWidth
+              />
+            </React.Fragment>
           }
           {this.getDialogType() === 1 &&
-            <TextField
-              margin="dense"
-              id="password"
-              value={this.state.password}
-              label="New Password"
-              type="password"
-              onChange={this.handleChange('password')}
-              fullWidth
-            />
-          }
-          {this.getDialogType() === 1 &&
-            <TextField
-              margin="dense"
-              id="confirm-password"
-              value={this.state.confirmPassword}
-              label="Confirm Password"
-              type="password"
-              onChange={this.handleChange('confirmPassword')}
-              fullWidth
-            />
+            <React.Fragment>
+              <TextField
+                margin="dense"
+                id="password"
+                value={this.state.password}
+                label="New Password"
+                type="password"
+                onChange={this.handleChange('password')}
+                fullWidth
+              />
+              <TextField
+                margin="dense"
+                id="confirm-password"
+                value={this.state.confirmPassword}
+                label="Confirm Password"
+                type="password"
+                onChange={this.handleChange('confirmPassword')}
+                fullWidth
+              />
+            </React.Fragment>
           }
         </DialogContent>
         <DialogActions>

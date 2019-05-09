@@ -17,11 +17,12 @@ import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 
+import DIYTopBar from '../commons/DIYTopBar'
 import MessageItem from '../items/MessageItem'
 import ChannelList from '../subcomponents/ChannelList'
 import ChatBox from '../subcomponents/ChatBox'
 import DetailDrawer from '../subcomponents/DetailDrawer'
-import DIYTopBar from '../commons/DIYTopBar'
+import WorkspaceManager from '../subcomponents/WorkspaceManager'
 
 
 const drawerWidth = 240
@@ -107,15 +108,17 @@ const styles = theme => ({
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
     transitionDelay: '0ms',
   },
-  workspaceMember: {
-    flexGrow: 1
-  }
 })
 
 class Workspace extends React.Component {
   state = {
     open: true,
     detailOpen: false,
+    currentWorkspace: {
+      wid: 1,
+      wname: 'Test Space',
+      wdesc: 'This is a workspace for testing React UI'
+    },
     currentChannel: null,
     isWorkspace: true,
     channels: [
@@ -138,7 +141,14 @@ class Workspace extends React.Component {
         uemail: 'mingyusysu@gmail.com',
         uname: 'mingyu',
         mtime: 'Fri Jan 18 2019 11:00:00 GMT-0500 (EST)',
-        mcontent: 'Haohao falls in love with Lee, Haohao falls in love with Lee, Haohao falls in love with Lee, Haohao falls in love with Lee, Haohao falls in love with Lee'
+        mcontent: 'This is a testing message. This is a testing message. This is a testing message. This is a testing message. This is a testing message. This is a testing message.'
+      }
+    ],
+    wmember: [
+      {
+        uemail: 'mingyusysu@gmail.com',
+        nickname: 'Alex',
+        uname: 'Mingyu Zhao',
       }
     ]
   }
@@ -154,10 +164,10 @@ class Workspace extends React.Component {
     return this.state.currentChannel ? this.state.currentChannel.cname : ''
   }
 
-  getWorkspaceName = () => {
+  getCurrentWorkspaceName = () => {
     // const wid = this.match.params.wid
     // get workspace name from DB or cache
-    return 'Test Space'
+    return this.state.currentWorkspace.wname
   }
 
   handleDrawerOpen = () => {
@@ -197,7 +207,7 @@ class Workspace extends React.Component {
         <DIYTopBar
           open={this.state.open}
           handleDrawerOpen={this.handleDrawerOpen}
-          title={`${this.getWorkspaceName()}/${this.getCurrentChannel()}`}
+          title={`#${this.getCurrentWorkspaceName()}${this.getCurrentChannel()}`}
         />
         <Drawer
           variant="permanent"
@@ -272,21 +282,10 @@ class Workspace extends React.Component {
         } {
           this.state.isWorkspace &&
           <main className={classes.content}>
-            <List className={classes.workspaceMember}>
-              <ListSubheader inset>
-                Workspace Mebers
-              </ListSubheader>
-              <ListItem
-                button
-              >
-                <ListItemAvatar>
-                  <Avatar>
-                    M
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="Mingyu" />
-              </ListItem>
-            </List>
+            <WorkspaceManager
+              wmember={this.state.wmember}
+              currentWorkspace={this.state.currentWorkspace}
+            />
           </main>
         }
       </div>
