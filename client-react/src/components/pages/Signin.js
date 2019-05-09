@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -54,7 +55,9 @@ class SignIn extends Component {
   state = {
     uemail: '',
     password: '',
-    remember: true
+    remember: true,
+    emailErrorMessage: null,
+    passwordErrorMessage: null,
   }
 
   componentDidMount () {
@@ -78,9 +81,19 @@ class SignIn extends Component {
       })
       store.setUser(res.data.users[0])
       this.props.history.push('/')
-    } catch (err) {
-      console.error(err)
-      console.error('login failed')
+    } catch (error) {
+      let { data } = error.response
+      if (data.error.toLowerCase().includes('email')) {
+        this.setState({
+          emailErrorMessage: data.error,
+          passwordErrorMessage: null
+        })
+      } else {
+        this.setState({
+          emailErrorMessage: null,
+          passwordErrorMessage: data.error
+        })
+      }
     }
   }
 
@@ -100,7 +113,12 @@ class SignIn extends Component {
             className={classes.form}
             onSubmit={this.handleSubmit}
           >
-            <FormControl margin="normal" required fullWidth>
+            <FormControl
+              margin="normal"
+              required
+              fullWidth
+              error={Boolean(this.state.emailErrorMessage)}
+            >
               <InputLabel htmlFor="uemail">Email Address</InputLabel>
               <Input
                 id="uemail"
@@ -110,8 +128,17 @@ class SignIn extends Component {
                 autoComplete="email"
                 autoFocus
               />
+              {
+                this.state.emailErrorMessage &&
+                <FormHelperText>{this.state.emailErrorMessage}</FormHelperText>
+              }
             </FormControl>
-            <FormControl margin="normal" required fullWidth>
+            <FormControl
+              margin="normal"
+              required
+              fullWidth
+              error={Boolean(this.state.passwordErrorMessage)}
+            >
               <InputLabel htmlFor="password">Password</InputLabel>
               <Input
                 id="password"
@@ -121,6 +148,10 @@ class SignIn extends Component {
                 onChange={this.handleChange}
                 autoComplete="current-password"
               />
+              {
+                this.state.passwordErrorMessage &&
+                <FormHelperText>{this.state.passwordErrorMessage}</FormHelperText>
+              }
             </FormControl>
             <FormControlLabel
               control={

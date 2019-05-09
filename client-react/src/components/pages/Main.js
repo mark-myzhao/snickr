@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import DIYTopBar from '../commons/DIYTopBar'
 import WorkspaceItem from '../items/WorkspaceItem'
 
-import store from '../../store'
+// import store from '../../store'
 
 import backgroundShape from '../../images/shape.svg'
 
@@ -37,7 +37,6 @@ const styles = theme => ({
 
 class Main extends Component {
   componentDidMount() {
-    console.log(store.isLogin())
   }
 
   state = {

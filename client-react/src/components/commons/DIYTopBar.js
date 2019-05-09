@@ -81,6 +81,9 @@ class DIYTopBar extends React.Component {
     ]
   }
 
+  componentDidMount() {
+  }
+
   handleHomeClick = () => {
     this.props.history.push('/')
   }
@@ -111,6 +114,12 @@ class DIYTopBar extends React.Component {
 
   handleNotificationDialogClose = () => {
     this.setState({ notificationDialogOpen: false })
+  }
+
+  handleLogoutClick = () => {
+    this.setState({ userProfileAnchor: null })
+    store.clear()
+    this.props.history.push('/signin')
   }
 
   render() {
@@ -178,7 +187,7 @@ class DIYTopBar extends React.Component {
           >
             <MenuItem onClick={this.handleUserDialogOpen('User Profile')}>User Profile</MenuItem>
             <MenuItem onClick={this.handleUserDialogOpen('Change Password')}>Change Password</MenuItem>
-            <MenuItem onClick={this.handleUserProfileClose}>Logout</MenuItem>
+            <MenuItem onClick={this.handleLogoutClick}>Logout</MenuItem>
           </Menu>
         </Toolbar>
         <UserProfileDialog

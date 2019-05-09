@@ -6,25 +6,26 @@ import Workspace from './components/pages/Workspace'
 import Signin from './components/pages/Signin'
 import NotFound from './components/pages/NotFound'
 
-const fakeAuth = {
-  isAuthenticated: true
-}
+import store from './store'
+
 
 function PrivateRoute({ component: Component, ...rest }) {
   return (
     <Route
       {...rest}
-      render={props =>
-        fakeAuth.isAuthenticated ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/signin",
-              state: { from: props.location }
-            }}
-          />
-        )
+      render={(props) => {
+        return store.isAuthenticated() ?
+          (
+            <Component {...props} />
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/signin",
+                state: { from: props.location }
+              }}
+            />
+          )
+        }
       }
     />
   )
