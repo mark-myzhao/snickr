@@ -4,9 +4,9 @@ let getmember = async (wid = undefined) => {
   try {
     let data = null
     if (wid) {
-      data = await db.query('SELECT uemail, wmtype FROM wMember WHERE wid = ?', wid)
+      data = await db.query('SELECT wMember.uemail, uname, nickname, wmtype FROM wMember NATURAL JOIN User WHERE wid = ?', wid)
     } else {
-      data = await db.query('SELECT uemail, wmtype FROM wMember')
+      data = await db.query('SELECT wMember.uemail, uname, nickname, wmtype FROM wMember NATURAL JOIN User')
     }
     return data
   } catch (error) {
