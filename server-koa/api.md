@@ -160,17 +160,18 @@ ctx.created({
 })
 
 
-// -> PUT /v1/wmember/:uemail  SET wid =2 for test
+// -> PUT /v1/wmember/:wid/:uemail  
 {
     'wmtype': 'admin'
 }
 // <- 200 ok
 
 
-// -> DELETE /v1/wmember/:uemail  SET wid =2 for test
+// -> DELETE /v1/wmember/:wid/:uemail  
 // <- 200 ok
 ctx.ok({
-    success: true
+    success: true,
+    deleted: uemail
 })
 ```
 
@@ -214,13 +215,10 @@ ctx.created({
 })
 
 
-// -> DELETE /v1/cmember/:uemail
-{
-    'cname': 'channel2',
-    'wid': 1,
-}
+// -> DELETE /v1/cmember/:wid/:cname/:uemail
 // <- 200 ok
 ctx.ok({
-    success: true
+    success: true,
+    deleted: uemail
 })
 ```

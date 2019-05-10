@@ -6,6 +6,6 @@ router.get('/:uemail', cMemberController.findmember)
 router.get('/', cMemberController.findallmember)
 router.get('/:wid/:cname', cMemberController.getmemberinchannel)
 router.post('/', cMemberController.addmember)
-router.delete('/:uemail', cMemberController.deletemember)
+router.delete('/:wid/:cname/:uemail', cMemberController.deletemember)
 
 module.exports = router.routes()

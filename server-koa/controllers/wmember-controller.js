@@ -78,8 +78,9 @@ let updatetype = withAuth(
   async (ctx, next) => {
     try {
       const uemail = ctx.params.uemail
+      const wid = ctx.params.wid
       const wmtype = ctx.request.body
-      let result = await wMemberModel.update(uemail, wmtype)
+      let result = await wMemberModel.update(uemail, wid, wmtype)
       if (result) {
         ctx.ok({ success: true, updated: uemail })
       } else {
@@ -95,7 +96,8 @@ let deletewmember = withAuth(
   async (ctx, next) => {
     try {
       const uemail = ctx.params.uemail
-      let result = await wMemberModel.remove(uemail)
+      const wid = ctx.params.wid
+      let result = await wMemberModel.remove(uemail, wid)
       if (result) {
         ctx.ok({ success: true, deleted: uemail })
       } else {

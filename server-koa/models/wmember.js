@@ -46,9 +46,8 @@ let addNewmember = async (uemail, wid, wmtype) => {
   }
 }
 
-let update = async (uemail, wmtype) => {
+let update = async (uemail, wid, wmtype) => {
   try {
-    let wid = 1 // this is for test
     if (uemail && wmtype) {
       let data = await db.query('SELECT uemail FROM wMember WHERE uemail = ? AND wid = ?', [uemail, wid])
       if (data.length > 0) {
@@ -65,9 +64,8 @@ let update = async (uemail, wmtype) => {
   }
 }
 
-let remove = async (uemail) => {
+let remove = async (uemail, wid) => {
   try {
-    let wid = 2
     let { affectedRows } = await db.query(` DELETE FROM wMember WHERE uemail = ? AND wid = ?`, [uemail, wid])
     return affectedRows > 0
   } catch (error) {
