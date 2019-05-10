@@ -1,7 +1,7 @@
 // manage the localstorage used in the project
-// import axios from 'axios'
 
 // const userKeys = ['uemail', 'uname', 'nickname']
+import buffer from './buffer'
 
 const setToken = (token) => {
   localStorage.setItem('token', token)
@@ -15,7 +15,7 @@ const clearToken = () => {
   localStorage.removeItem('token')
 }
 
-const isLogin = () => {
+const isAuthenticated = () => {
   const token = localStorage.getItem('token')
   return token !== null && token !== undefined
 }
@@ -34,6 +34,10 @@ const getUser = () => {
   }
 }
 
+const getUserName = () => {
+  return getUser().nickname ? getUser().nickname : 'Guest'
+}
+
 const clearUser = () => {
   localStorage.removeItem('uemail')
   localStorage.removeItem('uname')
@@ -48,9 +52,11 @@ export default {
   setToken,
   getToken,
   clearToken,
-  isLogin,
+  isAuthenticated,
   setUser,
   getUser,
+  getUserName,
   clearUser,
-  clear
+  clear,
+  buffer
 }

@@ -10,10 +10,10 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { withRouter } from 'react-router-dom'
 
 import store from '../../store'
@@ -21,7 +21,7 @@ import store from '../../store'
 const styles = theme => ({
   main: {
     width: 'auto',
-    display: 'block', // Fix IE 11 issue.
+    display: 'block',
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -42,7 +42,10 @@ const styles = theme => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
+    marginTop: theme.spacing.unit,
+  },
+  formItem: {
     marginTop: theme.spacing.unit,
   },
   submit: {
@@ -51,13 +54,19 @@ const styles = theme => ({
   }
 })
 
-class SignIn extends Component {
+class Signup extends Component {
   state = {
-    remember: true,
+    agree: true,
     uemail: '',
+    uname: '',
+    nickname: '',
     password: '',
-    emailErrorMessage: null,
+    passwordRepeat: '',
+    uemailErrorMessage: null,
+    unameErrorMessage: null,
+    nicknameErrorMessage: null,
     passwordErrorMessage: null,
+    passwordConfirmErrorMessage: null,
   }
 
   componentDidMount () {
@@ -66,10 +75,10 @@ class SignIn extends Component {
     }
   }
 
-  handleRememberClick = () => {
-    let { remember } = this.state
+  handleAgreeClick = () => {
+    let { agree } = this.state
     this.setState({
-      remember: !remember
+      agree: !agree
     })
   }
 
@@ -77,37 +86,29 @@ class SignIn extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  handleSubmit = async (e) => {
-    e.preventDefault()
+  handleSubmit = async (event) => {
+    event.preventDefault()
+    // TODO: Change the API from backend
     try {
-      let res = await axios.post('/auth/token', {
+      let res = await axios.post('/users', {
         uemail: this.state.uemail,
+        username: this.state.uname,
+        nickname: this.state.nickname,
         password: this.state.password
       })
-      store.setToken(res.data.token)
-      res = await axios.get(`/users/${this.state.uemail}`, {
-        headers: {'Authorization': `bearer ${res.data.token}`}
-      })
-      store.setUser(res.data.users[0])
-      this.props.history.push('/')
-    } catch (error) {
-      let { data } = error.response
-      if (data.error.toLowerCase().includes('email')) {
-        this.setState({
-          emailErrorMessage: data.error,
-          passwordErrorMessage: null
-        })
+      if (res.success) {
+        // success
       } else {
-        this.setState({
-          emailErrorMessage: null,
-          passwordErrorMessage: data.error
-        })
+        // handle error
       }
+    } catch (error) {
+      console.log(error)
+      // let { data } = error.response
     }
   }
 
-  handleSignupClick = () => {
-    this.props.history.push('/signup')
+  handleGoBackClick = () => {
+    this.props.history.push('/signin')
   }
 
   render() {
@@ -117,20 +118,20 @@ class SignIn extends Component {
         <CssBaseline />
         <Paper className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <AccountCircleIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Snickr Login
+            Register
           </Typography>
           <form
             className={classes.form}
             onSubmit={this.handleSubmit}
           >
             <FormControl
-              margin="normal"
+              margin="dense"
               required
               fullWidth
-              error={Boolean(this.state.emailErrorMessage)}
+              error={Boolean(this.state.uemailErrorMessage)}
             >
               <InputLabel htmlFor="uemail">Email Address</InputLabel>
               <Input
@@ -138,16 +139,51 @@ class SignIn extends Component {
                 name="uemail"
                 value={this.state.uemail}
                 onChange={this.handleChange}
-                autoComplete="email"
                 autoFocus
               />
               {
-                this.state.emailErrorMessage &&
-                <FormHelperText>{this.state.emailErrorMessage}</FormHelperText>
+                this.state.uemailErrorMessage &&
+                <FormHelperText>{this.state.uemailErrorMessage}</FormHelperText>
               }
             </FormControl>
             <FormControl
-              margin="normal"
+              margin="dense"
+              required
+              fullWidth
+              error={Boolean(this.state.unameErrorMessage)}
+            >
+              <InputLabel htmlFor="uname">Full Name</InputLabel>
+              <Input
+                id="uname"
+                name="uname"
+                value={this.state.uname}
+                onChange={this.handleChange}
+              />
+              {
+                this.state.unameErrorMessage &&
+                <FormHelperText>{this.state.unameErrorMessage}</FormHelperText>
+              }
+            </FormControl>
+            <FormControl
+              margin="dense"
+              required
+              fullWidth
+              error={Boolean(this.state.nicknameErrorMessage)}
+            >
+              <InputLabel htmlFor="nickname">Nickname</InputLabel>
+              <Input
+                id="nickname"
+                name="nickname"
+                value={this.state.nickname}
+                onChange={this.handleChange}
+              />
+              {
+                this.state.nicknameErrorMessage &&
+                <FormHelperText>{this.state.nicknameErrorMessage}</FormHelperText>
+              }
+            </FormControl>
+            <FormControl
+              margin="dense"
               required
               fullWidth
               error={Boolean(this.state.passwordErrorMessage)}
@@ -159,23 +195,41 @@ class SignIn extends Component {
                 type="password"
                 value={this.state.password}
                 onChange={this.handleChange}
-                autoComplete="current-password"
               />
               {
                 this.state.passwordErrorMessage &&
                 <FormHelperText>{this.state.passwordErrorMessage}</FormHelperText>
               }
             </FormControl>
+            <FormControl
+              margin="dense"
+              required
+              fullWidth
+              error={Boolean(this.state.passwordConfirmErrorMessage)}
+            >
+              <InputLabel htmlFor="password">Confirm Password</InputLabel>
+              <Input
+                id="passwordConfirm"
+                name="passwordConfirm"
+                type="password"
+                value={this.state.passwordConfirm}
+                onChange={this.handleChange}
+              />
+              {
+                this.state.passwordConfirmErrorMessage &&
+                <FormHelperText>{this.state.passwordConfirmErrorMessage}</FormHelperText>
+              }
+            </FormControl>
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={this.state.remember}
-                  onChange={this.handleRememberClick}
-                  value="remember"
+                  checked={this.state.agree}
+                  onChange={this.handleAgreeClick}
+                  value="agree"
                   color="primary"
                 />
               }
-              label="Remember me"
+              label="Agree to Snickr's policy"
             />
             <Button
               type="submit"
@@ -184,15 +238,15 @@ class SignIn extends Component {
               color="primary"
               className={classes.submit}
             >
-              Sign in
+              Sign up
             </Button>
             <Button
+              className={classes.submit}
               fullWidth
               variant="contained"
-              className={classes.submit}
-              onClick={this.handleSignupClick}
+              onClick={this.handleGoBackClick}
             >
-              Sign up
+              Go back to login
             </Button>
           </form>
         </Paper>
@@ -201,4 +255,4 @@ class SignIn extends Component {
   }
 }
 
-export default withRouter(withStyles(styles)(SignIn))
+export default withRouter(withStyles(styles)(Signup))

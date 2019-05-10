@@ -95,10 +95,14 @@ ctx.ok({
         {
             'cname': 'channel1',
             'ctype': 'public',
+            'oemail': '', // owner uemail
+            'oname': '',  // owner uname
             'ctime': 'Sat Dec 08 2018 10:00:00 GMT-0500'
         }, {
             'cname': 'channel5',
             'ctype': 'privite',
+            'oemail': '', // owner uemail
+            'oname': '',  // owner uname
             'ctime': 'Mon Oct 01 2018 10:00:00 GMT-0400'
         }
     ]
@@ -163,6 +167,20 @@ ctx.created({
 
 ##Message
 ```javascript
+// -> GET /v1/message/:wid/:cname
+// <- 200 OK
+{
+    'success': true,
+    'message': [
+        {
+            uemail: 'mingyusysu@gmail.com',
+            uname: 'mingyu',
+            mtime: 'Fri Jan 18 2019 11:00:00 GMT-0500 (EST)',
+            mcontent: 'This is a testing message.'
+        }
+    ]
+}
+
 // -> POST /v1/message/
 {
     'wid': 1,
@@ -187,7 +205,7 @@ ctx.ok({
 
 
 // -> GET /v1/wmember/getwid/:uemail
-// <- 200 ok 
+// <- 200 ok
 ctx.ok({
     success: true,
     workspace: {wid, wmtype}
@@ -226,7 +244,7 @@ ctx.ok({
 // <- 200 OK
 ctx.ok({
     success: true,
-    memberinfo: {uenamil, wid, cname} 
+    memberinfo: {uenamil, wid, cname}
 })
 
 // -> GET /v1/cmember   get all cmembers

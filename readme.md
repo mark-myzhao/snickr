@@ -72,6 +72,7 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 - JavaScript
     - [The Modern JavaScript Tutorial](https://javascript.info)
     - [MDN Java​Script](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+    - [Date and time](https://javascript.info/date)
 - Node.js
     - [Node.js in 2018: Full stack tutorial](https://medium.com/jtribe/node-js-in-2018-full-stack-tutorial-with-koa-react-redux-sagas-and-mongodb-14a7efaee4d4)
 - React.js
@@ -80,8 +81,16 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
 - MySQL
     - [MySQL Cheet Sheet](https://devhints.io/mysql)
     - [Promise MySQL](https://www.npmjs.com/package/promise-mysql)
+    - [A Comprehensive Guide to Using MySQL ENUM](http://www.mysqltutorial.org/mysql-enum/)
 - REST
     - [Learn REST: A RESTful Tutorial](https://www.restapitutorial.com)
     - [What is REST](https://restfulapi.net)
 - Authorization
     - [Learn how to handle authentication with Node using Passport.js](https://medium.freecodecamp.org/learn-how-to-handle-authentication-with-node-using-passport-js-4a56ed18e81e)
+
+
+
+## VI. Related Resources
+- Material Design
+    - [Material Design](https://material.io/)
+    - [Material Design: Icons](https://material.io/tools/icons/?icon=chat&style=baseline)
