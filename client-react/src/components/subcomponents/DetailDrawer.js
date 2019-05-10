@@ -64,6 +64,11 @@ class DetailDrawer extends React.Component {
     memberOpen: false
   }
 
+  componentDidMount = async () => {
+    const { currentWorkspace } = this.props
+
+  }
+
   handleChannelDetailClick = () => {
     this.setState(state => ({ channelDetailOpen: !state.channelDetailOpen }));
   }

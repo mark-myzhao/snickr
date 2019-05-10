@@ -142,7 +142,7 @@ ctx.ok({
 
 
 // -> GET /v1/wmember/getwid/:uemail
-// <- 200 ok 
+// <- 200 ok
 ctx.ok({
     success: true,
     workspace: {wid, wmtype}
@@ -180,7 +180,7 @@ ctx.ok({
 // <- 200 OK
 ctx.ok({
     success: true,
-    memberinfo: {uenamil, wid, cname} 
+    memberinfo: {uenamil, wid, cname}
 })
 
 // -> GET /v1/cmember   get all cmembers
@@ -191,7 +191,7 @@ ctx.ok({
 })
 
 // -> GET /v1/cmember/getchannelmember/:cname  get the member in the particular channel   SET wid = 1 for test
-// <- 200 ok 
+// <- 200 ok
 ctx.ok({
     success: true,
     member: uemail

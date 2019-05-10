@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
+import { fade } from '@material-ui/core/styles/colorManipulator'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -11,7 +12,9 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Button from '@material-ui/core/Button'
 import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
+import InputBase from '@material-ui/core/InputBase'
 import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import HomeIcon from '@material-ui/icons/Home'
 
@@ -38,22 +41,62 @@ const styles = theme => ({
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing.unit * 2,
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing.unit * 3,
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    width: theme.spacing.unit * 6,
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+    width: '100%',
+  },
+  inputInput: {
+    paddingTop: theme.spacing.unit,
+    paddingRight: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit * 6,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: 200,
+    },
+  },
   button: {
     color: '#FFFFFF',
     marginLeft: '5px'
   },
   menuButton: {
-    marginLeft: 8,
+    marginLeft: theme.spacing.unit * 1,
+    marginRight: theme.spacing.unit * 4,
   },
   menuButtonHidden: {
     display: 'none',
   },
   title: {
     flexGrow: 1,
-    marginLeft: theme.spacing.unit * 3,
+    marginLeft: theme.spacing.unit * 1,
   },
   toolbar: {
-    paddingRight: 24,
+    paddingRight: theme.spacing.unit * 3,
   },
 })
 
@@ -145,6 +188,7 @@ class DIYTopBar extends React.Component {
           >
             <MenuIcon />
           </IconButton>}
+          {!handleDrawerOpen && <div className={classes.menuButton}/>}
           <Typography
             className={classes.title}
             component="h1"
@@ -154,6 +198,18 @@ class DIYTopBar extends React.Component {
           >
             {title}
           </Typography>
+          <div className={classes.search}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+            />
+          </div>
           <IconButton
             color="inherit"
             aria-label="Home"

@@ -21,6 +21,7 @@ import ChannelList from '../subcomponents/ChannelList'
 import ChatBox from '../subcomponents/ChatBox'
 import DetailDrawer from '../subcomponents/DetailDrawer'
 import WorkspaceManager from '../subcomponents/WorkspaceManager'
+import AddChannelDialog from '../subcomponents/AddChannelDialog'
 
 import axios from 'axios'
 import store from '../../store'
@@ -114,10 +115,10 @@ class Workspace extends React.Component {
     open: true,
     detailOpen: false,
     addChannelOpen: false,
-    currentWorkspace: {},
-    currentChannel: {},
+    currentWorkspace: {},  // { wid, wname, wdesc }
+    currentChannel: {},    // { cname, ctime, ctype }
     isWorkspace: true,
-    channels: [], // { cname, ctime, ctype }
+    channels: [],
     messages: [
       {
         uemail: 'mingyusysu@gmail.com',
@@ -126,43 +127,57 @@ class Workspace extends React.Component {
         mcontent: 'This is a testing message. This is a testing message. This is a testing message. This is a testing message. This is a testing message. This is a testing message.'
       }
     ],
-    wmember: [
-      {
-        uemail: 'mingyusysu@gmail.com',
-        nickname: 'Alex',
-        uname: 'Mingyu Zhao',
-      }
-    ]
+    wmember: [] // uemail, uname, nickname, wmtype
   }
 
   async componentDidMount() {
     const { match } = this.props
-    const token = store.getToken()
     const { uemail } = store.getUser()
-    // get workspaces
-    if (!store.buffer.workspace) {
-      // Buffer is empty, get data from the server
-      let { data } = await axios.get(`/workspace/${uemail}`, {
-        headers: {'Authorization': `bearer ${token}`}
-      })
-      store.buffer.workspace = data.workspace
-    }
-    for (let item of store.buffer.workspace) {
-      if (`${item.wid}` === match.params.wid) {
-        this.setState({
-          currentWorkspace: item
+    const token = store.getToken()
+    const wid = match.params.wid
+    // GET workspaces
+    try {
+      if (!store.buffer.workspace) {
+        // Buffer is empty, get data from the server
+        let { data } = await axios.get(`/workspace/${uemail}`, {
+          headers: {'Authorization': `bearer ${token}`}
         })
+        store.buffer.workspace = data.workspace
       }
+      for (let item of store.buffer.workspace) {
+        if (`${item.wid}` === wid) {
+          this.setState({
+            currentWorkspace: item
+          })
+        }
+      }
+    } catch(error) {
+      console.error(error)
     }
 
-    // get channels
-    let { data } = await axios.get(`/channel/${match.params.wid}`, {
-      headers: {'Authorization': `bearer ${token}`}
-    })
-    this.setState({
-      channels: data.channels
-    })
-    console.log(data)
+    // GET channels
+    try {
+      let { data } = await axios.get(`/channel/${wid}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      this.setState({
+        channels: data.channels
+      })
+    } catch(error) {
+      console.error(error)
+    }
+
+    // GET workspace members
+    try {
+      let { data } = await axios.get(`/wmember/${wid}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      this.setState({
+        wmember: data.member
+      })
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   // computed attributes
@@ -197,7 +212,9 @@ class Workspace extends React.Component {
     })
   }
 
-  handleDrawerClick = (item) => {
+  handleDrawerClick = async (item) => {
+    // set messages
+    // axios.get()
     this.setState({
       currentChannel: item,
       isWorkspace: false
@@ -219,7 +236,7 @@ class Workspace extends React.Component {
 
   handleAddChannelClose = () => {
     this.setState({
-      addChannelOpen: true
+      addChannelOpen: false
     })
   }
 
@@ -306,6 +323,11 @@ class Workspace extends React.Component {
               primary="New Channel"
             />
           </ListItem>
+          <AddChannelDialog
+            open={this.state.addChannelOpen}
+            currentWorkspace={this.state.currentWorkspace}
+            handleClose={this.handleAddChannelClose}
+          />
         </Drawer>
         {
           !this.state.isWorkspace &&

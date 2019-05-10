@@ -7,11 +7,14 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
 import Typography from '@material-ui/core/Typography'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import InvitationDialog from '../subcomponents/InvitationDialog'
+import store from '../../store';
 
 
 const styles = theme => ({
@@ -26,10 +29,20 @@ const styles = theme => ({
   },
   title: {
     marginLeft: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
+    flexDirection: 'row',
+    display: 'flex',
+    alignItems: 'baseline',
+  },
+  workDescription: {
+    marginLeft: theme.spacing.unit,
     marginBottom: theme.spacing.unit * 2,
   },
   heading: {
     marginLeft: theme.spacing.unit * 2
+  },
+  userDetail: {
+    marginRight: theme.spacing.unit * 3
   },
   details: {
     paddingLeft: theme.spacing.unit * 3,
@@ -43,7 +56,32 @@ const styles = theme => ({
 
 class WMemberManager extends React.Component {
   state = {
-    invitationOpen: false
+    invitationOpen: false,
+    anchorEl: null,
+    isAdmin: false,
+  }
+
+  componentDidMount = () => {
+    const { wmember } = this.props
+    for (let item of wmember) {
+      if (item.uemail === store.getUser.uemail) {
+        this.setState({
+          isAdmin: true
+        })
+      }
+    }
+  }
+
+  handleMenuClick = event => {
+    this.setState({
+      anchorEl: event.currentTarget
+    })
+  }
+
+  handleMenuClose = () => {
+    this.setState({
+      anchorEl: null
+    })
   }
 
   handleInvitationDialogOpen = () => {
@@ -62,13 +100,30 @@ class WMemberManager extends React.Component {
     const { classes, wmember, currentWorkspace } = this.props
     return (
       <div className={classes.workspaceContainer}>
+        <div className={classes.title}>
+          <Typography
+            variant="h6"
+          >
+            Workspace Description
+          </Typography>
+          <Button color="primary">
+            Edit
+          </Button>
+        </div>
+        <Typography
+          variant="body1"
+          className={classes.workDescription}
+        >
+          {currentWorkspace.wdesc}
+        </Typography>
         <Typography
           variant="h6"
           className={classes.title}
         >
           Workspace Members
         </Typography>
-        {wmember && wmember.map(item => {
+        { wmember && wmember.map(item => {
+          const you = store.getUserName() === item.nickname ? ' (You)' : ''
           return (
             <ExpansionPanel
               key={item.uemail}
@@ -85,24 +140,59 @@ class WMemberManager extends React.Component {
                     color="primary"
                     className={classes.heading}
                   >
-                    {item.nickname}
+                    {`${item.nickname}${you}`}
                   </Typography>
                 </div>
               </ExpansionPanelSummary>
               <ExpansionPanelDetails className={classes.details}>
-                <Typography variant="body2">
-                  Email: {item.uemail}
-                </Typography>
-                <Typography variant="body2">
-                  Full Name: {item.uname}
-                </Typography>
+                <div
+                  className={classes.userDetail}
+                >
+                  <Typography variant="subtitle2">
+                    Email:
+                  </Typography>
+                  <Typography variant="body2">
+                    {item.uemail}
+                  </Typography>
+                </div>
+                <div
+                  className={classes.userDetail}
+                >
+                  <Typography variant="subtitle2">
+                    Full Name:
+                  </Typography>
+                  <Typography variant="body2">
+                    {item.uname}
+                  </Typography>
+                </div>
+                <div
+                  className={classes.userDetail}
+                >
+                  <Typography variant="subtitle2">
+                    User Type:
+                  </Typography>
+                  <Typography variant="body2">
+                    {item.wmtype}
+                  </Typography>
+                </div>
               </ExpansionPanelDetails>
-              <Divider />
-              <ExpansionPanelActions>
-                <Button size="small">
-                  Remove
-                </Button>
-              </ExpansionPanelActions>
+              {
+                this.state.isAdmin &&
+                <React.Fragment>
+                  <Divider />
+                  <ExpansionPanelActions>
+                    <Button
+                      size="small"
+                      onClick={this.handleMenuClick}
+                    >
+                      Change Type
+                    </Button>
+                    <Button size="small">
+                      Remove
+                    </Button>
+                  </ExpansionPanelActions>
+                </React.Fragment>
+              }
             </ExpansionPanel>
           )
         })}
@@ -125,6 +215,14 @@ class WMemberManager extends React.Component {
           currentWorkspace={currentWorkspace}
           handleClose={this.handleInvitationDialogClose}
         />
+        <Menu
+          anchorEl={this.state.anchorEl}
+          open={Boolean(this.state.anchorEl)}
+          onClose={this.handleMenuClose}
+        >
+          <MenuItem onClick={this.handleMenuClose}>Admin</MenuItem>
+          <MenuItem onClick={this.handleMenuClose}>User</MenuItem>
+        </Menu>
       </div>
     )
   }
