@@ -2,25 +2,25 @@ create table User
 (
     uemail varchar(50) not null
         primary key,
-    uname varchar(50) null,
-    nickname varchar(50) null,
-    password varchar(50) null
+    uname varchar(50) not null,
+    nickname varchar(50) not null,
+    password varchar(50) not null
 );
 
 create table Workspace
 (
     wid int auto_increment
         primary key,
-    wname varchar(50) null,
-    wdesc varchar(200) null
+    wname varchar(50) not null,
+    wdesc varchar(200) not null
 );
 
 create table Channel
 (
     wid int not null,
     cname varchar(50) not null,
-    ctype varchar(50) null,
-    ctime datetime null,
+    ctype ENUM('public', 'private', 'direct') not null,
+    ctime datetime not null,
     primary key (wid, cname),
     foreign key (wid) references Workspace (wid) on delete cascade
 );
@@ -31,7 +31,7 @@ create table Message
     cname varchar(50) not null,
     uemail varchar(50) not null,
     mtime datetime not null,
-    mcontent varchar(300) null,
+    mcontent varchar(300) not null,
     primary key (wid, cname, uemail, mtime),
     foreign key (wid, cname) references Channel (wid, cname) on delete cascade,
     foreign key (uemail) references User (uemail) on delete cascade
@@ -76,7 +76,7 @@ create table wMember
 (
     uemail varchar(50) not null,
     wid int not null,
-    wmtype varchar(50) null,
+    wmtype ENUM('admin', 'user') not null,
     primary key (uemail, wid),
     foreign key (uemail) references User (uemail) on delete cascade,
     foreign key (wid) references Workspace (wid) on delete cascade
