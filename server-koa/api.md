@@ -51,6 +51,21 @@ ctx.ok({
 
 ##wInvitation
 ```javascript
+// -> GET  /v1/winvitation/:remail
+// <- 200 ok
+ctx.ok({
+    success: true,
+    winvitation: [
+        {
+            'wid': 1,
+            'wname': '',
+            'witime': '',
+            'semail': 'send email',
+            'remail': 'recieve email'
+        }
+    ]
+})
+
 // -> POST /v1/winvitation/:wid
 {
     'semail': 'send email',
@@ -110,6 +125,21 @@ ctx.created({
 
 ##cInvitation
 ```javascript
+// -> GET  /v1/cinvitation/:remail
+ctx.ok({
+    success: true,
+    cinvitation: [
+        {
+            'wid': 1,
+            'wname': '',
+            'citime': '',
+            'cname': '',
+            'semail': 'send email',
+            'remail': 'recieve email',
+        }
+    ]
+})
+
 // -> POST /v1/cinvitation/:cname
 {
     'semail': 'send email',

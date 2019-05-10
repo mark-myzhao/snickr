@@ -1,5 +1,14 @@
 const db = require('../db.js')
 
+let getinvitation = async (remail) => {
+  try {
+    let data = await db.query('SELECT wid, wname, citime, cname, semail, remail FROM cInvitation NATURAL JOIN Workspace WHERE remail = ?', remail)
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+
 let addNewcinvitation = async (semail, remail, wid, cname, citime) => {
   try {
     if (semail && remail && wid && cname && citime) {
@@ -27,6 +36,7 @@ let remove = async (semail, remail, wid, cname) => {
 }
 
 module.exports = {
+  getinvitation,
   addNewcinvitation,
   remove
 }

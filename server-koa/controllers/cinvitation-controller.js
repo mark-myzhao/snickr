@@ -2,6 +2,25 @@ const cInvitationModel = require('../models/cinvitation')
 const { withAuth } = require('../util')
 const ERRMSG = require('../util/errmsg')
 
+let getallinvitation = withAuth(
+  async (ctx, next) => {
+    try {
+      const remail = ctx.params.remail
+      let result = await cInvitationModel.getinvitation(remail)
+      if (result.length > 0) {
+        ctx.ok({
+          success: true,
+          member: result
+        })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let addcinvitation = withAuth(
   async (ctx, next) => {
     try {
@@ -38,6 +57,7 @@ let deleteallcinvitation = withAuth(
 )
 
 module.exports = {
+  getallinvitation,
   addcinvitation,
   deleteallcinvitation
 }
