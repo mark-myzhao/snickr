@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
-// import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
@@ -17,12 +15,40 @@ import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Slide from '@material-ui/core/Slide'
-
-// import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
 
 const styles = theme => ({
   panelContainer: {
-    padding: theme.spacing.unit * 2,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+  },
+  summary: {
+    alignItems: 'baseline'
+  },
+  content: {
+    width: '640px',
+    height: '100vh',
+    maxWidth: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    paddingTop: theme.spacing.unit * 13,
+    marginLeft: theme.spacing.unit * 4,
+    marginRight: theme.spacing.unit * 4,
+  },
+  title: {
+    color: '#1d1c1d',
+    fontSize: '34px',
+    lineHeight: '41px',
+    fontWeight: 700,
+    marginBottom: theme.spacing.unit * 3,
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
@@ -35,14 +61,25 @@ const styles = theme => ({
   details: {
     alignItems: 'center',
   },
-  appBar: {
-    position: 'relative',
+  closeButton: {
+    position: 'absolute',
+    right: '4rem',
+    top: '3.5rem',
   },
-  flex: {
-    flex: 1,
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.unit * 4,
   },
-  groupTitle: {
-    margin: theme.spacing.unit
+  newChannelNameInput: {
+    flexGrow: 1
+  },
+  button: {
+    marginLeft: theme.spacing.unit,
+  },
+  button2: {
+    marginLeft: theme.spacing.unit * -1,
   }
 })
 
@@ -51,22 +88,13 @@ function Transition(props) {
 }
 
 class NotificationDialog extends React.Component {
-  getMergedInvitations = (cinvitation, winvitation) => {
-    // TODO:
-    // let totalInvitations = []
-    // for (let item of winvitation) {
+  state = {
+  }
 
-    // }
-    // for (let item of cinvitation) {
-    //   totalInvitations.push({
-    //     sender: {
-    //       semail: '...',
-    //       sname: '...'
-    //     },
-    //     target: `${item.wid}/${item.cname}`,
-    //     time: item.citime
-    //   })
-    // }
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    })
   }
 
   render() {
@@ -79,57 +107,119 @@ class NotificationDialog extends React.Component {
           onClose={handleClose}
           TransitionComponent={Transition}
         >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <Typography variant="h6" color="inherit" className={classes.flex}>
-                Received Invitations
-              </Typography>
-              <IconButton color="inherit" onClick={handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <div
-            className={classes.panelContainer}
-          >
-            {[1, 2, 3].map(item => {
-              return (
-                <ExpansionPanel key={item}>
-                  <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography
-                      variant="h6"
-                      color="primary"
-                      className={classes.heading}
-                    >
-                      Workspace Invitation
-                    </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      className={classes.secondaryHeading}
-                    >
-                      2018-12-25
-                    </Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails className={classes.details}>
-                    <div>
-                      <Typography variant="body2">
-                        Mingyu has invited you to join W1
-                      </Typography>
-                    </div>
-                  </ExpansionPanelDetails>
-                  <Divider />
-                  <ExpansionPanelActions>
-                    <Button size="small">
-                      Decline
-                    </Button>
-                    <Button size="small" color="primary">
-                      Accept
-                    </Button>
-                  </ExpansionPanelActions>
-                </ExpansionPanel>
-              )
-            })}
-
+          <div className={classes.panelContainer}>
+            <IconButton
+              color="inherit"
+              fontSize="large"
+              onClick={handleClose}
+              aria-label="Close"
+              className={classes.closeButton}
+            >
+              <CloseIcon />
+            </IconButton>
+            <div
+              className={classes.content}
+            >
+              {
+                winvitation.length > 0 &&
+                <React.Fragment>
+                  <div className={classes.title}>
+                    Workspace Invitations
+                  </div>
+                  { winvitation.map(item => {
+                      let t = new Date(item.citime)
+                      return (
+                        <ExpansionPanel key={item}>
+                          <ExpansionPanelSummary
+                            className={classes.summary}
+                            expandIcon={<ExpandMoreIcon />}
+                          >
+                            <Typography
+                              variant="h6"
+                              color="primary"
+                              className={classes.heading}
+                            >
+                              from {item.semail}
+                            </Typography>
+                            <Typography
+                              variant="subtitle2"
+                              className={classes.secondaryHeading}
+                            >
+                              2018-12-25
+                            </Typography>
+                          </ExpansionPanelSummary>
+                          <ExpansionPanelDetails className={classes.details}>
+                            <div>
+                              <Typography variant="body2">
+                                {item.semail} has invited you to join #{item.wname}/{item.cname}
+                              </Typography>
+                            </div>
+                          </ExpansionPanelDetails>
+                          <Divider />
+                          <ExpansionPanelActions>
+                            <Button size="small">
+                              Decline
+                            </Button>
+                            <Button size="small" color="primary">
+                              Accept
+                            </Button>
+                          </ExpansionPanelActions>
+                        </ExpansionPanel>
+                      )
+                    })
+                  }
+                </React.Fragment>
+              } {
+                cinvitation.length > 0 &&
+                <React.Fragment>
+                  <div className={classes.title}>
+                    Channel Invitations
+                  </div>
+                  { cinvitation.map(item => {
+                      let t = new Date(item.citime)
+                      return (
+                        <ExpansionPanel key={item}>
+                          <ExpansionPanelSummary
+                            className={classes.summary}
+                            expandIcon={<ExpandMoreIcon />}
+                          >
+                            <Typography
+                              variant="h6"
+                              color="primary"
+                              className={classes.heading}
+                            >
+                              from {item.semail}
+                            </Typography>
+                            <Typography
+                              variant="subtitle2"
+                              className={classes.secondaryHeading}
+                            >
+                              2018-12-25
+                            </Typography>
+                          </ExpansionPanelSummary>
+                          <ExpansionPanelDetails className={classes.details}>
+                            <div>
+                              <Typography variant="body2">
+                                {item.semail} has invited you to join #{item.wname}/{item.cname}
+                              </Typography>
+                            </div>
+                          </ExpansionPanelDetails>
+                          <Divider />
+                          <ExpansionPanelActions>
+                            <Button size="small">
+                              Decline
+                            </Button>
+                            <Button size="small" color="primary">
+                              Accept
+                            </Button>
+                          </ExpansionPanelActions>
+                        </ExpansionPanel>
+                      )
+                    })
+                  }
+                </React.Fragment>
+              }
+            </div>
           </div>
         </Dialog>
       </React.Fragment>
@@ -142,4 +232,3 @@ NotificationDialog.propTypes = {
 }
 
 export default withStyles(styles)(NotificationDialog)
-

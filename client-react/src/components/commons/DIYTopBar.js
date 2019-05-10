@@ -21,7 +21,8 @@ import HomeIcon from '@material-ui/icons/Home'
 import UserProfileDialog from '../subcomponents/UserProfileDialog'
 import NotificationDialog from '../subcomponents/NotificationDialog'
 
-import store from '../../store'
+import axios from 'axios'
+import $store from '../../store'
 
 // TODO: User Profile Dialog
 // TODO: Change Password Dialog
@@ -111,24 +112,41 @@ class DIYTopBar extends React.Component {
     userDialogTitle: '',
     notification: 10,
     notificationDialogOpen: false,
-    cinvitation: [
-      {
-        semail: 'mingyusysu@gmail.com',
-        wid: '1',
-        cname: 'channel1',
-        citime: '2018-12-25'
-      }
-    ],
-    winvitation: [
-      {
-        semail: 'mingyusysu@gmail.com',
-        wid: '1',
-        citime: '2018-12-24'
-      }
-    ]
+    cinvitation: [],  // { semail, remail, citime, cname, wid, wname }
+    winvitation: []
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    try {
+      let { data } = await axios.get(`/cinvitation/${you.uemail}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      this.setState({
+        cinvitation: data.member
+      })
+    } catch(error) {
+      console.error(error)
+      this.setState({
+        cinvitation: []
+      })
+    }
+    try {
+      let { data } = await axios.get(`/winvitation/${you.uemail}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      this.setState({
+        winvitation: data.member
+      })
+    } catch(error) {
+      // console.error(error)
+      this.setState({
+        winvitation: []
+      })
+    }
   }
 
   handleHomeClick = () => {
@@ -165,7 +183,7 @@ class DIYTopBar extends React.Component {
 
   handleLogoutClick = () => {
     this.setState({ userProfileAnchor: null })
-    store.clear()
+    $store.clear()
     this.props.history.push('/signin')
   }
 
@@ -238,7 +256,7 @@ class DIYTopBar extends React.Component {
             className={classes.button}
             onClick={this.handleUserProfileClick}
           >
-            {store.getUserName()}
+            {$store.getUserName()}
           </Button>
           <Menu
             anchorEl={this.state.userProfileAnchor}

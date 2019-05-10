@@ -35,7 +35,7 @@ import store from '../../store'
 // TODO: Add People to Channel
 // TODO: Quit from Workspace
 // TODO: Quit from Channel
-// TODO: Display Messages (scroll / partial load)
+// TODO: Display Messages (partial load)
 
 const styles = theme => ({
   root: {
