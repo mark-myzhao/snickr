@@ -137,7 +137,7 @@ ctx.created({
 // <- 200 OK
 ctx.ok({
     success: true,
-    member: {uemail, wmtype}
+    member: {uemail, ,uname, nickname, wmtype}
 })
 
 
