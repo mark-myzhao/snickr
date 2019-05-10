@@ -17,6 +17,16 @@ let addNewcinvitation = async (semail, remail, wid, cname, citime) => {
   }
 }
 
+let remove = async (semail, remail, wid, cname) => {
+  try {
+    let { affectedRows } = await db.query(` DELETE FROM cInvitation WHERE semail = ? AND remail = ? AND wid = ? AND cname = ?`, [semail, remail, wid, cname])
+    return affectedRows > 0
+  } catch (error) {
+    throw error
+  }
+}
+
 module.exports = {
-  addNewcinvitation
+  addNewcinvitation,
+  remove
 }

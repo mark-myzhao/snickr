@@ -60,6 +60,14 @@ ctx.ok({
 ctx.created({
     success: true
 })
+
+// -> DELETE /v1/winvitation
+{
+    'semail': 'send email',
+    'remail': 'recieve email',
+    'wid' : 1,
+}
+// <- 200 ok
 ```
 
 ##Channel
@@ -113,7 +121,14 @@ ctx.created({
     success: true
 })
 
-
+// -> DELETE /v1/cinvitation
+{
+    'semail': 'send email',
+    'remail': 'recieve email',
+    'wid' : 1,
+    'cname': ''
+}
+// <- 200 ok
 ```
 
 ##Message

@@ -21,6 +21,23 @@ let addcinvitation = withAuth(
   }
 )
 
+let deleteallcinvitation = withAuth(
+  async (ctx, next) => {
+    try {
+      const { semail, remail, wid, cname } = ctx.request.body
+      let result = await cInvitationModel.remove(semail, remail, wid, cname)
+      if (result) {
+        ctx.ok({ success: true })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.badRequest({ error })
+    }
+  }
+)
+
 module.exports = {
-  addcinvitation
+  addcinvitation,
+  deleteallcinvitation
 }
