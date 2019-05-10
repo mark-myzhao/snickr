@@ -18,6 +18,8 @@ import AlternateEmailIcon from '@material-ui/icons/AlternateEmail'
 
 import InvitationDialog from './InvitationDialog'
 
+// TODO: Get Channel Details
+// TODO: Edit Channel
 
 const styles = theme => ({
   nested: {
@@ -65,7 +67,7 @@ class DetailDrawer extends React.Component {
   }
 
   componentDidMount = async () => {
-    const { currentWorkspace } = this.props
+    // const { currentWorkspace } = this.props
 
   }
 

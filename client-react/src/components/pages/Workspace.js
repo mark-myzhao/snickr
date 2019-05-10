@@ -26,6 +26,15 @@ import AddChannelDialog from '../subcomponents/AddChannelDialog'
 import axios from 'axios'
 import store from '../../store'
 
+// TODO: Edit Workspace Dialog
+// TODO: Change User Type
+// TODO: Join Public Channels
+// TODO: Dynamic Update
+// TODO: Add People to Workspace
+// TODO: Add People to Channel
+// TODO: Quit from Workspace
+// TODO: Quit from Channel
+// TODO: Display Messages (scroll / partial load)
 
 const styles = theme => ({
   root: {

@@ -9,7 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
-// import store from '../../store'
+import store from '../../store'
 
 
 const styles = theme => ({})
@@ -23,10 +23,25 @@ class UserProfileDialog extends React.Component {
     confirmPassword: ''
   }
 
+  componentDidMount = () => {
+    const user = store.getUser()
+    this.setState({
+      ...user
+    })
+  }
+
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     })
+  }
+
+  handleUpdateProfile = () => {
+
+  }
+
+  handleUpdatePassword = () => {
+
   }
 
   getDialogType = () => {
@@ -53,28 +68,22 @@ class UserProfileDialog extends React.Component {
             <React.Fragment>
               <TextField
                 margin="dense"
-                id="uemail"
                 value={this.state.uemail}
                 label="Email Address"
-                type="email"
                 onChange={this.handleChange('uemail')}
                 fullWidth
               />
               <TextField
                 margin="dense"
-                id="uname"
                 value={this.state.uname}
                 label="Full Name"
-                type="text"
                 onChange={this.handleChange('uname')}
                 fullWidth
               />
               <TextField
                 margin="dense"
-                id="nickname"
                 value={this.state.nickname}
                 label="Nick Name"
-                type="text"
                 onChange={this.handleChange('nickname')}
                 fullWidth
               />

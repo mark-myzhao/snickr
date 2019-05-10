@@ -23,7 +23,11 @@ import NotificationDialog from '../subcomponents/NotificationDialog'
 
 import store from '../../store'
 
-const drawerWidth = 240
+// TODO: User Profile Dialog
+// TODO: Change Password Dialog
+// TODO: Get Notification
+// TODO: Accept/Decline Notification
+// TODO: Implement Search
 
 const styles = theme => ({
   appBar: {
@@ -34,8 +38,8 @@ const styles = theme => ({
     }),
   },
   appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: 240,
+    width: `calc(100% - ${240}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,

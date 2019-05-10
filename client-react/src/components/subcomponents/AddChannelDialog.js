@@ -98,7 +98,7 @@ class AddChannelDialog extends React.Component {
             </IconButton>
             <div className={classes.content}>
               <div className={classes.title}>
-                Add new channel to {currentWorkspace.wname}
+                Add new channel to #{currentWorkspace.wname}
               </div>
               <div className={classes.inputContainer}>
                 <TextField
