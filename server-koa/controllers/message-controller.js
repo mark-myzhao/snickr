@@ -7,8 +7,6 @@ let getmessage = withAuth(
     try {
       const wid = ctx.params.wid
       const cname = ctx.params.cname
-      console.log(wid)
-      console.log(cname)
       let result = await MessageModel.get(wid, cname)
       if (result.length > 0) {
         ctx.ok({

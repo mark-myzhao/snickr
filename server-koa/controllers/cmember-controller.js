@@ -43,7 +43,8 @@ let getmemberinchannel = withAuth(
   async (ctx, next) => {
     try {
       const cname = ctx.params.cname
-      let result = await cMemberModel.getchannelmember(cname)
+      const wid = ctx.params.wid
+      let result = await cMemberModel.getchannelmember(cname, wid)
       if (result.length > 0) {
         ctx.ok({
           success: true,

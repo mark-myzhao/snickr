@@ -14,10 +14,9 @@ let getmember = async (uemail = undefined) => {
   }
 }
 
-let getchannelmember = async (cname) => {
+let getchannelmember = async (cname, wid) => {
   try {
-    let wid = 1
-    let data = await db.query('SELECT uemail FROM cMember WHERE cname = ? AND wid = ?', [cname, wid])
+    let data = await db.query('SELECT cMember.uemail, uname, nickname FROM cMember NATURAL JOIN User WHERE cname = ? AND wid = ?', [cname, wid])
     return data
   } catch (error) {
     throw error

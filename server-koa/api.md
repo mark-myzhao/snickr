@@ -190,11 +190,15 @@ ctx.ok({
     memberinfo: {uenamil, wid, cname}
 })
 
-// -> GET /v1/cmember/getchannelmember/:cname  get the member in the particular channel   SET wid = 1 for test
+// -> GET /v1/cmember/:wid/:cname  get the members in the particular channel  
 // <- 200 ok 
 ctx.ok({
     success: true,
-    member: uemail
+    member: [{
+        uemail:'',
+        uname:'',
+        nickname:''
+    }]
 })
 
 
