@@ -61,7 +61,8 @@ ctx.ok({
             'wname': '',
             'witime': '',
             'semail': 'send email',
-            'remail': 'recieve email'
+            'remail': 'recieve email',
+            'sname': ''
         }
     ]
 })
@@ -140,6 +141,7 @@ ctx.ok({
             'cname': '',
             'semail': 'send email',
             'remail': 'recieve email',
+            'sname': ''
         }
     ]
 })

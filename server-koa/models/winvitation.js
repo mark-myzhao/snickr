@@ -2,7 +2,7 @@ const db = require('../db.js')
 
 let getinvitation = async (remail) => {
   try {
-    let data = await db.query('SELECT wid, wname, witime, semail, remail FROM wInvitation NATURAL JOIN Workspace WHERE remail = ?', remail)
+    let data = await db.query('SELECT wid, wname, witime, semail, remail, uname AS sname FROM User, wInvitation NATURAL JOIN Workspace WHERE remail = ? AND User.uemail = wInvitation.semail', remail)
     return data
   } catch (error) {
     throw error
