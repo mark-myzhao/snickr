@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import AddIcon from '@material-ui/icons/Add'
+import ScrollToBottom from 'react-scroll-to-bottom'
 
 import DIYTopBar from '../commons/DIYTopBar'
 import MessageItem from '../items/MessageItem'
@@ -128,14 +129,7 @@ class Workspace extends React.Component {
     currentChannel: {},    // { cname, ctime, ctype }
     isWorkspace: true,
     channels: [],
-    messages: [
-      {
-        uemail: 'mingyusysu@gmail.com',
-        uname: 'mingyu',
-        mtime: 'Fri Jan 18 2019 11:00:00 GMT-0500 (EST)',
-        mcontent: 'This is a testing message. This is a testing message. This is a testing message. This is a testing message. This is a testing message. This is a testing message.'
-      }
-    ],
+    messages: [], // { uemail, uname, mtime, mcontent, message }
     wmember: [] // uemail, uname, nickname, wmtype
   }
 
@@ -223,11 +217,30 @@ class Workspace extends React.Component {
 
   handleDrawerClick = async (item) => {
     // set messages
-    // axios.get()
+    const wid = this.props.match.params.wid
+    const cname = item.cname
+    await this.updateMessage(wid, cname)
     this.setState({
       currentChannel: item,
       isWorkspace: false
     })
+  }
+
+  updateMessage = async (wid, cname) => {
+    try {
+      const token = store.getToken()
+      let { data } = await axios.get(`/message/${wid}/${cname}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      let sortedMessage = data.message.sort((a, b) => {
+        return new Date(b.mtime) < new Date(a.mtime) ? 1 : -1
+      })
+      this.setState({
+        messages: sortedMessage
+      })
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   handleDetailClick = () => {
@@ -251,6 +264,8 @@ class Workspace extends React.Component {
 
   render() {
     const { classes } = this.props
+    const wid = this.props.match.params.wid
+    const cname = this.state.currentChannel.cname
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -341,8 +356,12 @@ class Workspace extends React.Component {
         {
           !this.state.isWorkspace &&
           <main className={classes.content}>
-            <div className={classes.chatAreaContainer}>
-              <div className={classes.messageItemContainer}>
+            <div
+              className={classes.chatAreaContainer}
+            >
+              <ScrollToBottom
+                className={classes.messageItemContainer}
+              >
                 {this.state.messages.map(item => {
                   return (
                     <MessageItem
@@ -351,8 +370,11 @@ class Workspace extends React.Component {
                     />
                   )}
                 )}
-              </div>
+              </ScrollToBottom>
               <ChatBox
+                wid={wid}
+                cname={cname}
+                updateMessage={this.updateMessage}
                 handleDetailClick={this.handleDetailClick}
               />
             </div>

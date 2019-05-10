@@ -28,8 +28,7 @@ let addmessage = withAuth(
   async (ctx, next) => {
     try {
       const { wid, cname, uemail, mcontent } = ctx.request.body
-      let time = new Date()
-      let mtime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate() + ' ' + time.toLocaleTimeString()
+      let mtime = new Date()
       let result = await MessageModel.addNewmessage(wid, cname, uemail, mtime, mcontent)
       if (result) {
         ctx.created({ success: true, message: mcontent })

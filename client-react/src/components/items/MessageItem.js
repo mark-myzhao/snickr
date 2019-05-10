@@ -5,6 +5,8 @@ import Avatar from '@material-ui/core/Avatar'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
+import $store from '../../store'
+
 const styles = theme => ({
   root: {
     padding: theme.spacing.unit * 2,
@@ -46,21 +48,23 @@ const styles = theme => ({
 class MessageItem extends React.Component {
   render() {
     const { classes, message } = this.props
+    const you = $store.getUser()
+    const displayName = message.uemail === you.uemail ? `${message.uname} (You)` : message.uname
     const mt = new Date(message.mtime)
     let dd = String(mt.getDate()).padStart(2, '0')
     let mm = String(mt.getMonth() + 1).padStart(2, '0')
     let yyyy = mt.getFullYear()
+    let hour = String(mt.getHours()).padStart(2, '0')
     let minute = String(mt.getMinutes()).padStart(2, '0')
-    let second = String(mt.getSeconds()).padStart(2, '0')
     return (
       <Paper className={classes.root} elevation={1}>
         <Avatar className={classes.avatar}>
-          M
+          {message.uname[0]}
         </Avatar>
         <div className={classes.textContainer}>
           <div>
-            <span className={classes.username}>{message.uname}</span>
-            <span className={classes.time}>{`${minute}:${second} ${mm}/${dd}/${yyyy}`}</span>
+            <span className={classes.username}>{displayName}</span>
+            <span className={classes.time}>{`${hour}:${minute} ${mm}/${dd}/${yyyy}`}</span>
           </div>
           <Typography
             className={classes.message}

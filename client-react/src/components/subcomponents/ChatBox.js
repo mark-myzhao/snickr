@@ -6,7 +6,8 @@ import IconButton from '@material-ui/core/IconButton'
 import KeyboardReturnIcon from '@material-ui/icons/KeyboardReturn'
 import InfoIcon from '@material-ui/icons/Info'
 
-// import Typography from '@material-ui/core/Typography'
+import axios from 'axios'
+import $store from '../../store'
 
 const styles = theme => ({
   root: {
@@ -24,6 +25,31 @@ const styles = theme => ({
 class ChatBox extends React.Component {
   state = {
     value: ''
+  }
+
+  handleMessageAdd = async () => {
+    const { wid, cname, updateMessage } = this.props
+    const mcontent = this.state.value
+    const token = $store.getToken()
+    const { uemail } = $store.getUser()
+    let sendObj = {
+      wid: Number(wid),
+      cname,
+      uemail,
+      mcontent
+    }
+    console.log(sendObj)
+    try {
+      await axios.post('/message/', sendObj, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      await updateMessage(wid, cname)
+      this.setState({
+        value: ''
+      })
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   handleChange = name => event => {
@@ -50,6 +76,7 @@ class ChatBox extends React.Component {
         <IconButton
           color="inherit"
           aria-label="Add"
+          onClick={this.handleMessageAdd}
         >
           <KeyboardReturnIcon />
         </IconButton>
