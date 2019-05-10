@@ -1,5 +1,14 @@
 const db = require('../db.js')
 
+let get = async (wid, cname) => {
+  try {
+    let data = await db.query('SELECT Message.uemail, uname, mtime, mcontent FROM User NATURAL JOIN Message WHERE wid = ? AND cname = ?', [wid, cname])
+    return data
+  } catch (error) {
+    throw (error)
+  }
+}
+
 let addNewmessage = async (wid, cname, uemail, mtime, mcontent) => {
   try {
     if (wid && cname && uemail && mtime && mcontent) {
@@ -14,5 +23,6 @@ let addNewmessage = async (wid, cname, uemail, mtime, mcontent) => {
 }
 
 module.exports = {
+  get,
   addNewmessage
 }

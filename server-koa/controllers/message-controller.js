@@ -2,6 +2,28 @@ const MessageModel = require('../models/message')
 const { withAuth } = require('../util')
 const ERRMSG = require('../util/errmsg')
 
+let getmessage = withAuth(
+  async (ctx, next) => {
+    try {
+      const wid = ctx.params.wid
+      const cname = ctx.params.cname
+      console.log(wid)
+      console.log(cname)
+      let result = await MessageModel.get(wid, cname)
+      if (result.length > 0) {
+        ctx.ok({
+          success: true,
+          message: result
+        })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let addmessage = withAuth(
   async (ctx, next) => {
     try {
@@ -21,5 +43,6 @@ let addmessage = withAuth(
 )
 
 module.exports = {
+  getmessage,
   addmessage
 }

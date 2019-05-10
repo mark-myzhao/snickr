@@ -51,6 +51,15 @@ describe('should be able to get access with authenticating session', function ()
       .end(done)
   })
 
+  // get all message in particular channel
+  it('Should be able to access now GET /v1/message/:wid/:cname', function (done) {
+    request(server)
+      .get('/v1/message/1/channel1')
+      .set('Authorization', `Bearer ${TEST_TOKEN}`)
+      .expect(200)
+      .end(done)
+  })
+
   // add a message
   it('Should be able to add a message POST /v1/message', function (done) {
     request(server)
