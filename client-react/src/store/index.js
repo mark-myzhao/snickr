@@ -1,6 +1,7 @@
 // manage the localstorage used in the project
 
 // const userKeys = ['uemail', 'uname', 'nickname']
+import buffer from './buffer'
 
 const setToken = (token) => {
   localStorage.setItem('token', token)
@@ -56,5 +57,6 @@ export default {
   getUser,
   getUserName,
   clearUser,
-  clear
+  clear,
+  buffer
 }

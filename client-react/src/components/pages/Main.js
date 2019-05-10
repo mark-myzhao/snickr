@@ -6,7 +6,8 @@ import Grid from '@material-ui/core/Grid'
 import DIYTopBar from '../commons/DIYTopBar'
 import WorkspaceItem from '../items/WorkspaceItem'
 
-// import store from '../../store'
+import axios from 'axios'
+import store from '../../store'
 
 import backgroundShape from '../../images/shape.svg'
 
@@ -36,11 +37,20 @@ const styles = theme => ({
 })
 
 class Main extends Component {
-  componentDidMount() {
+  state = {
+    workspace: []
   }
 
-  state = {
-    workspaces: ['w1', 'w2', 'w3', 'w4', 'w5']
+  async componentDidMount() {
+    const currentUser = store.getUser()
+    const token = store.getToken()
+    let { data } = await axios.get(`/workspace/${currentUser.uemail}`, {
+      headers: {'Authorization': `bearer ${token}`}
+    })
+    this.setState({
+      workspace: data.workspace
+    })
+    store.buffer.workspace = data.workspace
   }
 
   render() {
@@ -64,12 +74,12 @@ class Main extends Component {
               justify="flex-start"
               container
             >
-              {this.state.workspaces.map((value, index) => {
+              {this.state.workspace.map(item => {
                 return (
                   <WorkspaceItem
-                    key={value}
-                    value={value}
-                    index={index}
+                    key={item.wid}
+                    currentWorkspace={item}
+                    index={item.wid}
                   />
                 )
               })}

@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider'
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
+import AddIcon from '@material-ui/icons/Add'
 
 import DIYTopBar from '../commons/DIYTopBar'
 import MessageItem from '../items/MessageItem'
@@ -21,8 +22,9 @@ import ChatBox from '../subcomponents/ChatBox'
 import DetailDrawer from '../subcomponents/DetailDrawer'
 import WorkspaceManager from '../subcomponents/WorkspaceManager'
 
+import axios from 'axios'
+import store from '../../store'
 
-const drawerWidth = 240
 
 const styles = theme => ({
   root: {
@@ -38,7 +40,7 @@ const styles = theme => ({
   drawerPaper: {
     position: 'relative',
     whiteSpace: 'nowrap',
-    width: drawerWidth,
+    width: 240,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -111,28 +113,11 @@ class Workspace extends React.Component {
   state = {
     open: true,
     detailOpen: false,
-    currentWorkspace: {
-      wid: 1,
-      wname: 'Test Space',
-      wdesc: 'This is a workspace for testing React UI'
-    },
-    currentChannel: null,
+    addChannelOpen: false,
+    currentWorkspace: {},
+    currentChannel: {},
     isWorkspace: true,
-    channels: [
-      {
-        wid: 1,
-        cname: 'channel1',
-        ctype: 'public'
-      }, {
-        wid: 5,
-        cname: 'channel5',
-        ctype: 'private'
-      }, {
-        wid: 6,
-        cname: 'D channel',
-        ctype: 'direct'
-      }
-    ],
+    channels: [], // { cname, ctime, ctype }
     messages: [
       {
         uemail: 'mingyusysu@gmail.com',
@@ -150,6 +135,36 @@ class Workspace extends React.Component {
     ]
   }
 
+  async componentDidMount() {
+    const { match } = this.props
+    const token = store.getToken()
+    const { uemail } = store.getUser()
+    // get workspaces
+    if (!store.buffer.workspace) {
+      // Buffer is empty, get data from the server
+      let { data } = await axios.get(`/workspace/${uemail}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      store.buffer.workspace = data.workspace
+    }
+    for (let item of store.buffer.workspace) {
+      if (`${item.wid}` === match.params.wid) {
+        this.setState({
+          currentWorkspace: item
+        })
+      }
+    }
+
+    // get channels
+    let { data } = await axios.get(`/channel/${match.params.wid}`, {
+      headers: {'Authorization': `bearer ${token}`}
+    })
+    this.setState({
+      channels: data.channels
+    })
+    console.log(data)
+  }
+
   // computed attributes
   getChannels = (type) => {
     return this.state.channels.filter(item => {
@@ -157,8 +172,8 @@ class Workspace extends React.Component {
     })
   }
 
-  getCurrentChannel = () => {
-    return this.state.currentChannel ? this.state.currentChannel.cname : ''
+  getCurrentChannelName = () => {
+    return this.state.currentChannel.cname ? `/${this.state.currentChannel.cname}` : ''
   }
 
   getCurrentWorkspaceName = () => {
@@ -178,7 +193,7 @@ class Workspace extends React.Component {
   handleWorkspaceClick = () => {
     this.setState({
       isWorkspace: true,
-      currentChannel: null
+      currentChannel: {}
     })
   }
 
@@ -196,6 +211,18 @@ class Workspace extends React.Component {
     })
   }
 
+  handleAddChannelOpen = () => {
+    this.setState({
+      addChannelOpen: true
+    })
+  }
+
+  handleAddChannelClose = () => {
+    this.setState({
+      addChannelOpen: true
+    })
+  }
+
   render() {
     const { classes } = this.props
     return (
@@ -204,7 +231,7 @@ class Workspace extends React.Component {
         <DIYTopBar
           open={this.state.open}
           handleDrawerOpen={this.handleDrawerOpen}
-          title={`#${this.getCurrentWorkspaceName()}${this.getCurrentChannel()}`}
+          title={`#${this.getCurrentWorkspaceName()}${this.getCurrentChannelName()}`}
         />
         <Drawer
           variant="permanent"
@@ -231,27 +258,54 @@ class Workspace extends React.Component {
               <ListItemText primary="Workspace" />
             </ListItem>
           </List>
+          {
+            this.getChannels('public').length > 0 &&
+            <React.Fragment>
+              <Divider />
+              <ChannelList
+                type="Public"
+                currentChannel={this.state.currentChannel}
+                list={this.getChannels('public')}
+                handleClick={this.handleDrawerClick}
+              />
+            </React.Fragment>
+          } {
+            this.getChannels('private') > 0 &&
+            <React.Fragment>
+              <Divider />
+              <ChannelList
+                type="Private"
+                currentChannel={this.state.currentChannel}
+                list={this.getChannels('private')}
+                handleClick={this.handleDrawerClick}
+              />
+            </React.Fragment>
+          } {
+            this.getChannels('direct') > 0 &&
+            <React.Fragment>
+              <Divider />
+              <ChannelList
+                type="Direct"
+                currentChannel={this.state.currentChannel}
+                list={this.getChannels('direct')}
+                handleClick={this.handleDrawerClick}
+              />
+            </React.Fragment>
+          }
           <Divider />
-          <ChannelList
-            type="Public"
-            currentChannel={this.state.currentChannel}
-            list={this.getChannels('public')}
-            handleClick={this.handleDrawerClick}
-          />
-          <Divider />
-          <ChannelList
-            type="Private"
-            currentChannel={this.state.currentChannel}
-            list={this.getChannels('private')}
-            handleClick={this.handleDrawerClick}
-          />
-          <Divider />
-          <ChannelList
-            type="Direct"
-            currentChannel={this.state.currentChannel}
-            list={this.getChannels('direct')}
-            handleClick={this.handleDrawerClick}
-          />
+          <ListItem
+            button
+            onClick={this.handleAddChannelOpen}
+          >
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText
+              className={classes.nestedText}
+              inset
+              primary="New Channel"
+            />
+          </ListItem>
         </Drawer>
         {
           !this.state.isWorkspace &&
