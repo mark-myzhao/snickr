@@ -177,6 +177,7 @@ ctx.created({
         {
             uemail: 'mingyusysu@gmail.com',
             uname: 'mingyu',
+            nickname: '',
             mtime: 'Fri Jan 18 2019 11:00:00 GMT-0500 (EST)',
             mcontent: 'This is a testing message.'
         }
