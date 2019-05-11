@@ -22,8 +22,7 @@ let getchannelinworkspace = withAuth(
 let addchannel = withAuth(
   async (ctx, next) => {
     try {
-      const wid = ctx.params.wid
-      const { cname, ctype } = ctx.request.body
+      const { cname, ctype, wid } = ctx.request.body
       let time = new Date()
       let ctime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate() + ' ' + time.toLocaleTimeString()
       let result = await ChannelModel.addNewchannel(wid, cname, ctype, ctime)

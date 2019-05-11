@@ -3,7 +3,7 @@ const router = new Router()
 const ChannelController = require('../controllers/channel-controller')
 
 router.get('/:wid/:uemail', ChannelController.getchannelinworkspace)
-router.post('/:wid', ChannelController.addchannel)
+router.post('/', ChannelController.addchannel)
 router.delete('/:cname', ChannelController.deletechannel)
 
 module.exports = router.routes()

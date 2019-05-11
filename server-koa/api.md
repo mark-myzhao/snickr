@@ -110,7 +110,8 @@ ctx.ok({
 // -> POST /v1/channel/:wid
 {
     'cname': 'channel9',
-    'ctype': 'public'
+    'ctype': 'public',
+    'wid': ''
 }
 // <- 201 CREATED
 ctx.created({
