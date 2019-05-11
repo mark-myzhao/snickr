@@ -39,6 +39,23 @@ let addchannel = withAuth(
   }
 )
 
+let changechannel = withAuth(
+  async (ctx, next) => {
+    try {
+      const { wid, cname, ctype, uemail, oname } = ctx.request.body
+      console.log(0)
+      let result = await ChannelModel.change(wid, cname, ctype, oname, uemail)
+      if (result) {
+        ctx.ok({ success: true })
+      } else {
+        ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let deletechannel = withAuth(
   async (ctx, next) => {
     try {
@@ -59,5 +76,6 @@ let deletechannel = withAuth(
 module.exports = {
   getchannelinworkspace,
   addchannel,
+  changechannel,
   deletechannel
 }
