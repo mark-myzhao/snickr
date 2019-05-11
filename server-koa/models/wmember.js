@@ -32,7 +32,7 @@ let addNewmember = async (uemail, wid, wmtype) => {
         if (data2.length > 0) {
           return false
         } else {
-          await db.query(` DELETE FROM wInvitation WHERE AND remail = ? AND wid = ? `, [uemail, wid])
+          await db.query(` DELETE FROM wInvitation WHERE remail = ? AND wid = ? `, [uemail, wid])
           await db.query(` INSERT INTO wMember (uemail, wid, wmtype) VALUES (?, ?, ?) `, [uemail, wid, wmtype])
           return true
         }

@@ -12,11 +12,11 @@ let getWithUemail = async (uemail) => {
   }
 }
 
-let addWithWorkspace = async (wname, wdesc, uemail) => {
+let add = async (wname, wdesc, uemail) => {
   try {
     if (wname && wdesc && uemail) {
-      await db.query('INSERT INTO Workspace(wname, wdesc) VALUES (?, ?)', [wname, wdesc])
-      return true
+      const result = await db.query('INSERT INTO Workspace(wname, wdesc) VALUES (?, ?)', [wname, wdesc])
+      return result.insertId
     } else {
       return false
     }
@@ -56,7 +56,7 @@ let removeWithWorkspace = async (wid) => {
 
 module.exports = {
   getWithUemail,
-  addWithWorkspace,
+  add,
   updateWithWorkspace,
   removeWithWorkspace
 }

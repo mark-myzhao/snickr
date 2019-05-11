@@ -8,6 +8,8 @@ import TextField from '@material-ui/core/TextField'
 import CloseIcon from '@material-ui/icons/Close'
 import Slide from '@material-ui/core/Slide'
 
+import axios from 'axios'
+import $store from '../../store'
 
 const styles = theme => ({
   panelContainer: {
@@ -67,7 +69,44 @@ function Transition(props) {
 
 class AddChannelDialog extends React.Component {
   state = {
-    newChannelName: ''
+    newChannelName: '',
+    newChannelType: '',
+    errorMessage: ''
+  }
+
+  handleAddChannel = async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    const { currentWorkspace } = this.props
+    const cname = this.state.newChannelName
+    const ctype = this.state.newChannelType
+    const wid = currentWorkspace.wid
+    if (cname) {
+      try {
+        const { data } = await axios.post('/channel', {
+          cname,
+          ctype,
+          wid
+        }, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        console.log(data)
+        this.setState({
+          errorMessage: ''
+        })
+        this.setState({
+          newWorkspaceName: '',
+          newWorkspaceDesc: ''
+        })
+        this.handleClose()
+      } catch(error) {
+        console.error(error)
+      }
+    } else {
+      this.setState({
+        errorMessage: 'Name should not be empty.'
+      })
+    }
   }
 
   handleChange = name => event => {

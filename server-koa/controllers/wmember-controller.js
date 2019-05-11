@@ -13,7 +13,8 @@ let findmember = withAuth(
           member: result
         })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: true, member: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -31,7 +32,8 @@ let findallmember = withAuth(
           member: result
         })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: true, member: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -50,7 +52,8 @@ let getwidthememberin = withAuth(
           workspace: result
         })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: true, workspace: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -62,14 +65,10 @@ let addmember = withAuth(
   async (ctx, next) => {
     try {
       const { uemail, wid, wmtype } = ctx.request.body
-      let result = await wMemberModel.addNewmember(uemail, wid, wmtype)
-      if (result) {
-        ctx.created({ success: true, added: uemail })
-      } else {
-        ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
-      }
+      await wMemberModel.addNewmember(uemail, wid, wmtype)
+      ctx.created({ success: true, added: uemail })
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -87,7 +86,7 @@ let updatetype = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -104,7 +103,7 @@ let deletewmember = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )

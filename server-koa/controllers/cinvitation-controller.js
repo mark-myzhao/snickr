@@ -26,8 +26,7 @@ let addcinvitation = withAuth(
     try {
       const { semail, remail, cname, wid } = ctx.request.body
       let time = new Date()
-      let citime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate() + ' ' + time.toLocaleTimeString()
-      let result = await cInvitationModel.addNewcinvitation(semail, remail, wid, cname, citime)
+      let result = await cInvitationModel.addNewcinvitation(semail, remail, wid, cname, time)
       if (result) {
         ctx.created({ success: true, inviteuser: remail })
       } else {

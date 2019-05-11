@@ -11,7 +11,7 @@ import AddIcon from '@material-ui/icons/Add'
 import AddWorkspaceDialog from '../subcomponents/AddWorkspaceDialog'
 
 import axios from 'axios'
-import store from '../../store'
+import $store from '../../store'
 
 import backgroundShape from '../../images/shape.svg'
 
@@ -66,8 +66,12 @@ class Main extends Component {
   }
 
   componentDidMount = async () => {
-    const currentUser = store.getUser()
-    const token = store.getToken()
+    await this.updateWorkspace()
+  }
+
+  updateWorkspace = async () => {
+    const currentUser = $store.getUser()
+    const token = $store.getToken()
     try {
       let { data } = await axios.get(`/workspace/${currentUser.uemail}`, {
         headers: {'Authorization': `bearer ${token}`}
@@ -75,12 +79,12 @@ class Main extends Component {
       this.setState({
         workspace: data.workspace
       })
-      store.buffer.workspace = data.workspace
+      $store.buffer.workspace = data.workspace
     } catch(error) {
       this.setState({
         workspace: []
       })
-      store.buffer.workspace = []
+      $store.buffer.workspace = []
     }
   }
 
@@ -144,6 +148,7 @@ class Main extends Component {
           </Fab>
           <AddWorkspaceDialog
             open={this.state.addWorkspaceDialogOpen}
+            update={this.updateWorkspace}
             handleClose={this.handleAddWorkspaceClose}
           />
         </div>

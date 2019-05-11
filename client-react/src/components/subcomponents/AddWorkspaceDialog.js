@@ -86,8 +86,8 @@ class AddWorkspaceDialog extends React.Component {
   handleAddWorkspace = async () => {
     const you = $store.getUser()
     const token = $store.getToken()
-    let wname = this.state.newWorkspaceName
-    let wdesc = this.state.newWorkspaceDesc
+    const wname = this.state.newWorkspaceName
+    const wdesc = this.state.newWorkspaceDesc
     if (wname && wdesc) {
       try {
         console.log({
@@ -98,11 +98,11 @@ class AddWorkspaceDialog extends React.Component {
         const { data } = await axios.post('/workspace', {
           wname,
           wdesc,
-          uemail: you.uemail
+          uemail: you.uemail,
+          wmtype: 'admin'
         }, {
           headers: {'Authorization': `bearer ${token}`}
         })
-        console.log(data)
         this.setState({
           errorMessage: ''
         })
@@ -110,7 +110,8 @@ class AddWorkspaceDialog extends React.Component {
           newWorkspaceName: '',
           newWorkspaceDesc: ''
         })
-        this.handleClose()
+        this.props.update()
+        this.props.handleClose()
       } catch(error) {
         console.error(error)
       }

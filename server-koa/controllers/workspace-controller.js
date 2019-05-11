@@ -1,4 +1,5 @@
 const WorkspaceModel = require('../models/workspace')
+const wMemberModel = require('../models/wmember')
 const { withAuth } = require('../util')
 const ERRMSG = require('../util/errmsg')
 
@@ -13,7 +14,8 @@ let getWorkspace = withAuth(
           workspace: result
         })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: true, workspace: [] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -24,15 +26,23 @@ let getWorkspace = withAuth(
 let addWorkspace = withAuth(
   async (ctx, next) => {
     try {
-      const { wname, wdesc, uemail } = ctx.request.body
-      let result = await WorkspaceModel.addWithWorkspace(wname, wdesc, uemail)
-      if (result) {
-        ctx.created({ success: true, added: result })
+      const { wname, wdesc, uemail, wmtype } = ctx.request.body
+      if (wname && wdesc && uemail && wmtype) {
+        let wid = await WorkspaceModel.add(wname, wdesc, uemail)
+        await wMemberModel.addNewmember(uemail, wid, wmtype)
+        ctx.created({
+          success: true,
+          added: {
+            wid,
+            wname,
+            wdesc
+          }
+        })
       } else {
         ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -49,7 +59,7 @@ let updateWorkspace = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -65,7 +75,7 @@ let removeWorkspace = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )

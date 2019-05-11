@@ -23,7 +23,8 @@ ctx.ok({
 {
     'wname': 'new workspace',
     'wdesc': 'new desc',
-    'uemail': '...'
+    'uemail': '...',
+    'wmtype': ''
 }
 // <- 201 CREATED
 ctx.created({
@@ -107,11 +108,12 @@ ctx.ok({
 })
 
 
-// -> POST /v1/channel/:wid
+// -> POST /v1/channel/
 {
     'cname': 'channel9',
     'ctype': 'public',
-    'wid': ''
+    'wid': '',
+    'uemail': '...'
 }
 // <- 201 CREATED
 ctx.created({

@@ -14,7 +14,8 @@ let getmessage = withAuth(
           message: result
         })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: false, message: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -34,7 +35,7 @@ let addmessage = withAuth(
         ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )

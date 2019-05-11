@@ -1,4 +1,5 @@
 const ChannelModel = require('../models/channel')
+const cMemberModel = require('../models/cmember')
 const { withAuth } = require('../util')
 const ERRMSG = require('../util/errmsg')
 
@@ -11,7 +12,8 @@ let getchannelinworkspace = withAuth(
       if (result.length > 0) {
         ctx.ok({ success: true, channels: result })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: false, channels: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -22,17 +24,17 @@ let getchannelinworkspace = withAuth(
 let addchannel = withAuth(
   async (ctx, next) => {
     try {
-      const { cname, ctype, wid } = ctx.request.body
-      let time = new Date()
-      let ctime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate() + ' ' + time.toLocaleTimeString()
-      let result = await ChannelModel.addNewchannel(wid, cname, ctype, ctime)
-      if (result) {
+      const { wid, cname, ctype, uemail } = ctx.request.body
+      if (wid & cname & ctype & uemail) {
+        let time = new Date()
+        await ChannelModel.addNewchannel(wid, cname, ctype, time)
+        await cMemberModel.addNewmember(uemail, wid, cname)
         ctx.created({ success: true, added: cname })
       } else {
         ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -49,7 +51,7 @@ let deletechannel = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )

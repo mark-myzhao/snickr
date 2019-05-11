@@ -9,7 +9,8 @@ let getAllUsers = withAuth(
       if (result.length > 0) {
         ctx.ok({ users: result })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.notFound({ success: false, users: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
