@@ -419,6 +419,7 @@ class Workspace extends React.Component {
           <main className={classes.content}>
             <WorkspaceManager
               wmember={this.state.wmember}
+              updateMember={this.updateWorkspaceMember}
               currentWorkspace={this.state.currentWorkspace}
             />
           </main>

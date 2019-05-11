@@ -137,6 +137,27 @@ class WMemberManager extends React.Component {
     }
   }
 
+  handleChangeUser = (uemail, newType) => async () => {
+    const wid = this.props.currentWorkspace.wid
+    const token = store.getToken()
+
+
+    this.props.updateMember(wid, token)
+  }
+
+  handleRemoveUser = uemail => async () => {
+    const wid = this.props.currentWorkspace.wid
+    const token = store.getToken()
+    try {
+      await axios.delete(`/wmember/${wid}/${uemail}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      this.props.updateMember(wid, token)
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
   render() {
     const { classes, wmember, currentWorkspace } = this.props
     return (
@@ -255,12 +276,23 @@ class WMemberManager extends React.Component {
                     >
                       Change Type
                     </Button>
-                    <Button size="small">
+                    <Button
+                      size="small"
+                      onClick={this.handleRemoveUser(item.uemail)}
+                    >
                       Remove
                     </Button>
                   </ExpansionPanelActions>
                 </div>
               }
+              <Menu
+                anchorEl={this.state.anchorEl}
+                open={Boolean(this.state.anchorEl)}
+                onClose={this.handleMenuClose}
+              >
+                <MenuItem onClick={this.handleChangeUser(item.uemail, 'admin')}>Admin</MenuItem>
+                <MenuItem onClick={this.handleChangeUser(item.uemail, 'user')}>User</MenuItem>
+              </Menu>
             </ExpansionPanel>
           )
         })}
@@ -287,14 +319,6 @@ class WMemberManager extends React.Component {
             />
           </React.Fragment>
         }
-        <Menu
-          anchorEl={this.state.anchorEl}
-          open={Boolean(this.state.anchorEl)}
-          onClose={this.handleMenuClose}
-        >
-          <MenuItem onClick={this.handleMenuClose}>Admin</MenuItem>
-          <MenuItem onClick={this.handleMenuClose}>User</MenuItem>
-        </Menu>
       </div>
     )
   }

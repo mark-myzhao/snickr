@@ -50,9 +50,8 @@ let addWorkspace = withAuth(
 let updateWorkspace = withAuth(
   async (ctx, next) => {
     try {
-      const wid = ctx.params.wid
-      const { wname, wdesc } = ctx.request.body
-      let result = await WorkspaceModel.updateWithWorkspace(wid, wname, wdesc)
+      const { wid, wname, wdesc, uemail } = ctx.request.body
+      let result = await WorkspaceModel.updateWithWorkspace(wid, wname, wdesc, uemail)
       if (result) {
         ctx.ok({ success: true, updated: wid })
       } else {

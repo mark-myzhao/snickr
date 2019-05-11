@@ -25,21 +25,16 @@ let add = async (wname, wdesc, uemail) => {
   }
 }
 
-let updateWithWorkspace = async (wid, wname, wdesc) => {
+let updateWithWorkspace = async (wid, wname, wdesc, uemail) => {
   try {
-    let statement = null
-    let feed = []
-    if (!wid) return false
-    let values = { wname, wdesc }
-    for (let k in values) {
-      if (values[k]) {
-        statement = statement ? statement + `, ${k} = ?` : `SET ${k} = ?`
-        feed.push(values[k])
-      }
+    let data = await db.query('SELECT uemail FROM wMember NATURAL JOIN Workspace WHERE uemail = ? AND wid = ?', [uemail, wid])
+    console.log(data)
+    if (data.length > 0) {
+      await db.query('UPDATE Workspace SET wname = ?, wdesc = ? WHERE wid = ?', [wname, wdesc, wid])
+      return true
+    } else {
+      return false
     }
-    feed.push(wid)
-    let { affectedRows } = await db.query(` UPDATE Workspace ${statement} WHERE wid = ? `, feed)
-    return affectedRows > 0
   } catch (error) {
     throw error
   }
