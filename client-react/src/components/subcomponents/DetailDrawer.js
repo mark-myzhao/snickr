@@ -270,6 +270,7 @@ class DetailDrawer extends React.Component {
             op="update"
             currentWorkspace={currentWorkspace}
             currentChannel={currentChannel}
+            updateChannel={this.props.updateChannel}
             handleClose={this.handleEditDialogClose}
           />
           <Dialog

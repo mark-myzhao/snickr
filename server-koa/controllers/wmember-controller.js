@@ -78,7 +78,7 @@ let updatetype = withAuth(
     try {
       const uemail = ctx.params.uemail
       const wid = ctx.params.wid
-      const wmtype = ctx.request.body
+      const { wmtype } = ctx.request.body
       let result = await wMemberModel.update(uemail, wid, wmtype)
       if (result) {
         ctx.ok({ success: true, updated: uemail })

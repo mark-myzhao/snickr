@@ -283,7 +283,7 @@ ctx.ok({
 })
 ```
 
-##cMember
+## cMember
 ```javascript
 // -> GET /v1/cmember/:uemail     get particular member in channel
 // <- 200 OK
@@ -292,12 +292,14 @@ ctx.ok({
     memberinfo: {uenamil, wid, cname}
 })
 
+
 // -> GET /v1/cmember   get all cmembers
 // <- 200 OK
 ctx.ok({
     success: true,
     memberinfo: {uenamil, wid, cname}
 })
+
 
 // -> GET /v1/cmember/:wid/:cname  get the members in the particular channel
 // <- 200 ok

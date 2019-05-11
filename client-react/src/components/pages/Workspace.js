@@ -412,6 +412,7 @@ class Workspace extends React.Component {
               open={this.state.detailOpen}
               currentWorkspace={this.state.currentWorkspace}
               currentChannel={this.state.currentChannel}
+              updateChannel={this.updateChannel}
             />
           </main>
         } {

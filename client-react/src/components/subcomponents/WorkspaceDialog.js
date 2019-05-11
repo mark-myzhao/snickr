@@ -96,13 +96,14 @@ class AddWorkspaceDialog extends React.Component {
   handleSubmit = op => async () => {
     const you = $store.getUser()
     const token = $store.getToken()
+    const wid = this.props.currentWorkspace.wid
     const wname = this.state.newWorkspaceName
     const wdesc = this.state.newWorkspaceDesc
 
     if (op.toLowerCase() === 'add') {
       await this.handleAddWorkspace(wname, wdesc, 'admin', token, you.uemail)
     } else if (op.toLowerCase() === 'update') {
-      await this.handleUpdateWorkspace(wname, wdesc, 'admin', token, you.uemail)
+      await this.handleUpdateWorkspace(wid, wname, wdesc, token, you.uemail)
     }
   }
 
@@ -121,8 +122,7 @@ class AddWorkspaceDialog extends React.Component {
           newWorkspaceName: '',
           newWorkspaceDesc: ''
         })
-        this.props.update()
-        this.props.handleClose()
+        window.location.reload()
       } catch(error) {
         console.error(error)
       }
@@ -134,6 +134,7 @@ class AddWorkspaceDialog extends React.Component {
   }
 
   handleUpdateWorkspace = async (wid, wname, wdesc, token, uemail) => {
+    console.log(wid, wname, wdesc, uemail)
     if (wname && wdesc) {
       try {
         await axios.put('/workspace', {
@@ -148,8 +149,7 @@ class AddWorkspaceDialog extends React.Component {
           newWorkspaceName: '',
           newWorkspaceDesc: ''
         })
-        this.props.update()
-        this.props.handleClose()
+        window.location.reload()
       } catch(error) {
         console.error(error)
       }

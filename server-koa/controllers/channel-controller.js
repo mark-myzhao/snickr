@@ -43,7 +43,6 @@ let changechannel = withAuth(
   async (ctx, next) => {
     try {
       const { wid, cname, ctype, uemail, oname } = ctx.request.body
-      console.log(0)
       let result = await ChannelModel.change(wid, cname, ctype, oname, uemail)
       if (result) {
         ctx.ok({ success: true })

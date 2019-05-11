@@ -93,7 +93,7 @@ class ChannelDialog extends React.Component {
   handleSubmit = (op) => async () => {
     const you = $store.getUser()
     const token = $store.getToken()
-    const { currentWorkspace } = this.props
+    const { currentWorkspace, currentChannel } = this.props
     const cname = this.state.newChannelName
     const ctype = this.state.newChannelType
     const wid = currentWorkspace.wid
@@ -101,7 +101,7 @@ class ChannelDialog extends React.Component {
     if (op.toLowerCase() === 'add') {
       await this.handleAddChannel(wid, cname, ctype, token, you.uemail)
     } else if (op.toLowerCase() === 'update') {
-      await this.handleEditChannel(wid, cname, ctype, token, you.uemail)
+      await this.handleUpdateChannel(wid, currentChannel.cname, cname, ctype, token, you.uemail)
     }
   }
 
@@ -133,11 +133,11 @@ class ChannelDialog extends React.Component {
     }
   }
 
-  handleUpdateChannel = async (wid, cname, ctype, token, uemail) => {
+  handleUpdateChannel = async (wid, oname, cname, ctype, token, uemail) => {
     if (cname && ctype) {
       try {
         await axios.put('/channel', {
-          wid, cname, ctype, uemail
+          wid, oname, cname, ctype, uemail
         }, {
           headers: {'Authorization': `bearer ${token}`}
         })

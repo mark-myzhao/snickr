@@ -65,6 +65,7 @@ class WMemberManager extends React.Component {
   state = {
     invitationOpen: false,
     anchorEl: null,
+    currentUser: null,
     deleteAnchorEl: null,
     editOpen: false,
     deleteOpen: false,
@@ -75,15 +76,16 @@ class WMemberManager extends React.Component {
     const you = store.getUser()
     for (let item of wmember) {
       if (item.uemail === you.uemail) {
-        return true
+        return item.wmtype.toLowerCase() === 'admin'
       }
     }
     return false
   }
 
-  handleMenuClick = event => {
+  handleMenuClick = (item) => event => {
     this.setState({
-      anchorEl: event.currentTarget
+      anchorEl: event.currentTarget,
+      currentUser: item,
     })
   }
 
@@ -137,12 +139,24 @@ class WMemberManager extends React.Component {
     }
   }
 
-  handleChangeUser = (uemail, newType) => async () => {
+  handleChangeUser = newType => async () => {
     const wid = this.props.currentWorkspace.wid
     const token = store.getToken()
-
-
-    this.props.updateMember(wid, token)
+    const oldType = this.state.currentUser.wmtype
+    const uemail = this.state.currentUser.uemail
+    if (oldType !== newType) {
+      try {
+        await axios.put(`/wmember/${wid}/${uemail}`, {
+          wmtype: newType
+        }, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        this.props.updateMember(wid, token)
+      } catch(error) {
+        console.error(error)
+      }
+    }
+    this.handleMenuClose()
   }
 
   handleRemoveUser = uemail => async () => {
@@ -212,7 +226,7 @@ class WMemberManager extends React.Component {
           Workspace Members
         </Typography>
         { wmember && wmember.map(item => {
-          const you = store.getUserName() === item.nickname ? ' (You)' : ''
+          const you = store.getUser().uemail === item.uemail ? ' (You)' : ''
           return (
             <ExpansionPanel
               key={item.uemail}
@@ -272,7 +286,7 @@ class WMemberManager extends React.Component {
                   <ExpansionPanelActions>
                     <Button
                       size="small"
-                      onClick={this.handleMenuClick}
+                      onClick={this.handleMenuClick(item)}
                     >
                       Change Type
                     </Button>
@@ -285,14 +299,6 @@ class WMemberManager extends React.Component {
                   </ExpansionPanelActions>
                 </div>
               }
-              <Menu
-                anchorEl={this.state.anchorEl}
-                open={Boolean(this.state.anchorEl)}
-                onClose={this.handleMenuClose}
-              >
-                <MenuItem onClick={this.handleChangeUser(item.uemail, 'admin')}>Admin</MenuItem>
-                <MenuItem onClick={this.handleChangeUser(item.uemail, 'user')}>User</MenuItem>
-              </Menu>
             </ExpansionPanel>
           )
         })}
@@ -317,6 +323,20 @@ class WMemberManager extends React.Component {
               currentWorkspace={currentWorkspace}
               handleClose={this.handleInvitationDialogClose}
             />
+            <Menu
+              anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleMenuClose}
+            >
+              <MenuItem
+                onClick={this.handleChangeUser('admin')}
+              >
+                Admin
+              </MenuItem>
+              <MenuItem onClick={this.handleChangeUser('user')}>
+                User
+              </MenuItem>
+            </Menu>
           </React.Fragment>
         }
       </div>
