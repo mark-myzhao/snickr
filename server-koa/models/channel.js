@@ -2,7 +2,7 @@ const db = require('../db.js')
 
 let getchannelinfo = async (wid, uemail) => {
   try {
-    let data = await db.query('SELECT cname, ctype, ctime FROM cMember NATURAL JOIN Channel WHERE wid = ? AND uemail = ?', wid, uemail)
+    let data = await db.query('SELECT cname, ctype, ctime FROM cMember NATURAL JOIN Channel WHERE wid = ? AND uemail = ?', [wid, uemail])
     return data
   } catch (error) {
     throw error
