@@ -155,7 +155,10 @@ class Workspace extends React.Component {
         }
       }
     } catch(error) {
-      console.error(error)
+      // console.error(error)
+      this.setState({
+        currentWorkspace: []
+      })
     }
 
     // GET channels
@@ -167,7 +170,10 @@ class Workspace extends React.Component {
         channels: data.channels
       })
     } catch(error) {
-      console.error(error)
+      // console.error(error)
+      this.setState({
+        channels: []
+      })
     }
 
     // GET workspace members
@@ -179,7 +185,10 @@ class Workspace extends React.Component {
         wmember: data.member
       })
     } catch(error) {
-      console.error(error)
+      // console.error(error)
+      this.setState({
+        wmember: []
+      })
     }
   }
 
@@ -239,7 +248,10 @@ class Workspace extends React.Component {
         messages: sortedMessage
       })
     } catch(error) {
-      console.error(error)
+      // console.error(error)
+      this.setState({
+        messages: []
+      })
     }
   }
 

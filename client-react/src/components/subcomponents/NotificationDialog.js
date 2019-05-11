@@ -8,14 +8,19 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Slide from '@material-ui/core/Slide'
-import TextField from '@material-ui/core/TextField'
+
+import $store from '../../store'
+import axios from 'axios'
+
+const numToMonth = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+]
 
 const styles = theme => ({
   panelContainer: {
@@ -88,13 +93,88 @@ function Transition(props) {
 }
 
 class NotificationDialog extends React.Component {
-  state = {
-  }
+  state = {}
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     })
+  }
+
+  handleAcceptWorkspace = wid => async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    try {
+      const { data } = await axios.post('/wmember', {
+        uemail: you.uemail,
+        wid,
+        wmtype: 'user'
+      }, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      this.props.handleClose()
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  handleDeclineWorkspace = (wid, semail) => async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    const { update } = this.props
+    try {
+      await axios.delete('/winvitation', {
+        headers: {'Authorization': `bearer ${token}`},
+        data: {
+          wid,
+          semail,
+          remail: you.uemail,
+        }
+      })
+      await update()
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  handleAcceptChannel = (wid, cname) => async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    try {
+      const { data } = await axios.post('/cmember', {
+        wid,
+        cname,
+        uemail: you.uemail
+      }, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      this.props.handleClose()
+    } catch(error) {
+      console.log(error)
+    }
+  }
+
+  handleDeclineChannel = (wid, cname, semail) => async () => {
+    // TODO: Test with new API
+    const you = $store.getUser()
+    const token = $store.getToken()
+    const { update } = this.props
+    try {
+      await axios.delete(`/cmember`, {
+        headers: {'Authorization': `bearer ${token}`},
+        data: {
+          wid,
+          cname,
+          semail,
+          remail: you.uemail,
+        }
+      })
+      await update()
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   render() {
@@ -127,9 +207,9 @@ class NotificationDialog extends React.Component {
                     Workspace Invitations
                   </div>
                   { winvitation.map(item => {
-                      let t = new Date(item.citime)
+                      let t = new Date(item.witime)
                       return (
-                        <ExpansionPanel key={item}>
+                        <ExpansionPanel key={item.semail}>
                           <ExpansionPanelSummary
                             className={classes.summary}
                             expandIcon={<ExpandMoreIcon />}
@@ -145,22 +225,29 @@ class NotificationDialog extends React.Component {
                               variant="subtitle2"
                               className={classes.secondaryHeading}
                             >
-                              2018-12-25
+                              {numToMonth[t.getMonth()]} {t.getDate()}, {t.getFullYear()}
                             </Typography>
                           </ExpansionPanelSummary>
                           <ExpansionPanelDetails className={classes.details}>
                             <div>
                               <Typography variant="body2">
-                                {item.semail} has invited you to join #{item.wname}/{item.cname}
+                                {item.sname} has invited you to join #{item.wname}
                               </Typography>
                             </div>
                           </ExpansionPanelDetails>
                           <Divider />
                           <ExpansionPanelActions>
-                            <Button size="small">
+                            <Button
+                              size="small"
+                              onClick={this.handleDeclineWorkspace(item.wid, item.semail)}
+                            >
                               Decline
                             </Button>
-                            <Button size="small" color="primary">
+                            <Button
+                              size="small"
+                              color="primary"
+                              onClick={this.handleAcceptWorkspace(item.wid)}
+                            >
                               Accept
                             </Button>
                           </ExpansionPanelActions>
@@ -178,7 +265,7 @@ class NotificationDialog extends React.Component {
                   { cinvitation.map(item => {
                       let t = new Date(item.citime)
                       return (
-                        <ExpansionPanel key={item}>
+                        <ExpansionPanel key={item.semail}>
                           <ExpansionPanelSummary
                             className={classes.summary}
                             expandIcon={<ExpandMoreIcon />}
@@ -194,22 +281,29 @@ class NotificationDialog extends React.Component {
                               variant="subtitle2"
                               className={classes.secondaryHeading}
                             >
-                              2018-12-25
+                              {numToMonth[t.getMonth()]} {t.getDate()}, {t.getFullYear()}
                             </Typography>
                           </ExpansionPanelSummary>
                           <ExpansionPanelDetails className={classes.details}>
                             <div>
                               <Typography variant="body2">
-                                {item.semail} has invited you to join #{item.wname}/{item.cname}
+                                {item.sname} has invited you to join #{item.wname}/{item.cname}
                               </Typography>
                             </div>
                           </ExpansionPanelDetails>
                           <Divider />
                           <ExpansionPanelActions>
-                            <Button size="small">
+                            <Button
+                              size="small"
+                              onClick={this.handleDeclineChannel(item.wid, item.cname, item.semail)}
+                            >
                               Decline
                             </Button>
-                            <Button size="small" color="primary">
+                            <Button
+                              size="small"
+                              color="primary"
+                              onClick={this.handleAcceptChannel(item.wid, item.cname)}
+                            >
                               Accept
                             </Button>
                           </ExpansionPanelActions>

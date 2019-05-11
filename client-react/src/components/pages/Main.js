@@ -5,6 +5,10 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
 import DIYTopBar from '../commons/DIYTopBar'
 import WorkspaceItem from '../items/WorkspaceItem'
+import Fab from '@material-ui/core/Fab'
+import AddIcon from '@material-ui/icons/Add'
+
+import AddWorkspaceDialog from '../subcomponents/AddWorkspaceDialog'
 
 import axios from 'axios'
 import store from '../../store'
@@ -33,24 +37,63 @@ const styles = theme => ({
     [theme.breakpoints.down('sm')]: {
       width: 'calc(100% - 20px)'
     }
-  }
+  },
+  fab: {
+    position: 'absolute',
+    right: theme.spacing.unit * 3,
+    bottom: theme.spacing.unit * 3,
+    margin: theme.spacing.unit,
+  },
+  title: {
+    color: '#1d1c1d',
+    fontSize: '34px',
+    lineHeight: '41px',
+    fontWeight: 700,
+    marginTop: '40vh',
+    marginBottom: theme.spacing.unit * 4,
+    justifyContent: 'center',
+    display: 'flex',
+    flexGrow: 1,
+    flexDirection: 'row',
+    userSelect: 'none',
+  },
 })
 
 class Main extends Component {
   state = {
-    workspace: []
+    workspace: [],
+    addWorkspaceDialogOpen: false,
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     const currentUser = store.getUser()
     const token = store.getToken()
-    let { data } = await axios.get(`/workspace/${currentUser.uemail}`, {
-      headers: {'Authorization': `bearer ${token}`}
-    })
+    try {
+      let { data } = await axios.get(`/workspace/${currentUser.uemail}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      this.setState({
+        workspace: data.workspace
+      })
+      store.buffer.workspace = data.workspace
+    } catch(error) {
+      this.setState({
+        workspace: []
+      })
+      store.buffer.workspace = []
+    }
+  }
+
+  handleAddWorkspaceOpen = () => {
     this.setState({
-      workspace: data.workspace
+      addWorkspaceDialogOpen: true
     })
-    store.buffer.workspace = data.workspace
+  }
+
+  handleAddWorkspaceClose = () => {
+    this.setState({
+      addWorkspaceDialogOpen: false
+    })
   }
 
   render() {
@@ -63,6 +106,12 @@ class Main extends Component {
           title={'Snickr'}
         />
         <div className={classes.root}>
+          {
+            this.state.workspace.length === 0 &&
+            <div className={classes.title}>
+              no workspace here, create a new one?
+            </div>
+          }
           <Grid
             container
             justify="center"
@@ -85,6 +134,18 @@ class Main extends Component {
               })}
             </Grid>
           </Grid>
+          <Fab
+            color="primary"
+            aria-label="Add"
+            className={classes.fab}
+            onClick={this.handleAddWorkspaceOpen}
+          >
+            <AddIcon />
+          </Fab>
+          <AddWorkspaceDialog
+            open={this.state.addWorkspaceDialogOpen}
+            handleClose={this.handleAddWorkspaceClose}
+          />
         </div>
       </React.Fragment>
     )

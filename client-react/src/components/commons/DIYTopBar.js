@@ -26,7 +26,6 @@ import $store from '../../store'
 
 // TODO: User Profile Dialog
 // TODO: Change Password Dialog
-// TODO: Get Notification
 // TODO: Accept/Decline Notification
 // TODO: Implement Search
 
@@ -110,39 +109,42 @@ class DIYTopBar extends React.Component {
     userProfileAnchor: null,
     userDialogOpen: false,
     userDialogTitle: '',
-    notification: 10,
     notificationDialogOpen: false,
     cinvitation: [],  // { semail, remail, citime, cname, wid, wname }
-    winvitation: []
+    winvitation: []   // { semail, remail, wid, witime, wname }
   }
 
   componentDidMount = async () => {
+    await this.updateInvitations()
+  }
+
+  updateInvitations = async () => {
     const you = $store.getUser()
     const token = $store.getToken()
     try {
       let { data } = await axios.get(`/cinvitation/${you.uemail}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
       this.setState({
         cinvitation: data.member
       })
     } catch(error) {
-      console.error(error)
-      this.setState({
-        cinvitation: []
-      })
+      if (error && error.response.status === 404) {
+        this.setState({
+          cinvitation: []
+        })
+      } else {
+        console.error(error)
+      }
     }
     try {
       let { data } = await axios.get(`/winvitation/${you.uemail}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
       this.setState({
         winvitation: data.member
       })
     } catch(error) {
-      // console.error(error)
       this.setState({
         winvitation: []
       })
@@ -185,6 +187,10 @@ class DIYTopBar extends React.Component {
     this.setState({ userProfileAnchor: null })
     $store.clear()
     this.props.history.push('/signin')
+  }
+
+  getNotificationNum = () => {
+    return this.state.cinvitation.length + this.state.winvitation.length
   }
 
   render() {
@@ -246,8 +252,8 @@ class DIYTopBar extends React.Component {
           >
             <Badge
               color="error"
-              badgeContent={this.state.notification}
-              invisible={!this.state.notification}
+              badgeContent={this.getNotificationNum()}
+              invisible={this.getNotificationNum() === 0}
             >
               <NotificationsIcon />
             </Badge>
@@ -275,6 +281,7 @@ class DIYTopBar extends React.Component {
         />
         <NotificationDialog
           open={this.state.notificationDialogOpen}
+          update={this.updateInvitations}
           cinvitation={this.state.cinvitation}
           winvitation ={this.state.winvitation}
           handleClose={this.handleNotificationDialogClose}

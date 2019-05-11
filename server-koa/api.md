@@ -225,14 +225,14 @@ ctx.created({
 })
 
 
-// -> PUT /v1/wmember/:wid/:uemail  
+// -> PUT /v1/wmember/:wid/:uemail
 {
     'wmtype': 'admin'
 }
 // <- 200 ok
 
 
-// -> DELETE /v1/wmember/:wid/:uemail  
+// -> DELETE /v1/wmember/:wid/:uemail
 // <- 200 ok
 ctx.ok({
     success: true,
@@ -256,8 +256,8 @@ ctx.ok({
     memberinfo: {uenamil, wid, cname}
 })
 
-// -> GET /v1/cmember/:wid/:cname  get the members in the particular channel  
-// <- 200 ok 
+// -> GET /v1/cmember/:wid/:cname  get the members in the particular channel
+// <- 200 ok
 ctx.ok({
     success: true,
     member: [{
@@ -280,8 +280,15 @@ ctx.created({
 })
 
 
-// -> DELETE /v1/cmember/:wid/:cname/:uemail
+// -> DELETE /v1/cmember/
 // <- 200 ok
+{
+    'wid': '',
+    'cname': '',
+    'semail': '',
+    'remail': '',
+}
+
 ctx.ok({
     success: true,
     deleted: uemail
