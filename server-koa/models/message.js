@@ -2,7 +2,7 @@ const db = require('../db.js')
 
 let get = async (wid, cname) => {
   try {
-    let data = await db.query('SELECT Message.uemail, uname, mtime, mcontent FROM User NATURAL JOIN Message WHERE wid = ? AND cname = ?', [wid, cname])
+    let data = await db.query('SELECT Message.uemail, uname, nickname, mtime, mcontent FROM User NATURAL JOIN Message WHERE wid = ? AND cname = ?', [wid, cname])
     return data
   } catch (error) {
     throw (error)
