@@ -24,8 +24,7 @@ let getallinvitation = withAuth(
 let addinvitation = withAuth(
   async (ctx, next) => {
     try {
-      const { semail, remail } = ctx.request.body
-      const wid = ctx.params.wid
+      const { semail, remail, wid } = ctx.request.body
       let result = await wInvitationModel.addNewinvitation(wid, semail, remail)
       if (result) {
         ctx.created({ success: true, invitewid: wid, invitemember: remail })

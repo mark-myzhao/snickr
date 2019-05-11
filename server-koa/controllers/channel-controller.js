@@ -6,7 +6,8 @@ let getchannelinworkspace = withAuth(
   async (ctx, next) => {
     try {
       const wid = ctx.params.wid
-      let result = await ChannelModel.getchannelinfo(wid)
+      const uemail = ctx.params.uemail
+      let result = await ChannelModel.getchannelinfo(wid, uemail)
       if (result.length > 0) {
         ctx.ok({ success: true, channels: result })
       } else {

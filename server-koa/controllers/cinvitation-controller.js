@@ -24,8 +24,7 @@ let getallinvitation = withAuth(
 let addcinvitation = withAuth(
   async (ctx, next) => {
     try {
-      const cname = ctx.params.cname
-      const { semail, remail, wid } = ctx.request.body
+      const { semail, remail, cname, wid } = ctx.request.body
       let time = new Date()
       let citime = time.getFullYear() + '-' + time.getMonth() + '-' + time.getDate() + ' ' + time.toLocaleTimeString()
       let result = await cInvitationModel.addNewcinvitation(semail, remail, wid, cname, citime)
