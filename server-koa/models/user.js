@@ -16,8 +16,10 @@ let get = async (uemail = undefined) => {
 
 let add = async (uemail, uname, nickname, password) => {
   try {
+    console.log(uemail, uname, nickname, password)
     if (uemail && uname && nickname && password) {
       await db.query(` INSERT INTO User (uemail, uname, nickname, password) VALUES (?, ?, ?, ?) `, [uemail, uname, nickname, password])
+      console.log('--')
       return true
     } else {
       return false

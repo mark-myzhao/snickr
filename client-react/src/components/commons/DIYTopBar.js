@@ -26,7 +26,6 @@ import $store from '../../store'
 
 // TODO: User Profile Dialog
 // TODO: Change Password Dialog
-// TODO: Accept/Decline Notification
 // TODO: Implement Search
 
 const styles = theme => ({

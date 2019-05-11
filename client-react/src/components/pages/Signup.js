@@ -16,7 +16,9 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { withRouter } from 'react-router-dom'
 
-import store from '../../store'
+import $store from '../../store'
+
+// TODO: register
 
 const styles = theme => ({
   main: {
@@ -70,7 +72,7 @@ class Signup extends Component {
   }
 
   componentDidMount () {
-    if (store.isAuthenticated()) {
+    if ($store.isAuthenticated()) {
       this.props.history.push('/')
     }
   }
@@ -86,24 +88,89 @@ class Signup extends Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  autoLogin = async (uemail, password) => {
+    try{
+      let res = await axios.post('/auth/token', {
+        uemail,
+        password
+      })
+      $store.setToken(res.data.token)
+      res = await axios.get(`/users/${this.state.uemail}`, {
+        headers: {'Authorization': `bearer ${res.data.token}`}
+      })
+      $store.setUser(res.data.users[0])
+      this.props.history.push('/')
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  // generate error messages, if any
+  validate = (uemail, username, nickname, password, passwordRepeat) => {
+    let uemailErrorMessage = null
+    let unameErrorMessage = null
+    let nicknameErrorMessage = null
+    let passwordErrorMessage = null
+    let passwordConfirmErrorMessage = null
+
+    if (password !== passwordRepeat) {
+      passwordConfirmErrorMessage = 'passwords do not match'
+    }
+
+    return {
+      uemailErrorMessage,
+      unameErrorMessage,
+      nicknameErrorMessage,
+      passwordErrorMessage,
+      passwordConfirmErrorMessage
+    }
+  }
+
   handleSubmit = async (event) => {
     event.preventDefault()
-    // TODO: Change the API from backend
+    const {uemail, uname, nickname, password, passwordRepeat } = this.state
+    const {
+      uemailErrorMessage,
+      unameErrorMessage,
+      nicknameErrorMessage,
+      passwordErrorMessage,
+      passwordConfirmErrorMessage
+    } = this.validate(uemail, uname, nickname, password, passwordRepeat)
+    if (uemailErrorMessage || unameErrorMessage || nicknameErrorMessage || passwordErrorMessage || passwordConfirmErrorMessage) {
+      this.setState({
+        uemailErrorMessage,
+        unameErrorMessage,
+        nicknameErrorMessage,
+        passwordErrorMessage,
+        passwordConfirmErrorMessage
+      })
+      return
+    }
     try {
       let res = await axios.post('/users', {
-        uemail: this.state.uemail,
-        username: this.state.uname,
-        nickname: this.state.nickname,
-        password: this.state.password
+        uemail,
+        username: uname,
+        nickname,
+        password
       })
-      if (res.success) {
+      if (res.data.success) {
+        this.setState({
+          uemailErrorMessage: '',
+          unameErrorMessage: '',
+          nicknameErrorMessage: '',
+          passwordErrorMessage: '',
+          passwordConfirmErrorMessage: ''
+        })
         // success
+        await this.autoLogin(this.state.uemail, this.state.password)
       } else {
         // handle error
+        this.setState({
+          uemailErrorMessage: res.data.error
+        })
       }
     } catch (error) {
-      console.log(error)
-      // let { data } = error.response
+      console.error(error)
     }
   }
 
@@ -209,10 +276,10 @@ class Signup extends Component {
             >
               <InputLabel htmlFor="password">Confirm Password</InputLabel>
               <Input
-                id="passwordConfirm"
-                name="passwordConfirm"
+                id="passwordRepeat"
+                name="passwordRepeat"
                 type="password"
-                value={this.state.passwordConfirm}
+                value={this.state.passwordRepeat}
                 onChange={this.handleChange}
               />
               {

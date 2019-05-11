@@ -34,21 +34,24 @@ let getUser = withAuth(
   }
 )
 
-let addUser = withAuth(
-  async (ctx, next) => {
-    try {
-      const { uemail, username, nickname, password } = ctx.request.body
-      let result = await UserModel.add(uemail, username, nickname, password)
-      if (result) {
-        ctx.created({ success: true, added: uemail })
-      } else {
-        ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
-      }
-    } catch (error) {
-      ctx.badRequest({ error })
+let addUser = async (ctx, next) => {
+  try {
+    const { uemail, username, nickname, password } = ctx.request.body
+    let existedUser = await UserModel.get(uemail)
+    if (existedUser.length > 0) {
+      ctx.ok({ success: false, error: 'user already exists' })
+      return
     }
+    let result = await UserModel.add(uemail, username, nickname, password)
+    if (result) {
+      ctx.created({ success: true, added: uemail })
+    } else {
+      ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
+    }
+  } catch (error) {
+    ctx.internalServerError({ error })
   }
-)
+}
 
 let updateUser = withAuth(
   async (ctx, next) => {
@@ -62,7 +65,7 @@ let updateUser = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -78,7 +81,7 @@ let removeUser = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
