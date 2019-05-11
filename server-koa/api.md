@@ -280,8 +280,15 @@ ctx.created({
 })
 
 
-// -> DELETE /v1/cmember/:wid/:cname/:uemail
+// -> DELETE /v1/cmember/
 // <- 200 ok
+{
+    'wid': '',
+    'cname': '',
+    'semail': '',
+    'remail': '',
+}
+
 ctx.ok({
     success: true,
     deleted: uemail

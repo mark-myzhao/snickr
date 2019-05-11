@@ -78,9 +78,7 @@ let addmember = withAuth(
 let deletemember = withAuth(
   async (ctx, next) => {
     try {
-      const uemail = ctx.params.uemail
-      const wid = ctx.params.wid
-      const cname = ctx.params.cname
+      const { uemail, wid, cname } = ctx.request.body
       let result = await cMemberModel.remove(uemail, wid, cname)
       if (result) {
         ctx.ok({ success: true, deleted: uemail })
