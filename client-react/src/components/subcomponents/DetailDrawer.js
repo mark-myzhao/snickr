@@ -9,6 +9,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Divider from '@material-ui/core/Divider'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import Button from '@material-ui/core/Button'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
@@ -133,10 +139,32 @@ class DetailDrawer extends React.Component {
     })
   }
 
-  handleEditDialogClose = () => {
+  handleQuitDialogClose = () => {
     this.setState({
-      editOpen: false
+      quitOpen: false
     })
+  }
+
+  handleQuit = async () => {
+    const { currentWorkspace, currentChannel } = this.props
+    const token = $store.getToken()
+    const uemail = $store.getUser().uemail
+    const wid = currentWorkspace.wid
+    const cname = currentChannel.cname
+    try {
+      await axios.delete('/cmember', {
+        data: {
+          wid,
+          cname,
+          uemail
+        },
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      window.location.reload()
+      this.handleQuitDialogClose()
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   render() {
@@ -192,21 +220,24 @@ class DetailDrawer extends React.Component {
                       </ListItem>
                     )
                   })
+                } {
+                  (currentChannel.ctype !== 'direct' || this.state.cmember.length < 2) &&
+                  <ListItem
+                    className={classes.nested}
+                    button
+                    onClick={this.handleAddMemberOpen}
+                  >
+                    <ListItemIcon className={classes.nestedIcon}>
+                      <AddIcon />
+                    </ListItemIcon>
+
+                    <ListItemText
+                      className={classes.nestedText}
+                      inset
+                      primary="Add New Member"
+                    />
+                  </ListItem>
                 }
-                <ListItem
-                  className={classes.nested}
-                  button
-                  onClick={this.handleAddMemberOpen}
-                >
-                  <ListItemIcon className={classes.nestedIcon}>
-                    <AddIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    className={classes.nestedText}
-                    inset
-                    primary="Add New Member"
-                  />
-                </ListItem>
               </List>
             </Collapse>
             <ListItem
@@ -241,6 +272,34 @@ class DetailDrawer extends React.Component {
             currentChannel={currentChannel}
             handleClose={this.handleEditDialogClose}
           />
+          <Dialog
+            open={this.state.quitOpen}
+            onClose={this.handleQuitDialogClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Quit"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Want to quit this channel?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={this.handleQuitDialogClose}
+                color="primary"
+                autoFocus
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={this.handleQuit}
+                color="primary"
+              >
+                Confirm
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </React.Fragment>
     )

@@ -314,8 +314,7 @@ ctx.created({
 {
     'wid': '',
     'cname': '',
-    'semail': '',
-    'remail': '',
+    'uemail': '',
 }
 
 ctx.ok({

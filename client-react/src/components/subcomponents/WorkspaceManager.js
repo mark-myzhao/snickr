@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import { withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
@@ -15,6 +16,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import WorkspaceDialog from '../subcomponents/WorkspaceDialog'
 import InvitationDialog from '../subcomponents/InvitationDialog'
+
+import axios from 'axios'
 import store from '../../store';
 
 
@@ -52,6 +55,9 @@ const styles = theme => ({
   },
   addPeople: {
     marginTop: theme.spacing.unit,
+  },
+  button: {
+    marginLeft: theme.spacing.unit,
   }
 })
 
@@ -59,10 +65,10 @@ class WMemberManager extends React.Component {
   state = {
     invitationOpen: false,
     anchorEl: null,
+    deleteAnchorEl: null,
     editOpen: false,
+    deleteOpen: false,
   }
-
-  componentDidMount = () => {}
 
   isAdmin = () => {
     const { wmember } = this.props
@@ -99,11 +105,36 @@ class WMemberManager extends React.Component {
     })
   }
 
-  handleEditToggle = async () => {
+  handleEditToggle = () => {
     const editOpen = this.state.editOpen
     this.setState({
       editOpen: !editOpen
     })
+  }
+
+  handleDeleteOpen = event => {
+    this.setState({
+      deleteAnchorEl: event.currentTarget
+    })
+  }
+
+  handleDeleteClose = () => {
+    this.setState({
+      deleteAnchorEl: null
+    })
+  }
+
+  handleDelete = async () => {
+    const token = store.getToken()
+    const wid = this.props.currentWorkspace.wid
+    try {
+      await axios.delete(`/workspace/${wid}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      this.props.history.push('/')
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   render() {
@@ -121,6 +152,7 @@ class WMemberManager extends React.Component {
               <Button
                 color="primary"
                 onClick={this.handleEditToggle}
+                className={classes.button}
               >
                 Edit
               </Button>
@@ -130,6 +162,19 @@ class WMemberManager extends React.Component {
                 currentWorkspace={currentWorkspace}
                 handleClose={this.handleEditToggle}
               />
+              <Button
+                onClick={this.handleDeleteOpen}
+              >
+                Delete
+              </Button>
+              <Menu
+                anchorEl={this.state.deleteAnchorEl}
+                open={Boolean(this.state.deleteAnchorEl)}
+                onClose={this.handleDeleteClose}
+              >
+                <MenuItem onClick={this.handleDeleteClose}>Cancel</MenuItem>
+                <MenuItem onClick={this.handleDelete}>Confiem</MenuItem>
+              </Menu>
             </React.Fragment>
           }
         </div>
@@ -259,4 +304,4 @@ WMemberManager.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(WMemberManager)
+export default withRouter(withStyles(styles)(WMemberManager))
