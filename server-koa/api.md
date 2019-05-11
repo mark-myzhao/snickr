@@ -67,10 +67,11 @@ ctx.ok({
     ]
 })
 
-// -> POST /v1/winvitation/:wid
+// -> POST /v1/winvitation/
 {
     'semail': 'send email',
     'remail': 'recieve email',
+    'wid': ''
 }
 // <- 201 CREATED
 ctx.created({
@@ -88,7 +89,7 @@ ctx.created({
 
 ##Channel
 ```javascript
-// -> GET /v1/channel/:wid
+// -> GET /v1/channel/:wid/:uemail
 // <- 200 ok
 ctx.ok({
     success: true,
@@ -96,14 +97,10 @@ ctx.ok({
         {
             'cname': 'channel1',
             'ctype': 'public',
-            'oemail': '', // owner uemail
-            'oname': '',  // owner uname
             'ctime': 'Sat Dec 08 2018 10:00:00 GMT-0500'
         }, {
             'cname': 'channel5',
             'ctype': 'privite',
-            'oemail': '', // owner uemail
-            'oname': '',  // owner uname
             'ctime': 'Mon Oct 01 2018 10:00:00 GMT-0400'
         }
     ]
@@ -146,10 +143,11 @@ ctx.ok({
     ]
 })
 
-// -> POST /v1/cinvitation/:cname
+// -> POST /v1/cinvitation/
 {
     'semail': 'send email',
     'remail': 'recieve email',
+    'cname': ''
     'wid' : 1
 }
 // <- 201 CREATED
