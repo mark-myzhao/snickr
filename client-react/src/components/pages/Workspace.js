@@ -134,6 +134,10 @@ class Workspace extends React.Component {
   }
 
   async componentDidMount() {
+    await this.updateAll()
+  }
+
+  updateAll = async () => {
     const { match } = this.props
     const { uemail } = store.getUser()
     const token = store.getToken()
@@ -208,7 +212,7 @@ class Workspace extends React.Component {
   // computed attributes
   getChannels = (type) => {
     return this.state.channels.filter(item => {
-      return item.ctype === type
+      return item.ctype.toLowerCase() === type.toLowerCase()
     })
   }
 
@@ -336,7 +340,7 @@ class Workspace extends React.Component {
               />
             </React.Fragment>
           } {
-            this.getChannels('private') > 0 &&
+            this.getChannels('private').length > 0 &&
             <React.Fragment>
               <Divider />
               <ChannelList
@@ -347,7 +351,7 @@ class Workspace extends React.Component {
               />
             </React.Fragment>
           } {
-            this.getChannels('direct') > 0 &&
+            this.getChannels('direct').length > 0 &&
             <React.Fragment>
               <Divider />
               <ChannelList
@@ -375,6 +379,7 @@ class Workspace extends React.Component {
           <AddChannelDialog
             open={this.state.addChannelOpen}
             currentWorkspace={this.state.currentWorkspace}
+            updateChannel={this.updateChannel}
             handleClose={this.handleAddChannelClose}
           />
         </Drawer>

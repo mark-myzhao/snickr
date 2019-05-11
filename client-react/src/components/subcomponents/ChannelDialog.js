@@ -73,39 +73,80 @@ function Transition(props) {
   return <Slide direction="up" {...props} />
 }
 
-class AddChannelDialog extends React.Component {
+class ChannelDialog extends React.Component {
   state = {
     newChannelName: '',
     newChannelType: '',
     errorMessage: ''
   }
 
-  handleAddChannel = async () => {
+  componentDidMount = () => {
+    const { op, currentChannel } = this.props
+    if (op.toLowerCase() === 'update' && currentChannel) {
+      this.setState({
+        newChannelName: currentChannel.cname,
+        newChannelType: currentChannel.ctype
+      })
+    }
+  }
+
+  handleSubmit = (op) => async () => {
     const you = $store.getUser()
     const token = $store.getToken()
     const { currentWorkspace } = this.props
     const cname = this.state.newChannelName
     const ctype = this.state.newChannelType
     const wid = currentWorkspace.wid
+
+    if (op.toLowerCase() === 'add') {
+      await this.handleAddChannel(wid, cname, ctype, token, you.uemail)
+    } else if (op.toLowerCase() === 'update') {
+      await this.handleEditChannel(wid, cname, ctype, token, you.uemail)
+    }
+  }
+
+  handleAddChannel = async (wid, cname, ctype, token, uemail) => {
     if (cname && ctype) {
       try {
-        const { data } = await axios.post('/channel', {
-          cname,
-          ctype,
-          wid,
-          uemail: you.uemail
+        await axios.post('/channel', {
+          wid, cname, ctype, uemail
         }, {
           headers: {'Authorization': `bearer ${token}`}
         })
-        console.log(data)
         this.setState({
-          errorMessage: ''
-        })
-        this.setState({
+          errorMessage: '',
           newWorkspaceName: '',
           newWorkspaceDesc: ''
         })
-        await this.props.updateChannel(wid, you.uemail, token)
+        await this.props.updateChannel(wid, uemail, token)
+        this.props.handleClose()
+      } catch(error) {
+        console.error(error)
+        this.setState({
+          errorMessage: 'Channel with the same name already exists.'
+        })
+      }
+    } else {
+      this.setState({
+        errorMessage: 'Name should not be empty.'
+      })
+    }
+  }
+
+  handleUpdateChannel = async (wid, cname, ctype, token, uemail) => {
+    if (cname && ctype) {
+      try {
+        await axios.put('/channel', {
+          wid, cname, ctype, uemail
+        }, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        this.setState({
+          errorMessage: '',
+          newWorkspaceName: '',
+          newWorkspaceDesc: ''
+        })
+        await this.props.updateChannel(wid, uemail, token)
         this.props.handleClose()
       } catch(error) {
         console.error(error)
@@ -127,7 +168,7 @@ class AddChannelDialog extends React.Component {
   }
 
   render() {
-    const { classes, open, handleClose, currentWorkspace } = this.props
+    const { classes, open, op, handleClose, currentWorkspace } = this.props
     return (
       <React.Fragment>
         <Dialog
@@ -178,9 +219,9 @@ class AddChannelDialog extends React.Component {
                   size="large"
                   variant="contained"
                   color="primary"
-                  onClick={this.handleAddChannel}
+                  onClick={this.handleSubmit(op)}
                 >
-                  Add
+                  {op.toUpperCase()}
                 </Button>
               </div>
             </div>
@@ -191,9 +232,9 @@ class AddChannelDialog extends React.Component {
   }
 }
 
-AddChannelDialog.propTypes = {
+ChannelDialog.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(AddChannelDialog)
+export default withStyles(styles)(ChannelDialog)
 

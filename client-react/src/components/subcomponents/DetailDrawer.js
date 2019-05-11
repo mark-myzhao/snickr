@@ -13,15 +13,14 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
 
 import InvitationDialog from './InvitationDialog'
+import ChannelDialog from './ChannelDialog'
 import $store from '../../store'
 
-
-// TODO: Get Channel Details
-// TODO: Edit Channel
 
 const styles = theme => ({
   nested: {
@@ -66,7 +65,9 @@ class DetailDrawer extends React.Component {
     channelDetailOpen: false,
     addMemberOpen: false,
     memberOpen: false,
-    cmember: []  // uemail, uname, nickname
+    cmember: [],  // uemail, uname, nickname
+    editOpen: false,
+    quitOpen: false,
   }
 
   componentDidMount = async () => {
@@ -111,6 +112,30 @@ class DetailDrawer extends React.Component {
   handleAddMemberClose = () => {
     this.setState({
       addMemberOpen: false
+    })
+  }
+
+  handleEditDialogOpen = () => {
+    this.setState({
+      editOpen: true
+    })
+  }
+
+  handleEditDialogClose = () => {
+    this.setState({
+      editOpen: false
+    })
+  }
+
+  handleQuitDialogOpen = () => {
+    this.setState({
+      quitOpen: true
+    })
+  }
+
+  handleEditDialogClose = () => {
+    this.setState({
+      editOpen: false
     })
   }
 
@@ -186,7 +211,16 @@ class DetailDrawer extends React.Component {
             </Collapse>
             <ListItem
               button
-              onClick={this.handleChannelDetailClick}
+              onClick={this.handleEditDialogOpen}
+            >
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              <ListItemText primary="Edit" />
+            </ListItem>
+            <ListItem
+              button
+              onClick={this.handleQuitDialogOpen}
             >
               <ListItemIcon>
                 <ExitToAppIcon />
@@ -199,6 +233,13 @@ class DetailDrawer extends React.Component {
             currentWorkspace={currentWorkspace}
             currentChannel={currentChannel}
             handleClose={this.handleAddMemberClose}
+          />
+          <ChannelDialog
+            open={this.state.editOpen}
+            op="update"
+            currentWorkspace={currentWorkspace}
+            currentChannel={currentChannel}
+            handleClose={this.handleEditDialogClose}
           />
         </div>
       </React.Fragment>

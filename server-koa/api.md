@@ -32,13 +32,14 @@ ctx.created({
 })
 
 
-// -> PUT  /v1/workspace/:wid
+// -> PUT /v1/workspace/
 {
     'wname': 'new workspace',
-    'wdesc': 'new desc'
+    'wdesc': 'new desc',
+    'uemail': '...',
 }
-// <- 200 OK
-ctx.ok({
+// <- 201 CREATED
+ctx.created({
     success: true
 })
 
@@ -105,6 +106,19 @@ ctx.ok({
             'ctime': 'Mon Oct 01 2018 10:00:00 GMT-0400'
         }
     ]
+})
+
+
+// -> PUT /v1/channel/
+{
+    'cname': 'channel9',
+    'ctype': 'public',
+    'wid': '',
+    'uemail': '...'
+}
+// <- 201 CREATED
+ctx.ok({
+    success: true
 })
 
 

@@ -25,7 +25,7 @@ let addchannel = withAuth(
   async (ctx, next) => {
     try {
       const { wid, cname, ctype, uemail } = ctx.request.body
-      if (wid & cname & ctype & uemail) {
+      if (wid && cname && ctype && uemail) {
         let time = new Date()
         await ChannelModel.addNewchannel(wid, cname, ctype, time)
         await cMemberModel.addNewmember(uemail, wid, cname)

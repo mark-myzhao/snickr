@@ -13,7 +13,8 @@ let getallinvitation = withAuth(
           member: result
         })
       } else {
-        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: false, member: [] })
       }
     } catch (error) {
       ctx.internalServerError({ error })
@@ -33,7 +34,7 @@ let addcinvitation = withAuth(
         ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -49,7 +50,7 @@ let deleteallcinvitation = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )

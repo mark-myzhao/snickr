@@ -77,24 +77,67 @@ class AddWorkspaceDialog extends React.Component {
     errorMessage: ''
   }
 
+  componentDidMount = () => {
+    const { op, currentWorkspace } = this.props
+    if (op && op.toLowerCase() === 'update' && currentWorkspace) {
+      this.setState({
+        newWorkspaceName: currentWorkspace.wname,
+        newWorkspaceDesc: currentWorkspace.wdesc
+      })
+    }
+  }
+
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     })
   }
 
-  handleAddWorkspace = async () => {
+  handleSubmit = op => async () => {
     const you = $store.getUser()
     const token = $store.getToken()
     const wname = this.state.newWorkspaceName
     const wdesc = this.state.newWorkspaceDesc
+
+    if (op.toLowerCase() === 'add') {
+      await this.handleAddWorkspace(wname, wdesc, 'admin', token, you.uemail)
+    } else if (op.toLowerCase() === 'update') {
+      await this.handleUpdateWorkspace(wname, wdesc, 'admin', token, you.uemail)
+    }
+  }
+
+  handleAddWorkspace = async (wname, wdesc, wmtype, token, uemail) => {
     if (wname && wdesc) {
       try {
         await axios.post('/workspace', {
-          wname,
-          wdesc,
-          uemail: you.uemail,
-          wmtype: 'admin'
+          wname, wdesc, uemail, wmtype
+        }, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        this.setState({
+          errorMessage: ''
+        })
+        this.setState({
+          newWorkspaceName: '',
+          newWorkspaceDesc: ''
+        })
+        this.props.update()
+        this.props.handleClose()
+      } catch(error) {
+        console.error(error)
+      }
+    } else {
+      this.setState({
+        errorMessage: 'Name and Description should not be empty.'
+      })
+    }
+  }
+
+  handleUpdateWorkspace = async (wid, wname, wdesc, token, uemail) => {
+    if (wname && wdesc) {
+      try {
+        await axios.put('/workspace', {
+          wid, wname, wdesc, uemail
         }, {
           headers: {'Authorization': `bearer ${token}`}
         })
@@ -118,7 +161,7 @@ class AddWorkspaceDialog extends React.Component {
   }
 
   render() {
-    const { classes, open, handleClose } = this.props
+    const { classes, open, op, handleClose } = this.props
     return (
       <React.Fragment>
         <Dialog
@@ -167,9 +210,9 @@ class AddWorkspaceDialog extends React.Component {
                   size="large"
                   variant="contained"
                   color="primary"
-                  onClick={this.handleAddWorkspace}
+                  onClick={this.handleSubmit(op)}
                 >
-                  Add
+                  {op.toUpperCase()}
                 </Button>
               </div>
               {

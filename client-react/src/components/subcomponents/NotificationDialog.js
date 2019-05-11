@@ -164,7 +164,6 @@ class NotificationDialog extends React.Component {
   }
 
   handleDeclineChannel = (wid, cname, semail) => async () => {
-    // TODO: Test with new API
     const you = $store.getUser()
     const token = $store.getToken()
     const { update } = this.props

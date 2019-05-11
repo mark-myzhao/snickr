@@ -13,6 +13,7 @@ import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
+import WorkspaceDialog from '../subcomponents/WorkspaceDialog'
 import InvitationDialog from '../subcomponents/InvitationDialog'
 import store from '../../store';
 
@@ -58,18 +59,20 @@ class WMemberManager extends React.Component {
   state = {
     invitationOpen: false,
     anchorEl: null,
-    isAdmin: false,
+    editOpen: false,
   }
 
-  componentDidMount = () => {
+  componentDidMount = () => {}
+
+  isAdmin = () => {
     const { wmember } = this.props
+    const you = store.getUser()
     for (let item of wmember) {
-      if (item.uemail === store.getUser.uemail) {
-        this.setState({
-          isAdmin: true
-        })
+      if (item.uemail === you.uemail) {
+        return true
       }
     }
+    return false
   }
 
   handleMenuClick = event => {
@@ -96,6 +99,13 @@ class WMemberManager extends React.Component {
     })
   }
 
+  handleEditToggle = async () => {
+    const editOpen = this.state.editOpen
+    this.setState({
+      editOpen: !editOpen
+    })
+  }
+
   render() {
     const { classes, wmember, currentWorkspace } = this.props
     return (
@@ -106,9 +116,22 @@ class WMemberManager extends React.Component {
           >
             Workspace Description
           </Typography>
-          <Button color="primary">
-            Edit
-          </Button>
+          { this.isAdmin() &&
+            <React.Fragment>
+              <Button
+                color="primary"
+                onClick={this.handleEditToggle}
+              >
+                Edit
+              </Button>
+              <WorkspaceDialog
+                op="update"
+                open={this.state.editOpen}
+                currentWorkspace={currentWorkspace}
+                handleClose={this.handleEditToggle}
+              />
+            </React.Fragment>
+          }
         </div>
         <Typography
           variant="body1"
@@ -177,8 +200,8 @@ class WMemberManager extends React.Component {
                 </div>
               </ExpansionPanelDetails>
               {
-                this.state.isAdmin &&
-                <React.Fragment>
+                this.isAdmin() &&
+                <div>
                   <Divider />
                   <ExpansionPanelActions>
                     <Button
@@ -191,7 +214,7 @@ class WMemberManager extends React.Component {
                       Remove
                     </Button>
                   </ExpansionPanelActions>
-                </React.Fragment>
+                </div>
               }
             </ExpansionPanel>
           )
@@ -202,19 +225,23 @@ class WMemberManager extends React.Component {
           >
             You have no member in this work space yet.
           </Typography>
+        } {
+          this.isAdmin() &&
+          <React.Fragment>
+            <Button
+              className={classes.addPeople}
+              color="primary"
+              onClick={this.handleInvitationDialogOpen}
+            >
+              Add More People...
+            </Button>
+            <InvitationDialog
+              open={this.state.invitationOpen}
+              currentWorkspace={currentWorkspace}
+              handleClose={this.handleInvitationDialogClose}
+            />
+          </React.Fragment>
         }
-        <Button
-          className={classes.addPeople}
-          color="primary"
-          onClick={this.handleInvitationDialogOpen}
-        >
-          Add More People...
-        </Button>
-        <InvitationDialog
-          open={this.state.invitationOpen}
-          currentWorkspace={currentWorkspace}
-          handleClose={this.handleInvitationDialogClose}
-        />
         <Menu
           anchorEl={this.state.anchorEl}
           open={Boolean(this.state.anchorEl)}
