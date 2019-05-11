@@ -185,6 +185,19 @@ ctx.created({
     ]
 }
 
+// -> GET /v1/message/search/:uemail/:query
+// <- 200 ok
+ctx.ok({
+    wid:,
+    cname:,
+    mcontent:,
+    mtime:,
+    uname:,
+    uemail:,
+    nickname:
+})
+
+
 // -> POST /v1/message/
 {
     'wid': 1,

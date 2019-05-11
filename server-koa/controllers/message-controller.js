@@ -23,6 +23,27 @@ let getmessage = withAuth(
   }
 )
 
+let searchmessage = withAuth(
+  async (ctx, next) => {
+    try {
+      const uemail = ctx.params.uemail
+      const query = ctx.params.query
+      let result = await MessageModel.search(uemail, query)
+      if (result.length > 0) {
+        ctx.ok({
+          success: true,
+          message: result
+        })
+      } else {
+        // ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+        ctx.ok({ success: false, message: [] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let addmessage = withAuth(
   async (ctx, next) => {
     try {
@@ -42,5 +63,6 @@ let addmessage = withAuth(
 
 module.exports = {
   getmessage,
+  searchmessage,
   addmessage
 }
