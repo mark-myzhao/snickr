@@ -24,10 +24,10 @@ let getWorkspace = withAuth(
 let addWorkspace = withAuth(
   async (ctx, next) => {
     try {
-      const { wid, wname, wdesc, uemail } = ctx.request.body
-      let result = await WorkspaceModel.addWithWorkspace(wid, wname, wdesc, uemail)
+      const { wname, wdesc, uemail } = ctx.request.body
+      let result = await WorkspaceModel.addWithWorkspace(wname, wdesc, uemail)
       if (result) {
-        ctx.created({ success: true, added: wid })
+        ctx.created({ success: true, added: result })
       } else {
         ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
