@@ -8,7 +8,10 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import Slide from '@material-ui/core/Slide'
+import red from '@material-ui/core/colors/red'
 
+import axios from 'axios'
+import $store from '../../store'
 
 const styles = theme => ({
   panelContainer: {
@@ -59,6 +62,9 @@ const styles = theme => ({
   },
   button2: {
     marginLeft: theme.spacing.unit * -1,
+  },
+  errorMessage: {
+    color: red[700]
   }
 })
 
@@ -68,13 +74,87 @@ function Transition(props) {
 
 class InvitationDialog extends React.Component {
   state = {
-    inviteEmail: ''
+    inviteEmail: '',
+    errorMessage: ''
   }
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     })
+  }
+
+  handleAddClick = async () => {
+    const { currentChannel } = this.props
+    const token = $store.getToken()
+    const you = $store.getUser()
+    const target = this.state.inviteEmail
+    if (target === '') {
+      this.setState({
+        errorMessage: 'Please use a validate email'
+      })
+      return
+    }
+    if (!currentChannel) {
+      await this.sendWorkspaceInvitation(target, you, token)
+    } else {
+      await this.sendChannelInvitation(target, you, token)
+    }
+  }
+
+  sendWorkspaceInvitation = async (target, you, token) => {
+    const { currentWorkspace, handleClose } = this.props
+    // test if the user exists
+    try {
+      await axios.get(`/users/${target}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+    } catch(error) {
+      console.error(error)
+      return
+    }
+
+    try {
+      let { data } = await axios.post('/winvitation', {
+        semail: you.uemail,
+        remail: target,
+        wid: currentWorkspace.wid
+      }, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      handleClose()
+    } catch(error) {
+      console.error(error)
+    }
+  }
+
+  sendChannelInvitation = async (target, you, token) => {
+    const { currentWorkspace, currentChannel, handleClose } = this.props
+    // test if the user exists
+    try {
+      await axios.get(`/users/${target}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+    } catch(error) {
+      console.error(error)
+      return
+    }
+
+    try {
+      let { data } = await axios.post('/cinvitation', {
+        semail: you.uemail,
+        remail: target,
+        cname: currentChannel.cname,
+        wid: currentWorkspace.wid
+      }, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      handleClose()
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   render() {
@@ -114,6 +194,7 @@ class InvitationDialog extends React.Component {
                   className={classes.button}
                   size="large"
                   variant="contained"
+                  onClick={this.handleAddClick}
                 >
                   Add
                 </Button>
@@ -133,6 +214,11 @@ class InvitationDialog extends React.Component {
                     </Button>
                   </div>
                 </React.Fragment>
+              } {
+                this.state.errorMessage &&
+                <div className={classes.errorMessage}>
+                  {this.state.errorMessage}
+                </div>
               }
             </div>
           </div>

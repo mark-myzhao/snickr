@@ -129,7 +129,7 @@ class Workspace extends React.Component {
     currentChannel: {},    // { cname, ctime, ctype }
     isWorkspace: true,
     channels: [],
-    messages: [], // { uemail, uname, mtime, mcontent, message }
+    messages: [], // { uemail, uname, nickname, mtime, mcontent, message }
     wmember: [] // uemail, uname, nickname, wmtype
   }
 
@@ -138,7 +138,18 @@ class Workspace extends React.Component {
     const { uemail } = store.getUser()
     const token = store.getToken()
     const wid = match.params.wid
+
     // GET workspaces
+    await this.updateWorkspace(wid, uemail, token)
+
+    // GET channels
+    await this.updateChannel(wid, uemail, token)
+
+    // GET workspace members
+    await this.updateWorkspaceMember(wid, token)
+  }
+
+  updateWorkspace = async (wid, uemail, token) => {
     try {
       if (!store.buffer.workspace) {
         // Buffer is empty, get data from the server
@@ -160,10 +171,11 @@ class Workspace extends React.Component {
         currentWorkspace: []
       })
     }
+  }
 
-    // GET channels
+  updateChannel = async (wid, uemail, token) => {
     try {
-      let { data } = await axios.get(`/channel/${wid}`, {
+      let { data } = await axios.get(`/channel/${wid}/${uemail}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
       this.setState({
@@ -175,8 +187,9 @@ class Workspace extends React.Component {
         channels: []
       })
     }
+  }
 
-    // GET workspace members
+  updateWorkspaceMember = async (wid, token) => {
     try {
       let { data } = await axios.get(`/wmember/${wid}`, {
         headers: {'Authorization': `bearer ${token}`}

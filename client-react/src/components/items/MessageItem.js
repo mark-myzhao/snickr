@@ -49,7 +49,7 @@ class MessageItem extends React.Component {
   render() {
     const { classes, message } = this.props
     const you = $store.getUser()
-    const displayName = message.uemail === you.uemail ? `${message.uname} (You)` : message.uname
+    const displayName = message.uemail === you.uemail ? `${message.nickname} (You)` : message.nickname
     const mt = new Date(message.mtime)
     let dd = String(mt.getDate()).padStart(2, '0')
     let mm = String(mt.getMonth() + 1).padStart(2, '0')
@@ -59,7 +59,7 @@ class MessageItem extends React.Component {
     return (
       <Paper className={classes.root} elevation={1}>
         <Avatar className={classes.avatar}>
-          {message.uname[0]}
+          {message.nickname[0]}
         </Avatar>
         <div className={classes.textContainer}>
           <div>

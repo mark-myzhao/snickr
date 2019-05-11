@@ -85,7 +85,7 @@ const styles = theme => ({
   },
   button2: {
     marginLeft: theme.spacing.unit * -1,
-  }
+  },
 })
 
 function Transition(props) {
@@ -104,7 +104,13 @@ class NotificationDialog extends React.Component {
   handleAcceptWorkspace = wid => async () => {
     const you = $store.getUser()
     const token = $store.getToken()
+    const { update } = this.props
     try {
+      console.log({
+        uemail: you.uemail,
+        wid,
+        wmtype: 'user'
+      })
       const { data } = await axios.post('/wmember', {
         uemail: you.uemail,
         wid,
@@ -113,7 +119,7 @@ class NotificationDialog extends React.Component {
         headers: {'Authorization': `bearer ${token}`}
       })
       console.log(data)
-      this.props.handleClose()
+      await update()
     } catch(error) {
       console.log(error)
     }
@@ -141,6 +147,7 @@ class NotificationDialog extends React.Component {
   handleAcceptChannel = (wid, cname) => async () => {
     const you = $store.getUser()
     const token = $store.getToken()
+    const { update } = this.props
     try {
       const { data } = await axios.post('/cmember', {
         wid,
@@ -150,7 +157,7 @@ class NotificationDialog extends React.Component {
         headers: {'Authorization': `bearer ${token}`}
       })
       console.log(data)
-      this.props.handleClose()
+      await update()
     } catch(error) {
       console.log(error)
     }
@@ -201,6 +208,11 @@ class NotificationDialog extends React.Component {
               className={classes.content}
             >
               {
+                (cinvitation.length + winvitation.length) === 0 &&
+                <div className={classes.title}>
+                  No notification right now ...
+                </div>
+              } {
                 winvitation.length > 0 &&
                 <React.Fragment>
                   <div className={classes.title}>

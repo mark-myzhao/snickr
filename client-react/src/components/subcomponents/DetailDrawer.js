@@ -9,14 +9,16 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import Divider from '@material-ui/core/Divider'
-import InfoIcon from '@material-ui/icons/Info'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import PersonIcon from '@material-ui/icons/Person'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import AddIcon from '@material-ui/icons/Add'
-import AlternateEmailIcon from '@material-ui/icons/AlternateEmail'
+import axios from 'axios'
 
 import InvitationDialog from './InvitationDialog'
+import $store from '../../store'
+
 
 // TODO: Get Channel Details
 // TODO: Edit Channel
@@ -63,12 +65,33 @@ class DetailDrawer extends React.Component {
   state = {
     channelDetailOpen: false,
     addMemberOpen: false,
-    memberOpen: false
+    memberOpen: false,
+    cmember: []  // uemail, uname, nickname
   }
 
   componentDidMount = async () => {
-    // const { currentWorkspace } = this.props
+    await this.updateCMember()
+  }
 
+  updateCMember = async () => {
+    const { currentWorkspace, currentChannel } = this.props
+    const token = $store.getToken()
+    const wid = currentWorkspace.wid
+    const cname = currentChannel.cname
+    try {
+      let { data } = await axios.get(`/cmember/${wid}/${cname}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      // console.log(data)
+      this.setState({
+        cmember: data.member
+      })
+    } catch(error) {
+      // console.error(error)
+      this.setState({
+        cmember: []
+      })
+    }
   }
 
   handleChannelDetailClick = () => {
@@ -106,39 +129,6 @@ class DetailDrawer extends React.Component {
           <List component="nav">
             <ListItem
               button
-              onClick={this.handleChannelDetailClick}
-            >
-              <ListItemIcon>
-                <InfoIcon />
-              </ListItemIcon>
-              <ListItemText primary="Channel Details" />
-              {this.state.channelDetailOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItem>
-            <Collapse
-              in={this.state.channelDetailOpen}
-              timeout="auto"
-              unmountOnExit
-            >
-              <List
-                component="div"
-                disablePadding
-                dense
-              >
-                <ListItem className={classes.nested}>
-                  <ListItemIcon className={classes.nestedIcon}>
-                    <AlternateEmailIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    className={classes.nestedIcon}
-                    inset
-                    primary="Created by Mingyu"
-                    secondary="on 2018-12-25"
-                  />
-                </ListItem>
-              </List>
-            </Collapse>
-            <ListItem
-              button
               onClick={this.handleMemberClick}
             >
               <ListItemIcon>
@@ -157,17 +147,27 @@ class DetailDrawer extends React.Component {
                 disablePadding
                 dense
               >
-                <ListItem button className={classes.nested}>
-                  <ListItemAvatar>
-                    <Avatar>
-                      M
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText
-                    inset
-                    primary="Mingyu"
-                  />
-                </ListItem>
+                {
+                  this.state.cmember.map(item => {
+                    return (
+                      <ListItem
+                        button
+                        key={item.uemail}
+                        className={classes.nested}
+                      >
+                        <ListItemAvatar>
+                          <Avatar>
+                            {item.nickname[0]}
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          inset
+                          primary={item.nickname}
+                        />
+                      </ListItem>
+                    )
+                  })
+                }
                 <ListItem
                   className={classes.nested}
                   button
@@ -184,6 +184,15 @@ class DetailDrawer extends React.Component {
                 </ListItem>
               </List>
             </Collapse>
+            <ListItem
+              button
+              onClick={this.handleChannelDetailClick}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary="Quit" />
+            </ListItem>
           </List>
           <InvitationDialog
             open={this.state.addMemberOpen}
