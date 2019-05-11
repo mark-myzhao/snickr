@@ -15,13 +15,8 @@ let getWithUemail = async (uemail) => {
 let addWithWorkspace = async (wname, wdesc, uemail) => {
   try {
     if (wname && wdesc && uemail) {
-      let data = await db.query('SELECT uemail FROM wMember NATURAL JOIN Workspace WHERE uemail = ?', uemail)
-      if (data.length > 0) {
-        await db.query('INSERT INTO Workspace(wname, wdesc) VALUES (?, ?)', [wname, wdesc])
-        return true
-      } else {
-        return false
-      }
+      await db.query('INSERT INTO Workspace(wname, wdesc) VALUES (?, ?)', [wname, wdesc])
+      return true
     } else {
       return false
     }
