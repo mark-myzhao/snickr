@@ -13,7 +13,9 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Input from '@material-ui/core/Input'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
+import Snackbar from '@material-ui/core/Snackbar'
 
+import DIYSnackbar from '../subcomponents/DIYSnackbar'
 import $store from '../../store'
 
 const styles = theme => ({
@@ -106,7 +108,8 @@ class AddChannelDialog extends React.Component {
     const cname = this.state.newChannelName
     const ctype = this.state.newChannelType
     const wid = currentWorkspace.wid
-    if (cname && ctype) {
+    const validator = /^[a-zA-Z0-9_]+$/
+    if (validator.test(cname) && cname && ctype) {
       try {
         await axios.post('/channel', {
           cname,
@@ -133,7 +136,7 @@ class AddChannelDialog extends React.Component {
       }
     } else {
       this.setState({
-        errorMessage: 'Name should not be empty.'
+        errorMessage: 'Invalid Channel Name or Channel Type.'
       })
     }
   }
@@ -181,6 +184,12 @@ class AddChannelDialog extends React.Component {
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
+    })
+  }
+
+  handleSnackbarErrorClose = () => {
+    this.setState({
+      errorMessage: ''
     })
   }
 
@@ -283,6 +292,21 @@ class AddChannelDialog extends React.Component {
               }
             </div>
           </div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+            open={this.state.errorMessage !== ''}
+            autoHideDuration={6000}
+            onClose={this.handleSnackbarErrorClose}
+          >
+            <DIYSnackbar
+              onClose={this.handleSnackbarErrorClose}
+              variant="error"
+              message={this.state.errorMessage}
+            />
+          </Snackbar>
         </Dialog>
       </React.Fragment>
     )
