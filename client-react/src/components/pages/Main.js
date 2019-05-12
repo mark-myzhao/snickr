@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 
-
 import backgroundShape from '../../images/shape.svg'
 import WorkspaceItem from '../items/WorkspaceItem'
 import DIYTopBar from '../subcomponents/DIYTopBar'

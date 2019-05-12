@@ -12,6 +12,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import $store from '../../store'
 
@@ -51,12 +52,6 @@ const styles = theme => ({
     right: '4rem',
     top: '3.5rem',
   },
-  inputContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: theme.spacing.unit,
-  },
   table: {
     minWidth: 790,
   },
@@ -65,6 +60,15 @@ const styles = theme => ({
     marginTop: theme.spacing.unit * 3,
     overflowX: 'auto',
   },
+  loadingContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loading: {
+    position: 'relative',
+    top: '20vh'
+  }
 })
 
 const getTimeStr = (time) => {
@@ -74,11 +78,15 @@ const getTimeStr = (time) => {
 
 class searchResult extends React.Component {
   state = {
-    searchResult: []
+    searchResult: [],
+    isLoading: true
   }
 
   componentDidMount = async () => {
     await this.updateResult()
+    this.setState({
+      isLoading: false
+    })
   }
 
   updateResult = async () => {
@@ -105,6 +113,7 @@ class searchResult extends React.Component {
   render() {
     const { classes } = this.props
     const query = this.props.match.params.query
+    const { isLoading } = this.state
     return (
       <main>
         <CssBaseline />
@@ -120,7 +129,7 @@ class searchResult extends React.Component {
           </IconButton>
           <div className={classes.content}>
             {
-              this.state.searchResult.length > 0 &&
+              !isLoading && this.state.searchResult.length > 0 &&
               <React.Fragment>
                 <div className={classes.title}>
                   Search Result for {`"${query}"`}
@@ -153,9 +162,14 @@ class searchResult extends React.Component {
                 </Paper>
               </React.Fragment>
             } {
-              this.state.searchResult.length === 0 &&
+              !isLoading && this.state.searchResult.length === 0 &&
               <div className={classes.title}>
                 No Matched Result
+              </div>
+            } {
+              isLoading &&
+              <div className={classes.loadingContainer}>
+                <CircularProgress className={classes.loading} />
               </div>
             }
           </div>

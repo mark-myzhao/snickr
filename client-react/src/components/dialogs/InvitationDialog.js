@@ -5,13 +5,11 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog'
 import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import Slide from '@material-ui/core/Slide'
 import Snackbar from '@material-ui/core/Snackbar'
 import red from '@material-ui/core/colors/red'
 import green from '@material-ui/core/colors/green'
-
 
 import DIYSnackbar from '../subcomponents/DIYSnackbar'
 import axios from 'axios'
@@ -249,21 +247,6 @@ class InvitationDialog extends React.Component {
                 </Button>
               </div>
               {
-                currentChannel &&
-                <React.Fragment>
-                  <Typography variant="body1">
-                    Need to add someone who’s not yet in this workspace?
-                  </Typography>
-                  <div>
-                    <Button
-                      className={classes.button2}
-                      color="primary"
-                    >
-                      Invite people to {currentWorkspace.wname}
-                    </Button>
-                  </div>
-                </React.Fragment>
-              } {
                 this.state.errorMessage &&
                 <div className={classes.errorMessage}>
                   {this.state.errorMessage}
