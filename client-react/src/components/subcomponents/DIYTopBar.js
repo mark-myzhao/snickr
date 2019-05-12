@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import axios from 'axios'
 import { setIntervalAsync } from 'set-interval-async/dynamic'
+import { clearIntervalAsync } from 'set-interval-async'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import { fade } from '@material-ui/core/styles/colorManipulator'
@@ -108,12 +109,23 @@ class DIYTopBar extends React.Component {
     userDialogTitle: '',
     notificationDialogOpen: false,
     cinvitation: [],  // { semail, remail, citime, cname, wid, wname }
-    winvitation: []   // { semail, remail, wid, witime, wname }
+    winvitation: [],  // { semail, remail, wid, witime, wname }
+    updateTimer: null
   }
 
   componentDidMount = async () => {
     await this.updateInvitations()
-    setIntervalAsync(this.updateInvitations, 5000)
+    let updateTimer = setIntervalAsync(this.updateInvitations, 5000)
+    this.setState({
+      updateTimer
+    })
+  }
+
+  componentWillUnmount = () => {
+    clearIntervalAsync(this.state.updateTimer)
+    this.setState({
+      updateTimer: null
+    })
   }
 
   updateInvitations = async () => {

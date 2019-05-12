@@ -70,7 +70,7 @@ let addmember = withAuth(
         ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )
@@ -86,7 +86,7 @@ let deletemember = withAuth(
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })
       }
     } catch (error) {
-      ctx.badRequest({ error })
+      ctx.internalServerError({ error })
     }
   }
 )

@@ -46,6 +46,14 @@ const styles = theme => ({
     fontWeight: 700,
     marginBottom: theme.spacing.unit * 3,
   },
+  title2: {
+    color: '#1d1c1d',
+    fontSize: '34px',
+    lineHeight: '41px',
+    fontWeight: 700,
+    marginBottom: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 8,
+  },
   closeButton: {
     position: 'absolute',
     right: '4rem',
@@ -77,7 +85,18 @@ class AddChannelDialog extends React.Component {
   state = {
     newChannelName: '',
     newChannelType: '',
-    errorMessage: ''
+    errorMessage: '',
+    joinChannelName: '',
+    otherPublicChannels: [],
+  }
+
+  componentDidMount = async () => {
+    const { uemail } = $store.getUser()
+    const token = $store.getToken()
+    const wid = this.props.currentWorkspace.wid
+
+    // GET other public channels
+    await this.updateOtherPublicChannels(wid, uemail, token)
   }
 
   handleAddChannel = async () => {
@@ -89,7 +108,7 @@ class AddChannelDialog extends React.Component {
     const wid = currentWorkspace.wid
     if (cname && ctype) {
       try {
-        const { data } = await axios.post('/channel', {
+        await axios.post('/channel', {
           cname,
           ctype,
           wid,
@@ -97,7 +116,6 @@ class AddChannelDialog extends React.Component {
         }, {
           headers: {'Authorization': `bearer ${token}`}
         })
-        console.log(data)
         this.setState({
           errorMessage: ''
         })
@@ -116,6 +134,46 @@ class AddChannelDialog extends React.Component {
     } else {
       this.setState({
         errorMessage: 'Name should not be empty.'
+      })
+    }
+  }
+
+  updateOtherPublicChannels = async (wid, uemail, token) => {
+    try {
+      let { data } = await axios.get(`/channel/public/${wid}/${uemail}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      this.setState({
+        otherPublicChannels: data.channels
+      })
+    } catch(error) {
+      this.setState({
+        otherPublicChannels: []
+      })
+    }
+  }
+
+  handleJoinChannel = async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    const { currentWorkspace } = this.props
+    const wid = currentWorkspace.wid
+    const cname = this.state.joinChannelName
+    try {
+      await axios.post('/cmember', {
+        cname,
+        wid,
+        uemail: you.uemail
+      }, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      await this.props.updateChannel(wid, you.uemail, token)
+      await this.updateOtherPublicChannels(wid, you.uemail, token)
+      this.props.handleClose()
+    } catch(error) {
+      console.error(error)
+      this.setState({
+        errorMessage: 'Channel with the same name already exists.'
       })
     }
   }
@@ -183,6 +241,46 @@ class AddChannelDialog extends React.Component {
                   Add
                 </Button>
               </div>
+              {
+                this.state.otherPublicChannels.length > 0 &&
+                <React.Fragment>
+                  <div className={classes.title2}>
+                    Or, Join a public channel
+                  </div>
+                  <div className={classes.inputContainer}>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel htmlFor="name-readonly">Select Channel</InputLabel>
+                      <Select
+                        value={this.state.joinChannelName}
+                        onChange={this.handleChange('joinChannelName')}
+                        input={<Input name="joinChannelName" />}
+                      >
+                        {
+                          this.state.otherPublicChannels.map(item => {
+                            return (
+                              <MenuItem
+                                value={item.cname}
+                                key={item.cname}
+                              >
+                                {item.cname}
+                              </MenuItem>
+                            )
+                          })
+                        }
+                      </Select>
+                    </FormControl>
+                    <Button
+                      className={classes.button}
+                      size="large"
+                      variant="contained"
+                      color="primary"
+                      onClick={this.handleJoinChannel}
+                    >
+                      Join
+                    </Button>
+                  </div>
+                </React.Fragment>
+              }
             </div>
           </div>
         </Dialog>

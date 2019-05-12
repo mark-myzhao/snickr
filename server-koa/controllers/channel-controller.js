@@ -3,6 +3,23 @@ const cMemberModel = require('../models/cmember')
 const { withAuth } = require('../util')
 const ERRMSG = require('../util/errmsg')
 
+let getUnjoinedPublicChannels = withAuth(
+  async (ctx, next) => {
+    try {
+      const wid = ctx.params.wid
+      const uemail = ctx.params.uemail
+      let result = await ChannelModel.getChannelExclude('public', wid, uemail)
+      if (result.length > 0) {
+        ctx.ok({ success: true, channels: result })
+      } else {
+        ctx.ok({ success: false, channels: [] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let getchannelinworkspace = withAuth(
   async (ctx, next) => {
     try {
@@ -73,6 +90,7 @@ let deletechannel = withAuth(
 )
 
 module.exports = {
+  getUnjoinedPublicChannels,
   getchannelinworkspace,
   addchannel,
   changechannel,

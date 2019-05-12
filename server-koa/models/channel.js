@@ -1,5 +1,22 @@
 const db = require('../db.js')
 
+let getChannelExclude = async (type, wid, uemail) => {
+  try {
+    let data = await db.query(`
+      SELECT cname
+      FROM Channel
+      WHERE wid = ? AND ctype = ? AND cname not in (
+          SELECT cname
+          FROM Channel NATURAL JOIN cMember
+          WHERE wid = ? AND ctype = ? AND uemail = ?
+      )
+    `, [wid, type, wid, type, uemail])
+    return data
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 let getchannelinfo = async (wid, uemail) => {
   try {
     let data = await db.query('SELECT cname, ctype, ctime FROM cMember NATURAL JOIN Channel WHERE wid = ? AND uemail = ?', [wid, uemail])
@@ -56,6 +73,7 @@ let removechannel = async (wid, cname) => {
 }
 
 module.exports = {
+  getChannelExclude,
   getchannelinfo,
   addNewchannel,
   change,

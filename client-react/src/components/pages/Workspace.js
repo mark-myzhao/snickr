@@ -211,6 +211,10 @@ class Workspace extends React.Component {
     })
   }
 
+  getAllPublicChannel = () => {
+    return []
+  }
+
   getCurrentChannelName = () => {
     return this.state.currentChannel.cname ? `/${this.state.currentChannel.cname}` : ''
   }
@@ -380,12 +384,15 @@ class Workspace extends React.Component {
               primary="New Channel"
             />
           </ListItem>
-          <AddChannelDialog
-            open={this.state.addChannelOpen}
-            currentWorkspace={this.state.currentWorkspace}
-            updateChannel={this.updateChannel}
-            handleClose={this.handleAddChannelClose}
-          />
+          {
+            this.state.currentWorkspace.wid &&
+            <AddChannelDialog
+              open={this.state.addChannelOpen}
+              currentWorkspace={this.state.currentWorkspace}
+              updateChannel={this.updateChannel}
+              handleClose={this.handleAddChannelClose}
+            />
+          }
         </Drawer>
         {
           !this.state.isWorkspace &&
