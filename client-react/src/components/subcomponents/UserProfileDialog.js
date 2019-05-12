@@ -9,7 +9,9 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
+import axios from 'axios'
 import store from '../../store'
+import { validate } from '../../util'
 
 
 const styles = theme => ({})
@@ -20,7 +22,12 @@ class UserProfileDialog extends React.Component {
     uname: '',
     nickname: '',
     password: '',
-    confirmPassword: ''
+    passwordRepeat: '',
+    uemailErrorMessage: '',
+    unameErrorMessage: '',
+    nicknameErrorMessage: '',
+    passwordErrorMessage: '',
+    passwordConfirmErrorMessage: ''
   }
 
   componentDidMount = () => {
@@ -36,12 +43,77 @@ class UserProfileDialog extends React.Component {
     })
   }
 
-  handleUpdateProfile = () => {
-
+  handleSave = async () => {
+    if (this.getDialogType() === 0) {
+      await this.handleUpdateProfile()
+    } else if (this.getDialogType() === 1) {
+      await this.handleUpdatePassword()
+    }
   }
 
-  handleUpdatePassword = () => {
+  handleUpdateProfile = async () => {
+    const { uemail, uname, nickname, password, passwordRepeat } = this.state
+    const token = store.getToken()
+    const {
+      uemailErrorMessage,
+      unameErrorMessage,
+      nicknameErrorMessage
+    } = validate(uemail, uname, nickname, password, passwordRepeat)
+    if (uemailErrorMessage || unameErrorMessage || nicknameErrorMessage) {
+      this.setState({
+        uemailErrorMessage,
+        unameErrorMessage,
+        nicknameErrorMessage
+       })
+       return
+    }
+    await axios.put(`/users/profile/${uemail}`, {
+      uname, nickname
+    }, {
+      headers: {'Authorization': `bearer ${token}`}
+    })
+    store.setUser({
+      uemail,
+      uname,
+      nickname
+    })
+    this.setState({
+      uemailErrorMessage: '',
+      unameErrorMessage: '',
+      nicknameErrorMessage: '',
+      passwordErrorMessage: '',
+      passwordConfirmErrorMessage: ''
+    })
+    this.props.handleClose()
+  }
 
+  handleUpdatePassword = async () => {
+    const { uemail, uname, nickname, password, passwordRepeat } = this.state
+    const token = store.getToken()
+    const {
+      passwordErrorMessage,
+      passwordConfirmErrorMessage
+    } = validate(uemail, uname, nickname, password, passwordRepeat)
+    if (passwordErrorMessage || passwordConfirmErrorMessage) {
+      this.setState({
+        passwordErrorMessage,
+        passwordConfirmErrorMessage
+      })
+      return
+    }
+    await axios.put(`/users/password/${uemail}`, {
+      password
+    }, {
+      headers: {'Authorization': `bearer ${token}`}
+    })
+    this.setState({
+      uemailErrorMessage: '',
+      unameErrorMessage: '',
+      nicknameErrorMessage: '',
+      passwordErrorMessage: '',
+      passwordConfirmErrorMessage: ''
+    })
+    this.props.handleClose()
   }
 
   getDialogType = () => {
@@ -72,6 +144,7 @@ class UserProfileDialog extends React.Component {
                 label="Email Address"
                 onChange={this.handleChange('uemail')}
                 fullWidth
+                disabled
               />
               <TextField
                 margin="dense"
@@ -79,6 +152,8 @@ class UserProfileDialog extends React.Component {
                 label="Full Name"
                 onChange={this.handleChange('uname')}
                 fullWidth
+                error={this.state.unameErrorMessage !== ''}
+                helperText={this.state.unameErrorMessage}
               />
               <TextField
                 margin="dense"
@@ -86,6 +161,8 @@ class UserProfileDialog extends React.Component {
                 label="Nick Name"
                 onChange={this.handleChange('nickname')}
                 fullWidth
+                error={this.state.nicknameErrorMessage !== ''}
+                helperText={this.state.nicknameErrorMessage}
               />
             </React.Fragment>
           }
@@ -99,15 +176,19 @@ class UserProfileDialog extends React.Component {
                 type="password"
                 onChange={this.handleChange('password')}
                 fullWidth
+                error={this.state.passwordErrorMessage !== ''}
+                helperText={this.state.passwordErrorMessage}
               />
               <TextField
                 margin="dense"
                 id="confirm-password"
-                value={this.state.confirmPassword}
+                value={this.state.passwordRepeat}
                 label="Confirm Password"
                 type="password"
-                onChange={this.handleChange('confirmPassword')}
+                onChange={this.handleChange('passwordRepeat')}
                 fullWidth
+                error={this.state.passwordConfirmErrorMessage !== ''}
+                helperText={this.state.passwordConfirmErrorMessage}
               />
             </React.Fragment>
           }
@@ -120,7 +201,7 @@ class UserProfileDialog extends React.Component {
             Cancel
           </Button>
           <Button
-            onClick={handleClose}
+            onClick={this.handleSave}
             color="primary"
           >
             Save

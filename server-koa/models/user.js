@@ -29,18 +29,25 @@ let add = async (uemail, uname, nickname, password) => {
   }
 }
 
-let update = async (uemail, uname, nickname, password) => {
+let update = async (uemail, arg1, arg2) => {
   try {
     let statement = null
     let feed = []
     if (!uemail) return false
-    let values = { uname, nickname, password }
+    let values
+    if (arg2) {
+      values = { uname: arg1, nickname: arg2 }
+    } else {
+      values = { password: arg1 }
+    }
+    console.log(values)
     for (let k in values) {
       if (values[k]) {
         statement = statement ? statement + `, ${k} = ?` : `SET ${k} = ?`
         feed.push(values[k])
       }
     }
+    console.log(statement)
     feed.push(uemail)
     let { affectedRows } = await db.query(` UPDATE User ${statement} WHERE uemail = ? `, feed)
     return affectedRows > 0

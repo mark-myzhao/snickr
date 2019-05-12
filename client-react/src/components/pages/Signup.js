@@ -17,8 +17,9 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { withRouter } from 'react-router-dom'
 
 import $store from '../../store'
+import { validate } from '../../util'
 
-// TODO: register
+// TODO: validation
 
 const styles = theme => ({
   main: {
@@ -105,37 +106,10 @@ class Signup extends Component {
     }
   }
 
-  // generate error messages, if any
-  validate = (uemail, username, nickname, password, passwordRepeat) => {
-    let uemailErrorMessage = null
-    let unameErrorMessage = null
-    let nicknameErrorMessage = null
-    let passwordErrorMessage = null
-    let passwordConfirmErrorMessage = null
-
-    if (password !== passwordRepeat) {
-      passwordConfirmErrorMessage = 'passwords do not match'
-    }
-
-    return {
-      uemailErrorMessage,
-      unameErrorMessage,
-      nicknameErrorMessage,
-      passwordErrorMessage,
-      passwordConfirmErrorMessage
-    }
-  }
-
   handleSubmit = async (event) => {
     event.preventDefault()
-    const {uemail, uname, nickname, password, passwordRepeat } = this.state
-    const {
-      uemailErrorMessage,
-      unameErrorMessage,
-      nicknameErrorMessage,
-      passwordErrorMessage,
-      passwordConfirmErrorMessage
-    } = this.validate(uemail, uname, nickname, password, passwordRepeat)
+    const { uemail, uname, nickname, password, passwordRepeat } = this.state
+    const { uemailErrorMessage, unameErrorMessage, nicknameErrorMessage, passwordErrorMessage, passwordConfirmErrorMessage } = validate(uemail, uname, nickname, password, passwordRepeat)
     if (uemailErrorMessage || unameErrorMessage || nicknameErrorMessage || passwordErrorMessage || passwordConfirmErrorMessage) {
       this.setState({
         uemailErrorMessage,

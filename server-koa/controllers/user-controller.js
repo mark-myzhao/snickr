@@ -53,12 +53,30 @@ let addUser = async (ctx, next) => {
   }
 }
 
-let updateUser = withAuth(
+let updateUserProfile = withAuth(
   async (ctx, next) => {
     try {
       const uemail = ctx.params.uemail
-      const { username, nickname, password } = ctx.request.body
-      let result = await UserModel.update(uemail, username, nickname, password)
+      const { uname, nickname } = ctx.request.body
+      console.log(uemail, uname, nickname)
+      let result = await UserModel.update(uemail, uname, nickname)
+      if (result) {
+        ctx.ok({ success: true, updated: uemail })
+      } else {
+        ctx.notFound({ success: false, error: ERRMSG['notFound'] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
+let updateUserPassword = withAuth(
+  async (ctx, next) => {
+    try {
+      const uemail = ctx.params.uemail
+      const { password } = ctx.request.body
+      let result = await UserModel.update(uemail, password)
       if (result) {
         ctx.ok({ success: true, updated: uemail })
       } else {
@@ -90,6 +108,7 @@ module.exports = {
   getAllUsers,
   getUser,
   addUser,
-  updateUser,
+  updateUserProfile,
+  updateUserPassword,
   removeUser
 }
