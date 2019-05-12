@@ -3,6 +3,7 @@ import { Route, BrowserRouter, Redirect, Switch } from 'react-router-dom'
 import ScrollToTop from './components/subcomponents/ScrollTop'
 import Main from './components/pages/Main'
 import Workspace from './components/pages/Workspace'
+import SearchResult from './components/pages/SearchResult'
 import Signin from './components/pages/Signin'
 import Signup from './components/pages/Signup'
 import NotFound from './components/pages/NotFound'
@@ -38,6 +39,7 @@ export default props => (
         <Switch>
           <PrivateRoute exact path="/" component={ Main } />
           <PrivateRoute exact path="/workspace/:wid" component={ Workspace } />
+          <PrivateRoute exact path="/search/:query" component={ SearchResult } />
           <Route exact path="/signin" component={ Signin } />
           <Route exact path="/signup" component={ Signup } />
           <Route path="" component={ NotFound } />

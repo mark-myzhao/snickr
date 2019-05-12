@@ -25,7 +25,6 @@ import UserProfileDialog from '../dialogs/UserProfileDialog'
 import NotificationDialog from '../dialogs/NotificationDialog'
 import $store from '../../store'
 
-// TODO: Implement Search
 
 const styles = theme => ({
   appBar: {
@@ -110,6 +109,7 @@ class DIYTopBar extends React.Component {
     notificationDialogOpen: false,
     cinvitation: [],  // { semail, remail, citime, cname, wid, wname }
     winvitation: [],  // { semail, remail, wid, witime, wname }
+    query: '',
     updateTimer: null
   }
 
@@ -158,6 +158,19 @@ class DIYTopBar extends React.Component {
       this.setState({
         winvitation: []
       })
+    }
+  }
+
+  handleQueryChange = event => {
+    this.setState({
+      query: event.target.value
+    })
+  }
+
+  handleSearch = async event => {
+    const query = this.state.query
+    if (event.key === 'Enter' && query !== '') {
+      this.props.history.push(`/search/${query}`)
     }
   }
 
@@ -246,6 +259,9 @@ class DIYTopBar extends React.Component {
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
+              value={this.state.query}
+              onKeyPress={this.handleSearch}
+              onChange={this.handleQueryChange}
             />
           </div>
           <IconButton

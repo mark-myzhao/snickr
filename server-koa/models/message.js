@@ -12,10 +12,9 @@ let get = async (wid, cname) => {
 let search = async (uemail, query) => {
   try {
     let data = await db.query(`
-    SELECT Message.wid, Message.cname, Message.uemail, mtime, mcontent, uname, nickname
-    FROM cMember, Message, User
-    WHERE cMember.wid = Message.wid AND cMember.cname = Message.cname AND cMember.uemail = ? 
-    AND mcontent LIKE concat('%',?,'%') AND User.uemail = Message.uemail;`, [uemail, query])
+    SELECT Workspace.wname, Message.wid, Message.cname, Message.uemail, mtime, mcontent, uname, nickname
+    FROM cMember, Message, User, Workspace
+    WHERE cMember.wid = Message.wid AND cMember.cname = Message.cname AND cMember.uemail = ? AND mcontent LIKE concat('%',?,'%') AND User.uemail = Message.uemail AND Workspace.wid = Message.wid;`, [uemail, query])
     return data
   } catch (error) {
     throw (error)

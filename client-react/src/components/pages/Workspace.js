@@ -29,7 +29,6 @@ import AddChannelDialog from '../dialogs/AddChannelDialog'
 
 import store from '../../store'
 
-// TODO: Join Public Channels
 
 const styles = theme => ({
   root: {
