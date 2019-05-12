@@ -17,6 +17,7 @@ import IconButton from '@material-ui/core/IconButton'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import AddIcon from '@material-ui/icons/Add'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import ScrollToBottom from 'react-scroll-to-bottom'
 
 import MessageItem from '../items/MessageItem'
@@ -111,6 +112,28 @@ const styles = theme => ({
     transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.6, 1)',
     transitionDelay: '0ms',
   },
+  loading: {
+    position: 'relative',
+    left: '90px',
+    top: '150px',
+  },
+  contentLoading: {
+    position: 'relative',
+    height: '100vh',
+    overflow: 'auto',
+    flexGrow: 1,
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: theme.spacing.unit * 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  memberLoading: {
+    // position: 'relative',
+    // left: '90px',
+    // top: '40vh',
+  }
 })
 
 class Workspace extends React.Component {
@@ -125,10 +148,14 @@ class Workspace extends React.Component {
     messages: [], // { uemail, uname, nickname, mtime, mcontent, message }
     wmember: [],  // uemail, uname, nickname, wmtype
     messageTimer: null,
+    isLoading: true,
   }
 
   async componentDidMount() {
     await this.updateAll()
+    this.setState({
+      isLoading: false
+    })
   }
 
   updateAll = async () => {
@@ -302,6 +329,7 @@ class Workspace extends React.Component {
     const { classes } = this.props
     const wid = this.props.match.params.wid
     const cname = this.state.currentChannel.cname
+    const { isLoading } = this.state
     return (
       <div className={classes.root}>
         <CssBaseline />
@@ -336,7 +364,10 @@ class Workspace extends React.Component {
             </ListItem>
           </List>
           {
-            this.getChannels('public').length > 0 &&
+            isLoading &&
+            <CircularProgress className={classes.loading} />
+          } {
+            !isLoading && this.getChannels('public').length > 0 &&
             <React.Fragment>
               <Divider />
               <ChannelList
@@ -347,7 +378,7 @@ class Workspace extends React.Component {
               />
             </React.Fragment>
           } {
-            this.getChannels('private').length > 0 &&
+            !isLoading && this.getChannels('private').length > 0 &&
             <React.Fragment>
               <Divider />
               <ChannelList
@@ -358,7 +389,7 @@ class Workspace extends React.Component {
               />
             </React.Fragment>
           } {
-            this.getChannels('direct').length > 0 &&
+            !isLoading && this.getChannels('direct').length > 0 &&
             <React.Fragment>
               <Divider />
               <ChannelList
@@ -368,22 +399,25 @@ class Workspace extends React.Component {
                 handleClick={this.handleDrawerClick}
               />
             </React.Fragment>
-          }
-          <Divider />
-          <ListItem
-            button
-            onClick={this.handleAddChannelOpen}
-          >
-            <ListItemIcon>
-              <AddIcon />
-            </ListItemIcon>
-            <ListItemText
-              className={classes.nestedText}
-              inset
-              primary="New Channel"
-            />
-          </ListItem>
-          {
+          } {
+            !isLoading &&
+            <>
+              <Divider />
+              <ListItem
+                button
+                onClick={this.handleAddChannelOpen}
+              >
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                <ListItemText
+                  className={classes.nestedText}
+                  inset
+                  primary="New Channel"
+                />
+              </ListItem>
+            </>
+          } {
             this.state.currentWorkspace.wid &&
             <AddChannelDialog
               open={this.state.addChannelOpen}
@@ -426,7 +460,12 @@ class Workspace extends React.Component {
             />
           </main>
         } {
-          this.state.isWorkspace &&
+          isLoading &&
+          <main className={classes.contentLoading}>
+            <CircularProgress className={classes.memberLoading} />
+          </main>
+        } {
+          !isLoading && this.state.isWorkspace &&
           <main className={classes.content}>
             <WorkspaceManager
               wmember={this.state.wmember}

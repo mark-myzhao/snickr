@@ -63,10 +63,14 @@ class Main extends Component {
   state = {
     workspace: [],
     addWorkspaceDialogOpen: false,
+    isLoading: true
   }
 
   componentDidMount = async () => {
     await this.updateWorkspace()
+    this.setState({
+      isLoading: false
+    })
   }
 
   updateWorkspace = async () => {
@@ -102,6 +106,7 @@ class Main extends Component {
 
   render() {
     const { classes } = this.props
+    const { isLoading } = this.state
     return (
       <React.Fragment>
         <CssBaseline />
@@ -111,7 +116,7 @@ class Main extends Component {
         />
         <div className={classes.root}>
           {
-            this.state.workspace.length === 0 &&
+            !isLoading && this.state.workspace.length === 0 &&
             <div className={classes.title}>
               no workspace here, create a new one?
             </div>
@@ -127,7 +132,18 @@ class Main extends Component {
               justify="flex-start"
               container
             >
-              {this.state.workspace.map(item => {
+              {
+                isLoading &&
+                <>
+                  <WorkspaceItem />
+                  <WorkspaceItem />
+                  <WorkspaceItem />
+                  <WorkspaceItem />
+                  <WorkspaceItem />
+                  <WorkspaceItem />
+                </>
+              } {
+                !isLoading && this.state.workspace.map(item => {
                 return (
                   <WorkspaceItem
                     key={item.wid}

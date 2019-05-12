@@ -139,7 +139,7 @@ class DIYTopBar extends React.Component {
         cinvitation: data.member
       })
     } catch(error) {
-      if (error && error.response.status === 404) {
+      if (error && error.response && error.response.status === 404) {
         this.setState({
           cinvitation: []
         })

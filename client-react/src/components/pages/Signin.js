@@ -92,7 +92,7 @@ class SignIn extends Component {
       this.props.history.push('/')
     } catch (error) {
       let { data } = error.response
-      if (data.error.toLowerCase().includes('email')) {
+      if (data && data.error.toLowerCase().includes('email')) {
         this.setState({
           emailErrorMessage: data.error,
           passwordErrorMessage: null

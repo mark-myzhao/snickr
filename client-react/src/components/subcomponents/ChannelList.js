@@ -30,7 +30,7 @@ class ChannelList extends React.Component {
     return (
       <div>
        <List>
-          <ListSubheader inset>{type}</ListSubheader>
+        <ListSubheader inset>{type}</ListSubheader>
           {list.map(item => {
             return (
               <ListItem

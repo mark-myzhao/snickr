@@ -5,6 +5,8 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import Skeleton from 'react-loading-skeleton'
+
 
 const styles = theme => ({
   paper: {
@@ -42,25 +44,39 @@ class WorkspaceItem extends Component {
               color='secondary'
               gutterBottom
             >
-              {currentWorkspace.wname}
+              {
+                currentWorkspace ? currentWorkspace.wname : <Skeleton />
+              }
             </Typography>
             <Typography
               variant="body2"
               gutterBottom
             >
-              {currentWorkspace.wdesc}
+              {currentWorkspace ? currentWorkspace.wdesc : <Skeleton count={3} />}
             </Typography>
             </div>
-            <div className={classes.buttonContainer}>
-              <Button
-                color='primary'
-                variant="contained"
-                className={classes.actionButtom}
-                onClick={this.handleEnterClick(currentWorkspace.wid)}
-              >
-                  Enter
-              </Button>
-            </div>
+            {
+              currentWorkspace &&
+              <div className={classes.buttonContainer}>
+                <Button
+                  color='primary'
+                  variant="contained"
+                  className={classes.actionButtom}
+                  onClick={this.handleEnterClick(currentWorkspace.wid)}
+                >
+                    Enter
+                </Button>
+              </div>
+            } {
+              !currentWorkspace &&
+              <div className={classes.buttonContainer}>
+                <Skeleton
+                  circle={true}
+                  height={50}
+                  width={50}
+                />
+              </div>
+            }
         </Paper>
       </Grid>
     )
