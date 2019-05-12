@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
@@ -14,10 +15,8 @@ import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-import WorkspaceDialog from '../subcomponents/WorkspaceDialog'
-import InvitationDialog from '../subcomponents/InvitationDialog'
-
-import axios from 'axios'
+import WorkspaceDialog from '../dialogs/WorkspaceDialog'
+import InvitationDialog from '../dialogs/InvitationDialog'
 import store from '../../store';
 
 

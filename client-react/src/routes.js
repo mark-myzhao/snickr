@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, BrowserRouter, Redirect, Switch } from 'react-router-dom'
-import ScrollToTop from './components/commons/ScrollTop'
+import ScrollToTop from './components/subcomponents/ScrollTop'
 import Main from './components/pages/Main'
 import Workspace from './components/pages/Workspace'
 import Signin from './components/pages/Signin'

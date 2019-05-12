@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
@@ -18,14 +19,10 @@ import SearchIcon from '@material-ui/icons/Search'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import HomeIcon from '@material-ui/icons/Home'
 
-import UserProfileDialog from '../subcomponents/UserProfileDialog'
-import NotificationDialog from '../subcomponents/NotificationDialog'
-
-import axios from 'axios'
+import UserProfileDialog from '../dialogs/UserProfileDialog'
+import NotificationDialog from '../dialogs/NotificationDialog'
 import $store from '../../store'
 
-// TODO: User Profile Dialog
-// TODO: Change Password Dialog
 // TODO: Implement Search
 
 const styles = theme => ({

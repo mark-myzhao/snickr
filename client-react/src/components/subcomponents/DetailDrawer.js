@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import { withStyles } from '@material-ui/core/styles'
 import Avatar from '@material-ui/core/Avatar'
 import Collapse from '@material-ui/core/Collapse'
@@ -21,10 +22,9 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import EditIcon from '@material-ui/icons/Edit'
 import AddIcon from '@material-ui/icons/Add'
-import axios from 'axios'
 
-import InvitationDialog from './InvitationDialog'
-import ChannelDialog from './ChannelDialog'
+import InvitationDialog from '../dialogs/InvitationDialog'
+import ChannelDialog from '../dialogs/ChannelDialog'
 import $store from '../../store'
 
 

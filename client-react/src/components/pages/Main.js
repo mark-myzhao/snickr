@@ -1,19 +1,19 @@
 import React,  { Component } from 'react'
+import axios from 'axios'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { withRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Grid from '@material-ui/core/Grid'
-import DIYTopBar from '../commons/DIYTopBar'
-import WorkspaceItem from '../items/WorkspaceItem'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 
-import AddWorkspaceDialog from '../subcomponents/AddWorkspaceDialog'
-
-import axios from 'axios'
-import $store from '../../store'
 
 import backgroundShape from '../../images/shape.svg'
+import WorkspaceItem from '../items/WorkspaceItem'
+import DIYTopBar from '../subcomponents/DIYTopBar'
+import AddWorkspaceDialog from '../dialogs/AddWorkspaceDialog'
+import $store from '../../store'
+
 
 const styles = theme => ({
   root: {

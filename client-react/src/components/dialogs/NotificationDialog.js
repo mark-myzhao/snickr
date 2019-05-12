@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import { withStyles } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
@@ -15,7 +16,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Slide from '@material-ui/core/Slide'
 
 import $store from '../../store'
-import axios from 'axios'
 
 const numToMonth = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',

@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import axios from 'axios'
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog'
@@ -7,12 +8,13 @@ import IconButton from '@material-ui/core/IconButton'
 import TextField from '@material-ui/core/TextField'
 import CloseIcon from '@material-ui/icons/Close'
 import Slide from '@material-ui/core/Slide'
-import red from '@material-ui/core/colors/red'
+import MenuItem from '@material-ui/core/MenuItem'
+import InputLabel from '@material-ui/core/InputLabel'
+import Input from '@material-ui/core/Input'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 
-
-import axios from 'axios'
 import $store from '../../store'
-
 
 const styles = theme => ({
   panelContainer: {
@@ -53,36 +55,108 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.unit,
   },
-  newWorkspaceNameInput: {
+  newChannelNameInput: {
     flexGrow: 1
   },
   button: {
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing.unit,
   },
-  errorMessage: {
-    color: red[700]
-  }
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 120,
+    flexGrow: 1
+  },
 })
 
 function Transition(props) {
   return <Slide direction="up" {...props} />
 }
 
-class AddWorkspaceDialog extends React.Component {
+class ChannelDialog extends React.Component {
   state = {
-    newWorkspaceName: '',
-    newWorkspaceDesc: '',
+    newChannelName: '',
+    newChannelType: '',
     errorMessage: ''
   }
 
   componentDidMount = () => {
-    const { op, currentWorkspace } = this.props
-    if (op && op.toLowerCase() === 'update' && currentWorkspace) {
+    const { op, currentChannel } = this.props
+    if (op.toLowerCase() === 'update' && currentChannel) {
       this.setState({
-        newWorkspaceName: currentWorkspace.wname,
-        newWorkspaceDesc: currentWorkspace.wdesc
+        newChannelName: currentChannel.cname,
+        newChannelType: currentChannel.ctype
+      })
+    }
+  }
+
+  handleSubmit = (op) => async () => {
+    const you = $store.getUser()
+    const token = $store.getToken()
+    const { currentWorkspace, currentChannel } = this.props
+    const cname = this.state.newChannelName
+    const ctype = this.state.newChannelType
+    const wid = currentWorkspace.wid
+
+    if (op.toLowerCase() === 'add') {
+      await this.handleAddChannel(wid, cname, ctype, token, you.uemail)
+    } else if (op.toLowerCase() === 'update') {
+      await this.handleUpdateChannel(wid, currentChannel.cname, cname, ctype, token, you.uemail)
+    }
+  }
+
+  handleAddChannel = async (wid, cname, ctype, token, uemail) => {
+    if (cname && ctype) {
+      try {
+        await axios.post('/channel', {
+          wid, cname, ctype, uemail
+        }, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        this.setState({
+          errorMessage: '',
+          newWorkspaceName: '',
+          newWorkspaceDesc: ''
+        })
+        await this.props.updateChannel(wid, uemail, token)
+        this.props.handleClose()
+      } catch(error) {
+        console.error(error)
+        this.setState({
+          errorMessage: 'Channel with the same name already exists.'
+        })
+      }
+    } else {
+      this.setState({
+        errorMessage: 'Name should not be empty.'
+      })
+    }
+  }
+
+  handleUpdateChannel = async (wid, oname, cname, ctype, token, uemail) => {
+    if (cname && ctype) {
+      try {
+        await axios.put('/channel', {
+          wid, oname, cname, ctype, uemail
+        }, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        this.setState({
+          errorMessage: '',
+          newWorkspaceName: '',
+          newWorkspaceDesc: ''
+        })
+        await this.props.updateChannel(wid, uemail, token)
+        this.props.handleClose()
+      } catch(error) {
+        console.error(error)
+        this.setState({
+          errorMessage: 'Channel with the same name already exists.'
+        })
+      }
+    } else {
+      this.setState({
+        errorMessage: 'Name should not be empty.'
       })
     }
   }
@@ -93,75 +167,8 @@ class AddWorkspaceDialog extends React.Component {
     })
   }
 
-  handleSubmit = op => async () => {
-    const you = $store.getUser()
-    const token = $store.getToken()
-    const wid = this.props.currentWorkspace.wid
-    const wname = this.state.newWorkspaceName
-    const wdesc = this.state.newWorkspaceDesc
-
-    if (op.toLowerCase() === 'add') {
-      await this.handleAddWorkspace(wname, wdesc, 'admin', token, you.uemail)
-    } else if (op.toLowerCase() === 'update') {
-      await this.handleUpdateWorkspace(wid, wname, wdesc, token, you.uemail)
-    }
-  }
-
-  handleAddWorkspace = async (wname, wdesc, wmtype, token, uemail) => {
-    if (wname && wdesc) {
-      try {
-        await axios.post('/workspace', {
-          wname, wdesc, uemail, wmtype
-        }, {
-          headers: {'Authorization': `bearer ${token}`}
-        })
-        this.setState({
-          errorMessage: ''
-        })
-        this.setState({
-          newWorkspaceName: '',
-          newWorkspaceDesc: ''
-        })
-        window.location.reload()
-      } catch(error) {
-        console.error(error)
-      }
-    } else {
-      this.setState({
-        errorMessage: 'Name and Description should not be empty.'
-      })
-    }
-  }
-
-  handleUpdateWorkspace = async (wid, wname, wdesc, token, uemail) => {
-    console.log(wid, wname, wdesc, uemail)
-    if (wname && wdesc) {
-      try {
-        await axios.put('/workspace', {
-          wid, wname, wdesc, uemail
-        }, {
-          headers: {'Authorization': `bearer ${token}`}
-        })
-        this.setState({
-          errorMessage: ''
-        })
-        this.setState({
-          newWorkspaceName: '',
-          newWorkspaceDesc: ''
-        })
-        window.location.reload()
-      } catch(error) {
-        console.error(error)
-      }
-    } else {
-      this.setState({
-        errorMessage: 'Name and Description should not be empty.'
-      })
-    }
-  }
-
   render() {
-    const { classes, open, op, handleClose } = this.props
+    const { classes, open, op, handleClose, currentWorkspace } = this.props
     return (
       <React.Fragment>
         <Dialog
@@ -182,29 +189,31 @@ class AddWorkspaceDialog extends React.Component {
             </IconButton>
             <div className={classes.content}>
               <div className={classes.title}>
-                Add a new Workspace
+                Add new channel to #{currentWorkspace.wname}
               </div>
               <div className={classes.inputContainer}>
                 <TextField
-                  className={classes.newWorkspaceNameInput}
-                  value={this.state.newWorkspaceName}
-                  onChange={this.handleChange('newWorkspaceName')}
+                  className={classes.newChannelNameInput}
+                  value={this.state.newChannelName}
+                  onChange={this.handleChange('newChannelName')}
                   margin="normal"
                   variant="outlined"
-                  placeholder="Workspace Name"
+                  placeholder="Channel Name"
                 />
               </div>
               <div className={classes.inputContainer}>
-                <TextField
-                  className={classes.newWorkspaceNameInput}
-                  value={this.state.newWorkspaceDesc}
-                  onChange={this.handleChange('newWorkspaceDesc')}
-                  margin="normal"
-                  variant="outlined"
-                  placeholder="Workspace Description"
-                  rows="4"
-                  multiline
-                />
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="name-readonly">Type</InputLabel>
+                  <Select
+                    value={this.state.newChannelType}
+                    onChange={this.handleChange('newChannelType')}
+                    input={<Input name="newChannelType" />}
+                  >
+                    <MenuItem value="public">Public</MenuItem>
+                    <MenuItem value="private">Private</MenuItem>
+                    <MenuItem value="direct">Direct</MenuItem>
+                  </Select>
+                </FormControl>
                 <Button
                   className={classes.button}
                   size="large"
@@ -215,12 +224,6 @@ class AddWorkspaceDialog extends React.Component {
                   {op.toUpperCase()}
                 </Button>
               </div>
-              {
-                this.state.errorMessage &&
-                <div className={classes.errorMessage}>
-                  {this.state.errorMessage}
-                </div>
-              }
             </div>
           </div>
         </Dialog>
@@ -229,9 +232,9 @@ class AddWorkspaceDialog extends React.Component {
   }
 }
 
-AddWorkspaceDialog.propTypes = {
+ChannelDialog.propTypes = {
   classes: PropTypes.object.isRequired,
 }
 
-export default withStyles(styles)(AddWorkspaceDialog)
+export default withStyles(styles)(ChannelDialog)
 

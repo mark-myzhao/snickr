@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -17,6 +16,7 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import { withRouter } from 'react-router-dom'
 
 import store from '../../store'
+
 
 const styles = theme => ({
   main: {

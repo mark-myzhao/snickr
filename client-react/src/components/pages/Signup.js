@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-
+import { withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -14,12 +14,10 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { withRouter } from 'react-router-dom'
 
 import $store from '../../store'
 import { validate } from '../../util'
 
-// TODO: validation
 
 const styles = theme => ({
   main: {
