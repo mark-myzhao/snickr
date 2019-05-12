@@ -28,17 +28,27 @@ let addNewmember = async (uemail, wid, wmtype) => {
     if (uemail && wid && wmtype) {
       let data1 = await db.query('SELECT uemail FROM User WHERE uemail = ?', uemail)
       let data2 = await db.query('SELECT uemail FROM wMember WHERE uemail = ? AND wid = ?', [uemail, wid])
-      if (data1.length > 0) {
-        if (data2.length > 0) {
-          return false
-        } else {
-          await db.query(` DELETE FROM wInvitation WHERE remail = ? AND wid = ? `, [uemail, wid])
-          await db.query(` INSERT INTO wMember (uemail, wid, wmtype) VALUES (?, ?, ?) `, [uemail, wid, wmtype])
-          return true
+      let data3 = await db.query('SELECT wid FROM Workspace WHERE wid = ?', wid)
+      if (data1.length === 0) {
+        return {
+          success: false,
+          error: 'User does not exist.'
         }
-      } else {
-        return false
       }
+      if (data2.length > 0) {
+        return {
+          success: false,
+          error: 'User is already a member of this workspace.'
+        }
+      }
+      if (data3.length === 0) {
+        return {
+          success: false,
+          error: 'Workspace does not exist.'
+        }
+      }
+      await db.query(` DELETE FROM wInvitation WHERE remail = ? AND wid = ? `, [uemail, wid])
+      await db.query(` INSERT INTO wMember (uemail, wid, wmtype) VALUES (?, ?, ?) `, [uemail, wid, wmtype])
     } else {
       return false
     }

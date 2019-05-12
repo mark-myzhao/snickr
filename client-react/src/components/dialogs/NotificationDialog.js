@@ -7,6 +7,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
+import Snackbar from '@material-ui/core/Snackbar'
 import Divider from '@material-ui/core/Divider'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
@@ -15,6 +16,7 @@ import CloseIcon from '@material-ui/icons/Close'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Slide from '@material-ui/core/Slide'
 
+import DIYSnackbar from '../subcomponents/DIYSnackbar'
 import $store from '../../store'
 
 const numToMonth = [
@@ -93,7 +95,22 @@ function Transition(props) {
 }
 
 class NotificationDialog extends React.Component {
-  state = {}
+  state = {
+    errorSnackOpen: false,
+    errorMessage: ''
+  }
+
+  handleErrorSnackOpen = () => {
+    this.setState({
+      errorSnackOpen: true
+    })
+  }
+
+  handleErrorSnackClose = () => {
+    this.setState({
+      errorSnackOpen: false
+    })
+  }
 
   handleChange = name => event => {
     this.setState({
@@ -106,11 +123,6 @@ class NotificationDialog extends React.Component {
     const token = $store.getToken()
     const { update } = this.props
     try {
-      console.log({
-        uemail: you.uemail,
-        wid,
-        wmtype: 'user'
-      })
       const { data } = await axios.post('/wmember', {
         uemail: you.uemail,
         wid,
@@ -118,7 +130,12 @@ class NotificationDialog extends React.Component {
       }, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
+      if (!data.success) {
+        this.setState({
+          errorMessage: data.error
+        })
+        this.handleErrorSnackOpen()
+      }
       await update()
     } catch(error) {
       console.log(error)
@@ -220,7 +237,7 @@ class NotificationDialog extends React.Component {
                   { winvitation.map(item => {
                       let t = new Date(item.witime)
                       return (
-                        <ExpansionPanel key={item.semail}>
+                        <ExpansionPanel key={item.witime}>
                           <ExpansionPanelSummary
                             className={classes.summary}
                             expandIcon={<ExpandMoreIcon />}
@@ -327,6 +344,21 @@ class NotificationDialog extends React.Component {
             </div>
           </div>
         </Dialog>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={this.state.errorSnackOpen}
+          autoHideDuration={6000}
+          onClose={this.handleErrorSnackClose}
+        >
+          <DIYSnackbar
+            onClose={this.handleErrorSnackClose}
+            variant="error"
+            message={this.state.errorMessage}
+          />
+        </Snackbar>
       </React.Fragment>
     )
   }

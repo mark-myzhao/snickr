@@ -89,12 +89,10 @@ class DetailDrawer extends React.Component {
       let { data } = await axios.get(`/cmember/${wid}/${cname}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      // console.log(data)
       this.setState({
         cmember: data.member
       })
     } catch(error) {
-      // console.error(error)
       this.setState({
         cmember: []
       })

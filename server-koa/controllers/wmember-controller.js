@@ -65,8 +65,18 @@ let addmember = withAuth(
   async (ctx, next) => {
     try {
       const { uemail, wid, wmtype } = ctx.request.body
-      await wMemberModel.addNewmember(uemail, wid, wmtype)
-      ctx.created({ success: true, added: uemail })
+      const res = await wMemberModel.addNewmember(uemail, wid, wmtype)
+      if (res) {
+        if (res.success) {
+          ctx.created({ success: true, added: uemail })
+        } else {
+          ctx.ok(res)
+        }
+      } else {
+        ctx.badRequest({
+          success: false
+        })
+      }
     } catch (error) {
       ctx.internalServerError({ error })
     }

@@ -8,8 +8,12 @@ import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 import CloseIcon from '@material-ui/icons/Close'
 import Slide from '@material-ui/core/Slide'
+import Snackbar from '@material-ui/core/Snackbar'
 import red from '@material-ui/core/colors/red'
+import green from '@material-ui/core/colors/green'
 
+
+import DIYSnackbar from '../subcomponents/DIYSnackbar'
 import axios from 'axios'
 import $store from '../../store'
 
@@ -65,7 +69,25 @@ const styles = theme => ({
   },
   errorMessage: {
     color: red[700]
-  }
+  },
+  snack: {
+    marginTop: theme.spacing.unit * 8,
+  },
+  snackErrorRoot: {
+    backgroundColor: red[700],
+  },
+  snackInfoRoot: {
+    backgroundColor: green[700],
+  },
+  icon: {
+    fontSize: 20,
+    opacity: 0.9,
+    marginRight: theme.spacing.unit,
+  },
+  message: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 })
 
 function Transition(props) {
@@ -75,13 +97,34 @@ function Transition(props) {
 class InvitationDialog extends React.Component {
   state = {
     inviteEmail: '',
-    errorMessage: ''
+    errorMessage: '',
+    vertical: 'top',
+    horizontal: 'center',
+    snackbarErrorOpen: false,
+    snackbarInfoOpen: false,
+    snackMessage: ''
   }
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     })
+  }
+
+  handleSnackbarErrorOpen = () => {
+    this.setState({ snackbarErrorOpen: true })
+  }
+
+  handleSnackbarErrorClose = () => {
+    this.setState({ snackbarErrorOpen: false })
+  }
+
+  handleSnackbarInfoOpen = () => {
+    this.setState({ snackbarInfoOpen: true })
+  }
+
+  handleSnackbarInfoClose = () => {
+    this.setState({ snackbarInfoOpen: false })
   }
 
   handleAddClick = async () => {
@@ -104,26 +147,34 @@ class InvitationDialog extends React.Component {
 
   sendWorkspaceInvitation = async (target, you, token) => {
     const { currentWorkspace, handleClose } = this.props
-    // test if the user exists
     try {
       await axios.get(`/users/${target}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
     } catch(error) {
-      console.error(error)
+      this.setState({
+        snackMessage: 'The user does not exist'
+      })
+      this.handleSnackbarErrorOpen()
       return
     }
-
     try {
-      let { data } = await axios.post('/winvitation', {
+      const { data } = await axios.post('/winvitation', {
         semail: you.uemail,
         remail: target,
         wid: currentWorkspace.wid
       }, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
-      handleClose()
+      if (data.success) {
+        this.handleSnackbarInfoOpen()
+        handleClose()
+      } else {
+        this.setState({
+          snackMessage: data.error
+        })
+        this.handleSnackbarErrorOpen()
+      }
     } catch(error) {
       console.error(error)
     }
@@ -137,12 +188,14 @@ class InvitationDialog extends React.Component {
         headers: {'Authorization': `bearer ${token}`}
       })
     } catch(error) {
-      console.error(error)
+      this.setState({
+        snackMessage: 'The user is not in this workspace yet'
+      })
+      this.handleSnackbarErrorOpen()
       return
     }
-
     try {
-      let { data } = await axios.post('/cinvitation', {
+      await axios.post('/cinvitation', {
         semail: you.uemail,
         remail: target,
         cname: currentChannel.cname,
@@ -150,7 +203,7 @@ class InvitationDialog extends React.Component {
       }, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
+      this.handleSnackbarInfoOpen()
       handleClose()
     } catch(error) {
       console.error(error)
@@ -223,6 +276,36 @@ class InvitationDialog extends React.Component {
             </div>
           </div>
         </Dialog>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={this.state.snackbarErrorOpen}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbarErrorClose}
+        >
+          <DIYSnackbar
+            onClose={this.handleSnackbarErrorClose}
+            variant="error"
+            message={this.state.snackMessage}
+          />
+        </Snackbar>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          open={this.state.snackbarInfoOpen}
+          autoHideDuration={6000}
+          onClose={this.handleSnackbarInfoClose}
+        >
+          <DIYSnackbar
+            onClose={this.handleSnackbarInfoClose}
+            variant="success"
+            message="Invitation has been sent"
+          />
+        </Snackbar>
       </React.Fragment>
     )
   }

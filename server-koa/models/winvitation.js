@@ -9,24 +9,41 @@ let getinvitation = async (remail) => {
   }
 }
 
-let addNewinvitation = async (wid, semail, remail) => {
+let addNewinvitation = async (wid, semail, remail, time) => {
   try {
     if (wid && semail && remail) {
       let wtypeadmin = 'admin'
       let data1 = await db.query('SELECT uemail FROM wMember WHERE uemail = ? AND wid = ? AND wmtype = ?', [semail, wid, wtypeadmin])
+      if (data1.length === 0) {
+        return {
+          success: false,
+          error: 'Invalid sender.'
+        }
+      }
       let data2 = await db.query('SELECT uemail FROM User WHERE uemail = ?', [remail])
-      if (data1.length > 0 && data2.length > 0) {
-        let time = new Date()
-        await db.query('INSERT INTO wInvitation(semail, remail, wid, witime) VALUES (?, ?, ?, ?)', [semail, remail, wid, time])
-        return true
-      } else {
-        return false
+      if (data2.length === 0) {
+        return {
+          success: false,
+          error: 'Invalid receiver.'
+        }
+      }
+      let data3 = await db.query('SELECT uemail FROM wMember WHERE wid = ? AND uemail = ?', [wid, remail])
+      if (data3.length > 0) {
+        return {
+          success: false,
+          error: 'Receiver already exists in the workspace.'
+        }
+      }
+      await db.query('INSERT INTO wInvitation(semail, remail, wid, witime) VALUES (?, ?, ?, ?)', [semail, remail, wid, time])
+      return {
+        success: true
       }
     } else {
       return false
     }
   } catch (error) {
-    throw (error)
+    console.log(error)
+    return false
   }
 }
 
