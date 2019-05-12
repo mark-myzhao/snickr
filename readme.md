@@ -87,7 +87,9 @@ ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password
     - [What is REST](https://restfulapi.net)
 - Authorization
     - [Learn how to handle authentication with Node using Passport.js](https://medium.freecodecamp.org/learn-how-to-handle-authentication-with-node-using-passport-js-4a56ed18e81e)
-
+- WebSocket
+    - [koa-websocket](https://www.npmjs.com/package/koa-websocket)
+    - [Mixing HTTP and WebSocket routes in a Koa-based application](https://gustavostraube.wordpress.com/2016/08/17/mixing-http-and-websocket-routes-in-a-koa-based-application/)
 
 
 ## VI. Related Resources

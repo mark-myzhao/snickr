@@ -182,20 +182,8 @@ class InvitationDialog extends React.Component {
 
   sendChannelInvitation = async (target, you, token) => {
     const { currentWorkspace, currentChannel, handleClose } = this.props
-    // test if the user exists
     try {
-      await axios.get(`/users/${target}`, {
-        headers: {'Authorization': `bearer ${token}`}
-      })
-    } catch(error) {
-      this.setState({
-        snackMessage: 'The user is not in this workspace yet'
-      })
-      this.handleSnackbarErrorOpen()
-      return
-    }
-    try {
-      await axios.post('/cinvitation', {
+      const { data } = await axios.post('/cinvitation', {
         semail: you.uemail,
         remail: target,
         cname: currentChannel.cname,
@@ -203,8 +191,16 @@ class InvitationDialog extends React.Component {
       }, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      this.handleSnackbarInfoOpen()
-      handleClose()
+      console.log(data)
+      if (data.success) {
+        this.handleSnackbarInfoOpen()
+        handleClose()
+      } else {
+        this.setState({
+          snackMessage: data.error
+        })
+        this.handleSnackbarErrorOpen()
+      }
     } catch(error) {
       console.error(error)
     }

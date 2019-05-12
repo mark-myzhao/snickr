@@ -26,12 +26,16 @@ let addcinvitation = withAuth(
   async (ctx, next) => {
     try {
       const { semail, remail, cname, wid } = ctx.request.body
-      let time = new Date()
-      let result = await cInvitationModel.addNewcinvitation(semail, remail, wid, cname, time)
-      if (result) {
-        ctx.created({ success: true, inviteuser: remail })
+      if (semail && remail && cname && wid) {
+        let time = new Date()
+        let result = await cInvitationModel.addNewcinvitation(semail, remail, wid, cname, time)
+        if (result.success) {
+          ctx.created({ success: true, inviteuser: remail })
+        } else {
+          ctx.ok({ success: false, error: result.error })
+        }
       } else {
-        ctx.badRequest({ success: false, error: ERRMSG['badRequest'] })
+        ctx.badRequest({ success: false })
       }
     } catch (error) {
       ctx.internalServerError({ error })

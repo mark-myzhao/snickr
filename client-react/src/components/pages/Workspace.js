@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import axios from 'axios'
+import { setIntervalAsync } from 'set-interval-async/dynamic'
+import { clearIntervalAsync } from 'set-interval-async'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -24,7 +27,6 @@ import DetailDrawer from '../subcomponents/DetailDrawer'
 import WorkspaceManager from '../subcomponents/WorkspaceManager'
 import AddChannelDialog from '../dialogs/AddChannelDialog'
 
-import axios from 'axios'
 import store from '../../store'
 
 // TODO: Join Public Channels
@@ -122,7 +124,8 @@ class Workspace extends React.Component {
     isWorkspace: true,
     channels: [],
     messages: [], // { uemail, uname, nickname, mtime, mcontent, message }
-    wmember: [] // uemail, uname, nickname, wmtype
+    wmember: [],  // uemail, uname, nickname, wmtype
+    messageTimer: null,
   }
 
   async componentDidMount() {
@@ -227,9 +230,13 @@ class Workspace extends React.Component {
   }
 
   handleWorkspaceClick = () => {
+    if (this.state.messageTimer) {
+      clearIntervalAsync(this.state.messageTimer)
+    }
     this.setState({
       isWorkspace: true,
-      currentChannel: {}
+      currentChannel: {},
+      messageTimer: null,
     })
   }
 
@@ -238,9 +245,14 @@ class Workspace extends React.Component {
     const wid = this.props.match.params.wid
     const cname = item.cname
     await this.updateMessage(wid, cname)
+    if (this.state.messageTimer) {
+      clearIntervalAsync(this.state.messageTimer)
+    }
+    let messageTimer = setIntervalAsync(this.updateMessage, 2000, wid, cname)
     this.setState({
       currentChannel: item,
-      isWorkspace: false
+      isWorkspace: false,
+      messageTimer
     })
   }
 

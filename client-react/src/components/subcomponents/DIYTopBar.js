@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import axios from 'axios'
 import classNames from 'classnames'
+import axios from 'axios'
+import { setIntervalAsync } from 'set-interval-async/dynamic'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router-dom'
 import { fade } from '@material-ui/core/styles/colorManipulator'
@@ -112,6 +113,7 @@ class DIYTopBar extends React.Component {
 
   componentDidMount = async () => {
     await this.updateInvitations()
+    setIntervalAsync(this.updateInvitations, 5000)
   }
 
   updateInvitations = async () => {
