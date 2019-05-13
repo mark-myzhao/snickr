@@ -5,7 +5,23 @@ let getinvitation = async (remail) => {
     let data = await db.query('SELECT wid, wname, citime, cname, semail, remail, uname AS sname FROM User, cInvitation NATURAL JOIN Workspace WHERE remail = ? AND User.uemail = cInvitation.semail', remail)
     return data
   } catch (error) {
-    throw error
+    console.error(error)
+    return false
+  }
+}
+
+// get all invitations related to the particular channel
+const getChannelInvitation = async (wid, channel) => {
+  try {
+    let data = await db.query(`
+      SELECT semail, remail, citime
+      FROM cInvitation
+      WHERE wid = ? AND cname = ?
+    `, [wid, channel])
+    return data
+  } catch (error) {
+    console.error(error)
+    return false
   }
 }
 
@@ -54,6 +70,7 @@ let remove = async (semail, remail, wid, cname) => {
 
 module.exports = {
   getinvitation,
+  getChannelInvitation,
   addNewcinvitation,
   remove
 }

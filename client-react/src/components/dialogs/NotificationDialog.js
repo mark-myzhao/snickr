@@ -185,7 +185,7 @@ class NotificationDialog extends React.Component {
     const token = $store.getToken()
     const { update } = this.props
     try {
-      await axios.delete(`/cmember`, {
+      await axios.delete(`/cinvitation`, {
         headers: {'Authorization': `bearer ${token}`},
         data: {
           wid,
@@ -293,7 +293,7 @@ class NotificationDialog extends React.Component {
                   { cinvitation.map(item => {
                       let t = new Date(item.citime)
                       return (
-                        <ExpansionPanel key={item.semail}>
+                        <ExpansionPanel key={`${item.semail}-${item.citime}`}>
                           <ExpansionPanelSummary
                             className={classes.summary}
                             expandIcon={<ExpandMoreIcon />}

@@ -49,8 +49,19 @@ let addNewmember = async (uemail, wid, cname) => {
 
 let remove = async (uemail, wid, cname) => {
   try {
-    let { affectedRows } = await db.query(` DELETE FROM cMember WHERE uemail = ? AND wid = ? AND cname = ?`, [uemail, wid, cname])
-    return affectedRows > 0
+    let result
+    if (cname) {
+      result = await db.query(`
+        DELETE FROM cMember
+        WHERE uemail = ? AND wid = ? AND cname = ?
+      `, [uemail, wid, cname])
+    } else {
+      result = await db.query(`
+        DELETE FROM cMember
+        WHERE uemail = ? AND wid = ?
+      `, [uemail, wid])
+    }
+    return result.affectedRows > 0
   } catch (error) {
     throw error
   }

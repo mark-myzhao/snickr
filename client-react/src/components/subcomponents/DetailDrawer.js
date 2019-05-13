@@ -74,10 +74,32 @@ class DetailDrawer extends React.Component {
     cmember: [],  // uemail, uname, nickname
     editOpen: false,
     quitOpen: false,
+    channelInvitations: []
   }
 
   componentDidMount = async () => {
+    await this.updateCInvitation()
     await this.updateCMember()
+  }
+
+  updateCInvitation = async () => {
+    const { currentWorkspace, currentChannel } = this.props
+    const token = $store.getToken()
+    const wid = currentWorkspace.wid
+    const cname = currentChannel.cname
+    try {
+      let { data } = await axios.get(`/cinvitation/${wid}/${cname}`, {
+        headers: {'Authorization': `bearer ${token}`}
+      })
+      console.log(data)
+      this.setState({
+        channelInvitations: data.invitation
+      })
+    } catch(error) {
+      this.setState({
+        channelInvitations: []
+      })
+    }
   }
 
   updateCMember = async () => {
@@ -167,6 +189,7 @@ class DetailDrawer extends React.Component {
 
   render() {
     const { classes, open, currentChannel, currentWorkspace } = this.props
+    const { channelInvitations, cmember } = this.state
 
     return (
       <React.Fragment>
@@ -219,7 +242,7 @@ class DetailDrawer extends React.Component {
                     )
                   })
                 } {
-                  (currentChannel.ctype !== 'direct' || this.state.cmember.length < 2) &&
+                  (currentChannel.ctype !== 'direct' || (cmember < 2 &&channelInvitations.length === 0)) &&
                   <ListItem
                     className={classes.nested}
                     button
@@ -261,6 +284,7 @@ class DetailDrawer extends React.Component {
             open={this.state.addMemberOpen}
             currentWorkspace={currentWorkspace}
             currentChannel={currentChannel}
+            updateCInvitation={this.updateCInvitation}
             handleClose={this.handleAddMemberClose}
           />
           <ChannelDialog

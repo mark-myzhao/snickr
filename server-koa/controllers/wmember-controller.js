@@ -1,4 +1,5 @@
 const wMemberModel = require('../models/wmember')
+const cMemberModel = require('../models/cmember')
 const { withAuth } = require('../util')
 const ERRMSG = require('../util/errmsg')
 
@@ -106,8 +107,9 @@ let deletewmember = withAuth(
     try {
       const uemail = ctx.params.uemail
       const wid = ctx.params.wid
-      let result = await wMemberModel.remove(uemail, wid)
-      if (result) {
+      let result1 = await wMemberModel.remove(uemail, wid)
+      let result2 = await cMemberModel.remove(uemail, wid)
+      if (result1 && result2) {
         ctx.ok({ success: true, deleted: uemail })
       } else {
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })

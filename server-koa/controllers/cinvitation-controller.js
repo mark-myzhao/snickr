@@ -22,6 +22,25 @@ let getallinvitation = withAuth(
   }
 )
 
+const getChannelInvitation = withAuth(
+  async (ctx, next) => {
+    try {
+      const { wid, cname } = ctx.params
+      let result = await cInvitationModel.getChannelInvitation(wid, cname)
+      if (result.length > 0) {
+        ctx.ok({
+          success: true,
+          invitation: result
+        })
+      } else {
+        ctx.ok({ success: false, invitation: [] })
+      }
+    } catch (error) {
+      ctx.internalServerError({ error })
+    }
+  }
+)
+
 let addcinvitation = withAuth(
   async (ctx, next) => {
     try {
@@ -61,6 +80,7 @@ let deleteallcinvitation = withAuth(
 
 module.exports = {
   getallinvitation,
+  getChannelInvitation,
   addcinvitation,
   deleteallcinvitation
 }

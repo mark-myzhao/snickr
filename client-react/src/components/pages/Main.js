@@ -1,5 +1,7 @@
 import React,  { Component } from 'react'
 import axios from 'axios'
+import { setIntervalAsync } from 'set-interval-async/dynamic'
+import { clearIntervalAsync } from 'set-interval-async'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { withRouter } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -62,13 +64,24 @@ class Main extends Component {
   state = {
     workspace: [],
     addWorkspaceDialogOpen: false,
-    isLoading: true
+    isLoading: true,
+    timer: null
   }
 
   componentDidMount = async () => {
     await this.updateWorkspace()
+    const timer = setIntervalAsync(this.updateWorkspace, 2000)
     this.setState({
-      isLoading: false
+      isLoading: false,
+      timer
+    })
+  }
+
+  componentWillUnmount = () => {
+    const { timer } = this.state
+    clearIntervalAsync(timer)
+    this.setState({
+      timer: null
     })
   }
 

@@ -147,18 +147,22 @@ class Workspace extends React.Component {
     channels: [],
     messages: [], // { uemail, uname, nickname, mtime, mcontent, message }
     wmember: [],  // uemail, uname, nickname, wmtype
+    allTimer: null,
     messageTimer: null,
     isLoading: true,
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
     await this.updateAll()
+    const allTimer = setIntervalAsync(this.updateAll, 2000)
     this.setState({
-      isLoading: false
+      isLoading: false,
+      allTimer
     })
   }
 
   updateAll = async () => {
+    if (!store.isAuthenticated()) { return }
     const { match } = this.props
     const { uemail } = store.getUser()
     const token = store.getToken()
@@ -287,6 +291,9 @@ class Workspace extends React.Component {
   }
 
   updateMessage = async (wid, cname) => {
+    if (!store.isAuthenticated()) {
+      return
+    }
     try {
       const token = store.getToken()
       let { data } = await axios.get(`/message/${wid}/${cname}`, {

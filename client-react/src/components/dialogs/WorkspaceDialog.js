@@ -181,7 +181,7 @@ class AddWorkspaceDialog extends React.Component {
             </IconButton>
             <div className={classes.content}>
               <div className={classes.title}>
-                Add a new Workspace
+                Edit a new Workspace
               </div>
               <div className={classes.inputContainer}>
                 <TextField

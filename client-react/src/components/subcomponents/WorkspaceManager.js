@@ -300,8 +300,8 @@ class WMemberManager extends React.Component {
               }
             </ExpansionPanel>
           )
-        })}
-        {!wmember &&
+        })} {
+          !wmember &&
           <Typography
             variant="subtitle2"
           >
