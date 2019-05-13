@@ -91,7 +91,6 @@ class DetailDrawer extends React.Component {
       let { data } = await axios.get(`/cinvitation/${wid}/${cname}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
       this.setState({
         channelInvitations: data.invitation
       })
@@ -167,23 +166,34 @@ class DetailDrawer extends React.Component {
 
   handleQuit = async () => {
     const { currentWorkspace, currentChannel } = this.props
+    const { cmember } = this.state
     const token = $store.getToken()
     const uemail = $store.getUser().uemail
     const wid = currentWorkspace.wid
     const cname = currentChannel.cname
-    try {
-      await axios.delete('/cmember', {
-        data: {
-          wid,
-          cname,
-          uemail
-        },
+    if (cmember.length === 1) {
+      // delete the entire channel
+      await axios.delete(`/channel/${wid}/${cname}`, {
         headers: {'Authorization': `bearer ${token}`}
       })
       window.location.reload()
       this.handleQuitDialogClose()
-    } catch(error) {
-      console.error(error)
+    } else {
+      // simply quit
+      try {
+        await axios.delete('/cmember', {
+          data: {
+            wid,
+            cname,
+            uemail
+          },
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        window.location.reload()
+        this.handleQuitDialogClose()
+      } catch(error) {
+        console.error(error)
+      }
     }
   }
 
@@ -242,7 +252,7 @@ class DetailDrawer extends React.Component {
                     )
                   })
                 } {
-                  (currentChannel.ctype !== 'direct' || (cmember < 2 &&channelInvitations.length === 0)) &&
+                  (currentChannel.ctype !== 'direct' || (cmember.length < 2 &&channelInvitations.length === 0)) &&
                   <ListItem
                     className={classes.nested}
                     button

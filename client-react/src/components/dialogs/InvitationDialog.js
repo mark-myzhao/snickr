@@ -147,7 +147,7 @@ class InvitationDialog extends React.Component {
   }
 
   sendWorkspaceInvitation = async (target, you, token) => {
-    const { currentWorkspace, handleClose, updateCInvitation } = this.props
+    const { currentWorkspace, handleClose } = this.props
     try {
       await axios.get(`/users/${target}`, {
         headers: {'Authorization': `bearer ${token}`}
@@ -169,7 +169,6 @@ class InvitationDialog extends React.Component {
       })
       if (data.success) {
         this.handleSnackbarInfoOpen()
-        await updateCInvitation()
         handleClose()
       } else {
         this.setState({
@@ -183,7 +182,7 @@ class InvitationDialog extends React.Component {
   }
 
   sendChannelInvitation = async (target, you, token) => {
-    const { currentWorkspace, currentChannel, handleClose } = this.props
+    const { currentWorkspace, currentChannel, updateCInvitation, handleClose } = this.props
     try {
       const { data } = await axios.post('/cinvitation', {
         semail: you.uemail,
@@ -196,6 +195,7 @@ class InvitationDialog extends React.Component {
       console.log(data)
       if (data.success) {
         this.handleSnackbarInfoOpen()
+        await updateCInvitation()
         handleClose()
       } else {
         this.setState({

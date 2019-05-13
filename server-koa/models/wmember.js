@@ -80,7 +80,10 @@ let update = async (uemail, wid, wmtype) => {
 
 let remove = async (uemail, wid) => {
   try {
-    let { affectedRows } = await db.query(` DELETE FROM wMember WHERE uemail = ? AND wid = ?`, [uemail, wid])
+    let { affectedRows } = await db.query(`
+      DELETE FROM wMember
+      WHERE uemail = ? AND wid = ?
+    `, [uemail, wid])
     return affectedRows > 0
   } catch (error) {
     throw error

@@ -105,11 +105,10 @@ let updatetype = withAuth(
 let deletewmember = withAuth(
   async (ctx, next) => {
     try {
-      const uemail = ctx.params.uemail
-      const wid = ctx.params.wid
+      const { wid, uemail } = ctx.params
       let result1 = await wMemberModel.remove(uemail, wid)
-      let result2 = await cMemberModel.remove(uemail, wid)
-      if (result1 && result2) {
+      await cMemberModel.remove(uemail, wid)
+      if (result1) {
         ctx.ok({ success: true, deleted: uemail })
       } else {
         ctx.notFound({ success: false, error: ERRMSG['notFound'] })

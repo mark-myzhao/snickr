@@ -6,6 +6,6 @@ router.get('/public/:wid/:uemail', ChannelController.getUnjoinedPublicChannels)
 router.get('/:wid/:uemail', ChannelController.getchannelinworkspace)
 router.post('/', ChannelController.addchannel)
 router.put('/', ChannelController.changechannel)
-router.delete('/:cname', ChannelController.deletechannel)
+router.delete('/:wid/:cname', ChannelController.deletechannel)
 
 module.exports = router.routes()

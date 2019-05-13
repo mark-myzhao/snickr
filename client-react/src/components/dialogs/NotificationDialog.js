@@ -166,14 +166,13 @@ class NotificationDialog extends React.Component {
     const token = $store.getToken()
     const { update } = this.props
     try {
-      const { data } = await axios.post('/cmember', {
+      await axios.post('/cmember', {
         wid,
         cname,
         uemail: you.uemail
       }, {
         headers: {'Authorization': `bearer ${token}`}
       })
-      console.log(data)
       await update()
     } catch(error) {
       console.log(error)

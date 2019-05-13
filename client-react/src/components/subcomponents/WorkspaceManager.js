@@ -54,6 +54,7 @@ const styles = theme => ({
   },
   addPeople: {
     marginTop: theme.spacing.unit,
+    marginRight: theme.spacing.unit * 3,
   },
   button: {
     marginLeft: theme.spacing.unit,
@@ -66,6 +67,7 @@ class WMemberManager extends React.Component {
     anchorEl: null,
     currentUser: null,
     deleteAnchorEl: null,
+    quitAnchorEl: null,
     editOpen: false,
     deleteOpen: false,
   }
@@ -81,6 +83,14 @@ class WMemberManager extends React.Component {
     return false
   }
 
+  componentDidMount = () => {
+    setTimeout(() => {
+      if (!this.props.currentWorkspace.wid) {
+        this.props.history.push('/')
+      }
+    }, 50)
+  }
+
   handleMenuClick = (item) => event => {
     this.setState({
       anchorEl: event.currentTarget,
@@ -90,7 +100,8 @@ class WMemberManager extends React.Component {
 
   handleMenuClose = () => {
     this.setState({
-      anchorEl: null
+      anchorEl: null,
+      quitAnchorEl: null
     })
   }
 
@@ -127,14 +138,40 @@ class WMemberManager extends React.Component {
 
   handleDelete = async () => {
     const token = store.getToken()
-    const wid = this.props.currentWorkspace.wid
+    const wid = this.props.currentWorkspace.wid.wid
     try {
       await axios.delete(`/workspace/${wid}`, {
-        headers: {'Authorization': `bearer ${token}`}
+        headers: {'Authorization': `beare5${token}`}
       })
       this.props.history.push('/')
     } catch(error) {
       console.error(error)
+    }
+  }
+
+  handleQuitWorkspace = event => {
+    this.setState({
+      quitAnchorEl: event.currentTarget
+    })
+  }
+
+  handleQuit = async () => {
+    const wid = this.props.currentWorkspace.wid
+    const { wmember } = this.props
+    const token = store.getToken()
+    const uemail = store.getUser().uemail
+    if (wmember.length === 1) {
+      this.handleDelete()
+    } else {
+      try {
+        await axios.delete(`/wmember/${wid}/${uemail}`, {
+          headers: {'Authorization': `bearer ${token}`}
+        })
+        this.handleMenuClose()
+        this.props.history.push('/')
+      } catch(error) {
+        console.error(error)
+      }
     }
   }
 
@@ -207,7 +244,7 @@ class WMemberManager extends React.Component {
                 onClose={this.handleDeleteClose}
               >
                 <MenuItem onClick={this.handleDeleteClose}>Cancel</MenuItem>
-                <MenuItem onClick={this.handleDelete}>Confiem</MenuItem>
+                <MenuItem onClick={this.handleDelete}>Confirm</MenuItem>
               </Menu>
             </React.Fragment>
           }
@@ -315,7 +352,7 @@ class WMemberManager extends React.Component {
               color="primary"
               onClick={this.handleInvitationDialogOpen}
             >
-              Add More People...
+              Add More People ...
             </Button>
             <InvitationDialog
               open={this.state.invitationOpen}
@@ -338,6 +375,27 @@ class WMemberManager extends React.Component {
             </Menu>
           </React.Fragment>
         }
+        <Button
+          className={classes.addPeople}
+          color="primary"
+          onClick={this.handleQuitWorkspace}
+        >
+          Quit this workspace
+        </Button>
+        <Menu
+          anchorEl={this.state.quitAnchorEl}
+          open={Boolean(this.state.quitAnchorEl)}
+          onClose={this.handleMenuClose}
+        >
+          <MenuItem
+            onClick={this.handleMenuClose}
+          >
+            Cancel
+          </MenuItem>
+          <MenuItem onClick={this.handleQuit}>
+            Confirm
+          </MenuItem>
+        </Menu>
       </div>
     )
   }

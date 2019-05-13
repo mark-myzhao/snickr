@@ -75,8 +75,7 @@ let changechannel = withAuth(
 let deletechannel = withAuth(
   async (ctx, next) => {
     try {
-      const cname = ctx.params.cname
-      const wid = ctx.request.body
+      const { wid, cname } = ctx.params
       let result = await ChannelModel.removechannel(wid, cname)
       if (result) {
         ctx.ok({ success: true, delete: cname })
